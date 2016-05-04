@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "4.4"
+  - "6"
+before_script:
+  - npm run typings
+notifications:
+  email: false
