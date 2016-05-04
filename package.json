@@ -1,0 +1,30 @@
+{
+  "name": "abapmerge",
+  "version": "0.1.0",
+  "description": "Merge ABAP INCLUDEs into single file",
+  "bin": {
+    "abapmerge": "./abapmerge"
+  },
+  "main": "build/index.js",
+  "scripts": {
+    "test": "tsc --pretty",
+    "posttest": "tslint ./src/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larshp/abapmerge.git"
+  },
+  "keywords": [
+    "ABAP"
+  ],
+  "author": "Lars Hvam Petersen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/larshp/abapmerge/issues"
+  },
+  "homepage": "https://github.com/larshp/abapmerge#readme",
+  "devDependencies": {
+    "tslint": "^3.9.0",
+    "typescript": "^1.8.10"
+  }
+}
