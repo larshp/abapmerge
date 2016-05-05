@@ -5,7 +5,7 @@
   "bin": {
     "abapmerge": "./abapmerge"
   },
-  "main": "build/index.js",
+  "main": "build/merge.js",
   "scripts": {
     "test": "tsc --pretty",
     "posttest": "tslint ./src/*.ts",
