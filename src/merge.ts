@@ -37,12 +37,16 @@ export default class Merge {
       }
     }
 
+    checkFiles();
+
+    return output;
+  }
+
+  private static checkFiles(): void {
 // just comparing the length is not completely correct, but it will work for now
     if (this.used !== this.files.length) {
       throw "not all files used";
     }
-
-    return output;
   }
 
   private static comment(name: string): string {
