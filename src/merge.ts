@@ -37,7 +37,7 @@ export default class Merge {
       }
     }
 
-    checkFiles();
+    this.checkFiles();
 
     return output;
   }
