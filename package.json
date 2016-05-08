@@ -7,6 +7,7 @@
   },
   "main": "build/merge.js",
   "scripts": {
+    "postinstall": "npm run typings",
     "test": "tsc --pretty",
     "posttest": "tslint ./src/*.ts",
     "typings": "typings install"
