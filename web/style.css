@@ -1,0 +1,18 @@
+body {
+  background: #333;
+  font-family: "Arial";
+  color: #bbb;
+}
+.area {
+  width: 500px;
+  padding: 15px;
+}
+#drop_zone {
+  border: 2px dashed #bbb;
+  -webkit-border-radius: 5px;
+  border-radius: 20px;
+  padding: 50px;
+  text-align: center;
+  font-family: "Arial";
+  font-size: 20pt;
+}
