@@ -4,3 +4,5 @@
 
 # abapmerge
 Merge ABAP INCLUDEs into single file
+
+Test online: http://larshp.github.io/abapmerge/
