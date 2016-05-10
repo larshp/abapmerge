@@ -1,6 +1,6 @@
 {
   "name": "abapmerge",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Merge ABAP INCLUDEs into single file",
   "bin": {
     "abapmerge": "./abapmerge"
@@ -8,8 +8,9 @@
   "main": "build/merge.js",
   "scripts": {
     "postinstall": "npm run typings",
-    "test": "tsc --pretty",
-    "posttest": "tslint ./src/*.ts",
+    "pretest": "tsc --pretty",
+    "test": "tslint ./src/*.ts",
+    "posttest": "browserify build/web.js -o web/bundle.js",
     "typings": "typings install"
   },
   "repository": {
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
+    "browserify": "^13.0.1",
     "tslint": "^3.9.0",
     "typescript": "^1.8.10",
     "typings": "^0.8.1"

@@ -142,7 +142,7 @@
     ],
     "use-isnan": true,
     "use-strict": [
-      true,
+      false,
       "check-module",
       "check-function"
     ],

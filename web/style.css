@@ -16,3 +16,11 @@ body {
   font-family: "Arial";
   font-size: 20pt;
 }
+a, a:visited {
+  text-decoration:  none;
+  color: #bbb;
+  font-weight: bold;
+}
+a:hover, a:active {
+  text-decoration:  underline;
+}
