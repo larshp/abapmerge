@@ -9,7 +9,7 @@ export default class Merge {
     this.used = 0;
     let result = this.analyze(this.fileByName(main));
     this.checkFiles();
-    return result;
+    return this.appendTimestamp(result);
   }
 
   private static fileByName(name: string): string {
@@ -21,6 +21,13 @@ export default class Merge {
     }
 
     throw "file not found: " + name;
+  }
+
+  private static appendTimestamp(contents: string) {
+    return contents +
+      "****************************************************\n" +
+      "* abapmerge - " + new Date().toJSON() + "\n" +
+      "****************************************************\n";
   }
 
   private static analyze(contents: string) {
