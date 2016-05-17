@@ -35,7 +35,7 @@ export default class Merge {
     let lines = contents.split("\n");
 
     for (let line of lines) {
-      let include = line.match(/^\s?INCLUDE\s+(\w+)\s*.\s*$/i);
+      let include = line.match(/^\s?INCLUDE\s+(z\w+)\s*.\s*$/i);
       if (include) {
         output = output +
           this.comment(include[1]) +

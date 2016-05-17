@@ -1,2 +1,2 @@
-include subinc1.
+include standard.
 write / 'hello @inc1'.
