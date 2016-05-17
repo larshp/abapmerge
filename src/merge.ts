@@ -7,7 +7,9 @@ export default class Merge {
   public static merge(files: File[], main: string): string {
     this.files = files;
     this.used = 0;
-    return this.analyze(this.fileByName(main));
+    let result = this.analyze(this.fileByName(main));
+    this.checkFiles();
+    return result;
   }
 
   private static fileByName(name: string): string {
@@ -30,14 +32,12 @@ export default class Merge {
       if (include) {
         output = output +
           this.comment(include[1]) +
-          this.fileByName(include[1]) +
+          this.analyze(this.fileByName(include[1])) +
           "\n";
       } else {
         output = output + line + "\n";
       }
     }
-
-    this.checkFiles();
 
     return output;
   }
