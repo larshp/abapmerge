@@ -1,5 +1,5 @@
 {
-  "ambientDependencies": {
+  "globalDependencies": {
     "node": "registry:dt/node#4.0.0+20160501135006"
   }
 }
