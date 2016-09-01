@@ -6,3 +6,11 @@
 Merge ABAP INCLUDEs into single file
 
 Test online: http://larshp.github.io/abapmerge/
+
+### Building
+
+* `npm install`
+
+* `npm run typings`
+
+* `npm test`
