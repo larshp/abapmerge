@@ -3,5 +3,3 @@ node_js:
   - "6"
 notifications:
   email: false
-before_script:
-  - npm run typings
