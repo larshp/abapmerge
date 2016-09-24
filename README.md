@@ -11,6 +11,4 @@ Test online: http://larshp.github.io/abapmerge/
 
 * `npm install`
 
-* `npm run typings`
-
 * `npm test`
