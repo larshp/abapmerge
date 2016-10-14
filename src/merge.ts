@@ -45,9 +45,9 @@ export default class Merge {
           this.analyze(this.fileByName(include[1])) +
           "\n";
       } else if (pragma) {
-        let indent = (pragma[1] == "*")? "" : pragma[2];
+        let indent = (pragma[1] === "*") ? "" : pragma[2];
         let result = this.processPragma(indent, pragma[3]);
-        if(result) { 
+        if (result) {
           output += result + "\n";
         } else {
           output += line + "\n";
@@ -78,17 +78,19 @@ export default class Merge {
     switch (cmd[1].toLowerCase()) {
       case "include":
         let params = pragma.match(/(\S+)\s*>\s*(.*)/i);
-        if (!params) break;
+        if (!params) { break; }
 
-        let dir      = path.dirname(process.argv[2]); // Refactor somewhen
+        let dir      = path.dirname(process.argv[2]); // refactor somewhen
         let fileName = path.join(dir, params[1]);
-        if(!fs.existsSync(fileName)) break;
+        if (!fs.existsSync(fileName)) { break; }
 
         let lines = fs.readFileSync(fileName, "utf8")
           .replace("\t", "  ")
           .split(/\r?\n/);
 
-        if(lines.length > 0 && !lines[lines.length-1]) lines.pop(); // remove empty string
+        if (lines.length > 0 && !lines[lines.length - 1]) {
+          lines.pop(); // remove empty string
+        }
 
         result = this.comment(params[1]);
         result += lines
@@ -96,7 +98,7 @@ export default class Merge {
           .join("\n");
 
         break;
-      
+
       default: break;
     }
 
