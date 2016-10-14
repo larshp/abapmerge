@@ -12,3 +12,23 @@ Test online: http://larshp.github.io/abapmerge/
 * `npm install`
 
 * `npm test`
+
+### Additional features
+
+Abapmerge supports pragmas that can be written inside an abap comment. If written as " comment, then indentation before " is also used for output.
+
+`@@abapmerge command params`
+
+Currently supported pragmas:
+- **include** {filename} > {string wrapper}
+  - {filename} - path to the file relative to script execution dir (argv[0])
+  - {string wrapper} is a pattern where $$ is replaced by the include line
+
+Example
+
+```abap
+...
+  " @@abapmerge include somefile.txt > APPEND '$$' TO styletab.
+...
+``` 
+     
