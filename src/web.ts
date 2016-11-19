@@ -49,7 +49,7 @@ function setupReader(file) {
   let name = file.name;
   let reader = new FileReader();
 
-  reader.onload = function(e) {
+  reader.onload = function() {
     files.push(new File(fname(name), reader.result));
     redraw();
   };

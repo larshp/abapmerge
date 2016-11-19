@@ -1,6 +1,6 @@
 {
   "name": "abapmerge",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Merge ABAP INCLUDEs into single file",
   "bin": {
     "abapmerge": "./abapmerge"
@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
-    "@types/node": "^6.0.45",
+    "@types/node": "^6.0.48",
     "browserify": "^13.1.1",
     "tslint": "^4.0.0",
-    "typescript": "^2.0.3"
+    "typescript": "^2.0.10"
   }
 }

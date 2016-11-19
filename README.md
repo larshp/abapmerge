@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/larshp/abapmerge.svg?branch=master)](https://travis-ci.org/larshp/abapmerge)
 [![npm version](https://badge.fury.io/js/abapmerge.svg)](https://badge.fury.io/js/abapmerge)
-[![Dependency Status](https://david-dm.org/larshp/abapmerge.svg)](https://david-dm.org/larshp/abapmerge)
+[![devDependencies Status](https://david-dm.org/larshp/abapmerge/dev-status.svg)](https://david-dm.org/larshp/abapmerge?type=dev)
 
 # abapmerge
 Merge ABAP INCLUDEs into single file
@@ -30,5 +30,4 @@ Example
 ...
   " @@abapmerge include somefile.txt > APPEND '$$' TO styletab.
 ...
-``` 
-     
+```
