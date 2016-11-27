@@ -1,6 +1,6 @@
 {
   "name": "abapmerge",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Merge ABAP INCLUDEs into single file",
   "bin": {
     "abapmerge": "./abapmerge"
