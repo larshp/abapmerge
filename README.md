@@ -22,7 +22,8 @@ Abapmerge supports pragmas that can be written inside an abap comment. If writte
 Currently supported pragmas:
 - **include** {filename} > {string wrapper}
   - {filename} - path to the file relative to script execution dir (argv[0])
-  - {string wrapper} is a pattern where $$ is replaced by the include line
+  - {string wrapper} is a pattern where `$$` is replaced by the include line
+  - `$$` is escaped - ' replaced to '' (to fit in abap string), use `$$$` to skip escaping
 
 Example
 

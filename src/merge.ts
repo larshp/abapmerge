@@ -4,11 +4,9 @@ import * as fs from "fs";
 
 export default class Merge {
   private static files: File[];
-  private static used: number;
 
   public static merge(files: File[], main: string): string {
     this.files = files;
-    this.used  = 0;
     let result = this.analyze(this.fileByName(main));
     this.checkFiles();
     return this.appendTimestamp(result);
@@ -17,7 +15,7 @@ export default class Merge {
   private static fileByName(name: string): string {
     for (let file of this.files) {
       if (file.getName().toLowerCase() === name.toLowerCase()) {
-        this.used++;
+        file.markUsed();
         return file.getContents();
       }
     }
@@ -34,7 +32,7 @@ export default class Merge {
 
   private static analyze(contents: string) {
     let output = "";
-    let lines = contents.split("\n");
+    let lines = contents.split("\n").map(i => i.replace("\r", ""));
 
     for (let line of lines) {
       let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
@@ -69,6 +67,7 @@ export default class Merge {
      * - include {filename} > {string wrapper}
      *      {filename} - path to the file relative to script execution dir (argv[0])
      *      {string wrapper} is a pattern where $$ is replaced by the include line
+     *      $$ is escaped - ' replaced to '' (to fit in abap string), use $$$ to avoid escaping
      *      e.g. include somestyle.css > APPEND '$$' TO styletab.
      */
 
@@ -86,15 +85,21 @@ export default class Merge {
 
         let lines = fs.readFileSync(fileName, "utf8")
           .replace("\t", "  ")
-          .split(/\r?\n/);
+          .split("\n")
+          .map(i => i.replace("\r", ""));
 
         if (lines.length > 0 && !lines[lines.length - 1]) {
           lines.pop(); // remove empty string
         }
 
+        const template = params[2];
         result = this.comment(params[1]);
         result += lines
-          .map(line => indent + params[2].replace("$$", line))
+          .map(line => {
+            let render = template.replace("$$$", line); // unescaped
+            render = render.replace("$$", line.replace(/'/g, "''")); // escape ' -> ''
+            return indent + render;
+          })
           .join("\n");
 
         break;
@@ -106,9 +111,13 @@ export default class Merge {
   }
 
   private static checkFiles(): void {
-// just comparing the length is not completely correct, but it will work for now
-    if (this.used !== this.files.length) {
-      throw "not all files used";
+    const unusedFiles = this.files
+      .filter(i => !i.wasUsed())
+      .map(i => i.getName().toLowerCase())
+      .join(", ");
+
+    if (unusedFiles) {
+      throw "Not all files used: [" + unusedFiles + "]";
     }
   }
 
