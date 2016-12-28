@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
-    "@types/node": "^6.0.48",
+    "@types/node": "^6.0.54",
     "browserify": "^13.1.1",
-    "tslint": "^4.0.0",
-    "typescript": "^2.0.10"
+    "tslint": "^4.2.0",
+    "typescript": "^2.1.4"
   }
 }
