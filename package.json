@@ -9,7 +9,7 @@
   "scripts": {
     "pretest": "tsc --pretty",
     "test": "tslint ./src/*.ts",
-    "posttest": "browserify build/web.js -o web/bundle.js && powershell -ExecutionPolicy Bypass -File ./test.ps1"
+    "posttest": "browserify build/web.js -o web/bundle.js && powershell \"echo lalala test\""
   },
   "repository": {
     "type": "git",
