@@ -4,6 +4,7 @@ node_js:
 
 os:
   - linux
+sudo: required
 
 install:
   - pushd ci
