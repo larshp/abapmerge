@@ -12,6 +12,7 @@ install:
   - chmod +x ./download-ps.sh
   - ./download-ps.sh
   - popd
+  - npm install
 
 notifications:
   email: false
