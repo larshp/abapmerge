@@ -1,4 +1,4 @@
-write-host "starting tests..."
+write-host "Starting tests..."
 node abapmerge ./test/abap/1/zmain.abap > $null
 node abapmerge ./test/abap/2/zmain.abap > $null
 node abapmerge ./test/abap/3/zmain.abap > $null
