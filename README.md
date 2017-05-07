@@ -1,10 +1,10 @@
 [![Build Status](https://travis-ci.org/larshp/abapmerge.svg?branch=master)](https://travis-ci.org/larshp/abapmerge)
 [![npm version](https://badge.fury.io/js/abapmerge.svg)](https://badge.fury.io/js/abapmerge)
 [![devDependencies Status](https://david-dm.org/larshp/abapmerge/dev-status.svg)](https://david-dm.org/larshp/abapmerge?type=dev)
+[![Greenkeeper badge](https://badges.greenkeeper.io/larshp/abapmerge.svg)](https://greenkeeper.io/)
 
 # abapmerge
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/larshp/abapmerge.svg)](https://greenkeeper.io/)
 Merge ABAP INCLUDEs into single file
 
 Test online: http://larshp.github.io/abapmerge/
