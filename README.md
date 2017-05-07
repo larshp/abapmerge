@@ -3,6 +3,8 @@
 [![devDependencies Status](https://david-dm.org/larshp/abapmerge/dev-status.svg)](https://david-dm.org/larshp/abapmerge?type=dev)
 
 # abapmerge
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/larshp/abapmerge.svg)](https://greenkeeper.io/)
 Merge ABAP INCLUDEs into single file
 
 Test online: http://larshp.github.io/abapmerge/
