@@ -1,1 +1,0 @@
-write / 'hello @subinc1'.

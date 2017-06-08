@@ -1,18 +1,6 @@
 language: node_js
 node_js:
   - "6"
-
-os:
-  - linux
-sudo: required
-dist: trusty
-
-install:
-  - pushd ci
-  - chmod +x ./download-ps.sh
-  - ./download-ps.sh
-  - popd
-  - npm install
-
+  - "8"
 notifications:
   email: false
