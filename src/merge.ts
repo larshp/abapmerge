@@ -14,7 +14,7 @@ export default class Merge {
 
   private static fileByName(name: string): string {
     for (let file of this.files) {
-      if (file.getName().toLowerCase() === name.toLowerCase()) {
+      if (file.getName().toLowerCase() === name.toLowerCase() && file.isABAP()) {
         file.markUsed();
         return file.getContents();
       }
@@ -112,7 +112,7 @@ export default class Merge {
 
   private static checkFiles(): void {
     const unusedFiles = this.files
-      .filter(i => !i.wasUsed())
+      .filter(i => !i.wasUsed() && i.isABAP())
       .map(i => i.getName().toLowerCase())
       .join(", ");
 
