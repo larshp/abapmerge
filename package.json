@@ -8,7 +8,7 @@
   "main": "build/merge.js",
   "scripts": {
     "pretest": "tsc --pretty && mocha --recursive build/test",
-    "test": "tslint ./src/*.ts",
+    "test": "tslint ./src/*.ts ./test/*.ts",
     "posttest": "browserify build/src/web.js -o web/bundle.js"
   },
   "repository": {

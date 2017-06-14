@@ -1,6 +1,4 @@
 import File from "./file";
-import * as path from "path";
-import * as fs from "fs";
 
 export default class Merge {
   private static files: File[];
@@ -15,6 +13,17 @@ export default class Merge {
   private static fileByName(name: string): string {
     for (let file of this.files) {
       if (file.getName().toLowerCase() === name.toLowerCase() && file.isABAP()) {
+        file.markUsed();
+        return file.getContents();
+      }
+    }
+
+    throw "file not found: " + name;
+  }
+
+  private static otherByName(name: string): string {
+    for (let file of this.files) {
+      if (file.getFilename().toLowerCase() === name.toLowerCase() && !file.isABAP()) {
         file.markUsed();
         return file.getContents();
       }
@@ -79,11 +88,7 @@ export default class Merge {
         let params = pragma.match(/(\S+)\s*>\s*(.*)/i);
         if (!params) { break; }
 
-        let dir      = path.dirname(process.argv[2]); // refactor somewhen
-        let fileName = path.join(dir, params[1]);
-        if (!fs.existsSync(fileName)) { break; }
-
-        let lines = fs.readFileSync(fileName, "utf8")
+        let lines = this.otherByName(params[1])
           .replace("\t", "  ")
           .split("\n")
           .map(i => i.replace("\r", ""));

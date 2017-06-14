@@ -5,13 +5,19 @@ import Merge from "./merge";
 
 class Logic {
 
-  public static readFiles(dir: string): File[] {
+  public static readFiles(dir: string, pre = ""): File[] {
     let files = fs.readdirSync(dir);
     let output: File[] = [];
 
     for (let file of files) {
-      let contents = fs.readFileSync(dir + "/" + file, "utf8");
-      output.push(new File(file, contents));
+      let full = dir + "/" + file;
+
+      if (fs.lstatSync(full).isFile()) {
+        let contents = fs.readFileSync(full, "utf8");
+        output.push(new File(pre + file, contents));
+      } else {
+        output = output.concat(this.readFiles(full, pre + file + "/"));
+      }
     }
 
     return output;

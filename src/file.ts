@@ -13,6 +13,10 @@ export default class File {
     return this.filename.split(".")[0];
   }
 
+  public getFilename(): string {
+    return this.filename;
+  }
+
   public getContents(): string {
     return this.contents;
   }
