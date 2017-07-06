@@ -7,20 +7,20 @@ class Logic {
 
   public static readFiles(dir: string, pre = ""): File[] {
     let files = fs.readdirSync(dir);
-    let output: File[] = [];
+    let out: File[] = [];
 
     for (let file of files) {
       let full = dir + "/" + file;
 
       if (fs.lstatSync(full).isFile()) {
         let contents = fs.readFileSync(full, "utf8");
-        output.push(new File(pre + file, contents));
+        out.push(new File(pre + file, contents));
       } else {
-        output = output.concat(this.readFiles(full, pre + file + "/"));
+        out = out.concat(this.readFiles(full, pre + file + "/"));
       }
     }
 
-    return output;
+    return out;
   }
 }
 

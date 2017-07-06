@@ -31,7 +31,7 @@
     "browserify": "^14.0.0",
     "chai": "^4.0.2",
     "mocha": "^3.4.2",
-    "tslint": "^5.4.3",
+    "tslint": "^5.5.0",
     "typescript": "^2.3.4"
   }
 }
