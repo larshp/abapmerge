@@ -112,3 +112,12 @@ describe("test 9, @@abapmerge commands", () => {
     expect(result.split("\n").length).to.equal(26);
   });
 });
+
+describe("test 10, one include, namespaced", () => {
+  it("something", () => {
+    let files: File[] = [];
+    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE /foo/zinclude."));
+    files.push(new File("#foo#zinclude.abap", "WRITE / 'Hello World!'."));
+    expect(Merge.merge(files, "zmain")).to.be.a("string");
+  });
+});

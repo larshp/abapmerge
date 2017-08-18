@@ -45,6 +45,13 @@ export default class Merge {
 
     for (let line of lines) {
       let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
+      if (!include) {
+// try namespaced
+        include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
+        if (include) {
+          include[1] = include[1].replace(/\//g, "#");
+        }
+      }
       let pragma  = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
       if (include) {
         output = output +
