@@ -3,6 +3,8 @@ export default class File {
   private contents: string;
   private isUsed: boolean;
 
+// object names are unique across packages in ABAP, so
+// the folder name is not part of this class
   public constructor(filename: string, c: string) {
     this.filename = filename;
     this.contents = c;

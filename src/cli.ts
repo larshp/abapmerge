@@ -14,7 +14,7 @@ class Logic {
 
       if (fs.lstatSync(full).isFile()) {
         let contents = fs.readFileSync(full, "utf8");
-        out.push(new File(pre + file, contents));
+        out.push(new File(file, contents));
       } else {
         out = out.concat(this.readFiles(full, pre + file + "/"));
       }

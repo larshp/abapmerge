@@ -4,8 +4,6 @@ import File from "../src/file";
 
 let expect = chai.expect;
 
-// todo: test @@abapmerge include command - node abapmerge ./test/abap/5/zmain.abap
-
 describe("test 1, one include", () => {
   it("something", () => {
     let files: File[] = [];
