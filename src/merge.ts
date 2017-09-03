@@ -4,8 +4,10 @@ import ClassList from "./class_list";
 export default class Merge {
   private static files: FileList;
   private static classes: ClassList;
+  private static classesHandled: boolean;
 
   public static merge(files: FileList, main: string): string {
+    this.classesHandled = false;
     this.files = files;
     this.analyzeClasses();
     let result = this.analyze(this.files.fileByName(main));
@@ -34,7 +36,6 @@ export default class Merge {
 
   private static analyze(contents: string) {
     let output = "";
-    let classesHandled = false;
     let lines = contents.split("\n").map(i => i.replace("\r", ""));
 
     for (let line of lines) {
@@ -48,10 +49,10 @@ export default class Merge {
       }
       let pragma  = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
       if (include) {
-        if (classesHandled === false) {
+        if (this.classesHandled === false) {
 // global classes are placed before the first INCLUDE
           output = output + this.classes.getResult();
-          classesHandled = true;
+          this.classesHandled = true;
         }
         output = output +
           this.comment(include[1]) +
