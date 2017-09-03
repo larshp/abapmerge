@@ -3,9 +3,11 @@ import FileList from "./file_list";
 
 export default class Merge {
   private static files: FileList;
+//  private static classes: ClassList;
 
   public static merge(files: FileList, main: string): string {
     this.files = files;
+//    this.classes = new ClassList();
     let result = this.analyze(this.files.fileByName(main));
     this.files.checkFiles();
     return this.appendTimestamp(result);
