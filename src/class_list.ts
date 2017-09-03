@@ -18,7 +18,7 @@ export default class ClassList {
     }
     let name = f.getFilename().split(".")[0];
     this.deferred = this.deferred + "CLASS " + name + " DEFINITION DEFERRED.\n";
-    this.definitions = this.definitions + match[1] + "\n";
+    this.definitions = this.definitions + this.removePublic(name, match[1]) + "\n";
     this.implementations = this.implementations + match[3] + "\n";
   }
 
@@ -36,5 +36,10 @@ export default class ClassList {
 
   public getImplementations(): string {
     return this.implementations;
+  }
+
+  private removePublic(name: string, s: string): string {
+    let reg = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+PUBLIC", "i");
+    return s.replace(reg, "CLASS " + name + " DEFINITION");
   }
 }

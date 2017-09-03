@@ -126,15 +126,18 @@ describe("test 11, simple class", () => {
     let files = new FileList();
     files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
     files.push(new File("zinc1.abap", "write / 'foo'."));
-    files.push(new File("zcl_class.clas.abap",
-      "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
-      "  PUBLIC SECTION.\n" +
-      "    CLASS-METHODS: blah.\n" +
-      "ENDCLASS.\n" +
-      "CLASS zcl_class IMPLEMENTATION.\n" +
-      "  METHOD bits_to_int.\n" +
-      "  ENDMETHOD.\n" +
-      "ENDCLASS."));
-    expect(Merge.merge(files, "zmain")).to.be.a("string");
+    files.push(
+      new File("zcl_class.clas.abap",
+               "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
+               "  PUBLIC SECTION.\n" +
+               "    CLASS-METHODS: blah.\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcl_class IMPLEMENTATION.\n" +
+               "  METHOD blah.\n" +
+               "  ENDMETHOD.\n" +
+               "ENDCLASS."));
+    let result = Merge.merge(files, "zmain");
+    expect(result).to.be.a("string");
+    expect(result.split("\n").length).to.equal(20);
   });
 });

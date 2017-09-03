@@ -1,16 +1,28 @@
-//import File from "./file";
 import FileList from "./file_list";
+import ClassList from "./class_list";
 
 export default class Merge {
   private static files: FileList;
-//  private static classes: ClassList;
+  private static classes: ClassList;
 
   public static merge(files: FileList, main: string): string {
     this.files = files;
-//    this.classes = new ClassList();
+    this.analyzeClasses();
     let result = this.analyze(this.files.fileByName(main));
     this.files.checkFiles();
     return this.appendTimestamp(result);
+  }
+
+  private static analyzeClasses() {
+    this.classes = new ClassList();
+
+    for (let i = 0; i < this.files.length(); i++) {
+      let f = this.files.get(i);
+      if (f.getFilename().match(/\.clas\.abap$/)) {
+        f.markUsed();
+        this.classes.push(f);
+      }
+    }
   }
 
   private static appendTimestamp(contents: string) {
@@ -22,6 +34,7 @@ export default class Merge {
 
   private static analyze(contents: string) {
     let output = "";
+    let classesHandled = false;
     let lines = contents.split("\n").map(i => i.replace("\r", ""));
 
     for (let line of lines) {
@@ -35,6 +48,11 @@ export default class Merge {
       }
       let pragma  = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
       if (include) {
+        if (classesHandled === false) {
+// global classes are placed before the first INCLUDE
+          output = output + this.classes.getResult();
+          classesHandled = true;
+        }
         output = output +
           this.comment(include[1]) +
           this.analyze(this.files.fileByName(include[1])) +

@@ -8,15 +8,16 @@ describe("classes 1, test", () => {
   it("something", () => {
     let classes = new ClassList();
 
-    classes.push(new File("zcl_class.clas.abap",
-      "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
-      "  PUBLIC SECTION.\n" +
-      "    CLASS-METHODS: blah.\n" +
-      "ENDCLASS.\n" +
-      "CLASS zcl_class IMPLEMENTATION.\n" +
-      "  METHOD bits_to_int.\n" +
-      "  ENDMETHOD.\n" +
-      "ENDCLASS."));
+    classes.push(
+      new File("zcl_class.clas.abap",
+               "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
+               "  PUBLIC SECTION.\n" +
+               "    CLASS-METHODS: blah.\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcl_class IMPLEMENTATION.\n" +
+               "  METHOD blah.\n" +
+               "  ENDMETHOD.\n" +
+               "ENDCLASS."));
 
     expect(classes.getDeferred().split("\n").length).to.equal(2);
     expect(classes.getDefinitions().split("\n").length).to.equal(5);
@@ -25,15 +26,34 @@ describe("classes 1, test", () => {
   });
 });
 
-
 describe("classes 2, parser error", () => {
   it("something", () => {
 
-    var run = function () {
+    let run = function () {
       let classes = new ClassList();
       classes.push(new File("zcl_class.clas.abap", "foo boo moo"));
-    }
+    };
 
+// tslint:disable-next-line:no-invalid-this
     expect(run.bind(this)).to.throw("error parsing class: zcl_class.clas.abap");
+  });
+});
+
+describe("classes 3, remove public", () => {
+  it("something", () => {
+    let classes = new ClassList();
+
+    classes.push(
+      new File("zcl_class.clas.abap",
+               "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
+               "  PUBLIC SECTION.\n" +
+               "    CLASS-METHODS: blah.\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcl_class IMPLEMENTATION.\n" +
+               "  METHOD blah.\n" +
+               "  ENDMETHOD.\n" +
+               "ENDCLASS."));
+
+    expect(classes.getDefinitions()).to.have.string("CLASS zcl_class DEFINITION CREATE PUBLIC.");
   });
 });
