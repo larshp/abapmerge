@@ -15,9 +15,6 @@ Test online: http://larshp.github.io/abapmerge/
 
 * `npm test`
 
-Note: [Powershell](https://github.com/PowerShell/PowerShell) is used to execute the tests. Make sure you have it installed.
-* `powershell "write-host it works!"`
-
 ### Additional features
 
 Abapmerge supports pragmas that can be written inside an abap comment. If written as " comment, then indentation before " is also used for output.
