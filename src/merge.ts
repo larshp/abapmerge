@@ -1,35 +1,14 @@
-import File from "./file";
+//import File from "./file";
+import FileList from "./file_list";
 
 export default class Merge {
-  private static files: File[];
+  private static files: FileList;
 
-  public static merge(files: File[], main: string): string {
+  public static merge(files: FileList, main: string): string {
     this.files = files;
-    let result = this.analyze(this.fileByName(main));
-    this.checkFiles();
+    let result = this.analyze(this.files.fileByName(main));
+    this.files.checkFiles();
     return this.appendTimestamp(result);
-  }
-
-  private static fileByName(name: string): string {
-    for (let file of this.files) {
-      if (file.getName().toLowerCase() === name.toLowerCase() && file.isABAP()) {
-        file.markUsed();
-        return file.getContents();
-      }
-    }
-
-    throw "file not found: " + name;
-  }
-
-  private static otherByName(name: string): string {
-    for (let file of this.files) {
-      if (file.getFilename().toLowerCase() === name.toLowerCase() && !file.isABAP()) {
-        file.markUsed();
-        return file.getContents();
-      }
-    }
-
-    throw "file not found: " + name;
   }
 
   private static appendTimestamp(contents: string) {
@@ -56,7 +35,7 @@ export default class Merge {
       if (include) {
         output = output +
           this.comment(include[1]) +
-          this.analyze(this.fileByName(include[1])) +
+          this.analyze(this.files.fileByName(include[1])) +
           "\n";
       } else if (pragma) {
         let indent = (pragma[1] === "*") ? "" : pragma[2];
@@ -95,7 +74,7 @@ export default class Merge {
         let params = pragma.match(/(\S+)\s*>\s*(.*)/i);
         if (!params) { break; }
 
-        let lines = this.otherByName(params[1])
+        let lines = this.files.otherByName(params[1])
           .replace("\t", "  ")
           .split("\n")
           .map(i => i.replace("\r", ""));
@@ -120,17 +99,6 @@ export default class Merge {
     }
 
     return result;
-  }
-
-  private static checkFiles(): void {
-    const unusedFiles = this.files
-      .filter(i => !i.wasUsed() && i.isABAP())
-      .map(i => i.getName().toLowerCase())
-      .join(", ");
-
-    if (unusedFiles) {
-      throw "Not all files used: [" + unusedFiles + "]";
-    }
   }
 
   private static comment(name: string): string {

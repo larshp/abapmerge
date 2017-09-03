@@ -1,7 +1,8 @@
 import File from "./file";
+import FileList from "./file_list";
 import Merge from "./merge";
 
-let files: File[];
+let files: FileList;
 
 function fname(s: string): string {
     return s.split(".")[0];
@@ -26,22 +27,22 @@ export function onClick(e) {
 function redraw() {
   let html = "Select main file:<br>";
 
-  for (let i = 0; i < files.length; i++) {
+  for (let i = 0; i < files.length(); i++) {
     html = html +
       "<a id='myLink" + i + "' title='Set as main' href='#' value=''>" +
-      files[i].getName() +
+      files.get(i).getName() +
       "</a><br>";
   }
 
   document.getElementById("filelist").innerHTML = html;
 
-  for (let i = 0; i < files.length; i++) {
+  for (let i = 0; i < files.length(); i++) {
     document.getElementById("myLink" + i).onclick = onClick;
   }
 }
 
 function reset() {
-  files = [];
+  files = new FileList();
   document.getElementById("filelist").innerHTML = "";
 }
 

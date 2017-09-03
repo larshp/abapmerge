@@ -1,13 +1,14 @@
 import * as fs from "fs";
 import * as path from "path";
 import File from "./file";
+import FileList from "./file_list";
 import Merge from "./merge";
 
 class Logic {
 
-  public static readFiles(dir: string, pre = ""): File[] {
+  public static readFiles(dir: string, pre = ""): FileList {
     let files = fs.readdirSync(dir);
-    let out: File[] = [];
+    let out: FileList = new FileList();
 
     for (let file of files) {
       let full = dir + "/" + file;
