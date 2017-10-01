@@ -2,10 +2,12 @@ import File from "./file";
 
 export default class ClassList {
   private deferred: string;
+  private exceptions: string;
   private definitions: string;
   private implementations: string;
 
   public constructor() {
+    this.exceptions = "";
     this.deferred = "";
     this.definitions = "";
     this.implementations = "";
@@ -17,13 +19,23 @@ export default class ClassList {
       throw "error parsing class: " + f.getFilename();
     }
     let name = f.getFilename().split(".")[0];
-    this.deferred = this.deferred + "CLASS " + name + " DEFINITION DEFERRED.\n";
-    this.definitions = this.definitions + this.removePublic(name, match[1]) + "\n";
-    this.implementations = this.implementations + match[3] + "\n";
+    let def = this.removePublic(name, match[1]);
+
+    if (name.match(/^.?CX_/i)) {
+// the DEFINITION DEFERRED does not work very well for exception classes
+      this.exceptions = this.exceptions + def + "\n" + match[3] + "\n";
+    } else {
+      this.deferred = this.deferred + "CLASS " + name + " DEFINITION DEFERRED.\n";
+      this.definitions = this.definitions + def + "\n";
+      this.implementations = this.implementations + match[3] + "\n";
+    }
   }
 
   public getResult(): string {
-    return this.deferred + this.definitions + this.implementations;
+    return this.exceptions +
+      this.deferred +
+      this.definitions +
+      this.implementations;
   }
 
   public getDeferred(): string {
@@ -32,6 +44,10 @@ export default class ClassList {
 
   public getDefinitions(): string {
     return this.definitions;
+  }
+
+  public getExceptions(): string {
+    return this.exceptions;
   }
 
   public getImplementations(): string {

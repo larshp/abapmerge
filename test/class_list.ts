@@ -57,3 +57,22 @@ describe("classes 3, remove public", () => {
     expect(classes.getDefinitions()).to.have.string("CLASS zcl_class DEFINITION CREATE PUBLIC.");
   });
 });
+
+describe("classes 4, exception class", () => {
+  it("something", () => {
+    let classes = new ClassList();
+
+    classes.push(
+      new File("zcx_exception.clas.abap",
+               "CLASS zcl_exception DEFINITION PUBLIC CREATE PUBLIC.\n" +
+               "  PUBLIC SECTION.\n" +
+               "    CLASS-METHODS: blah.\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcx_exception IMPLEMENTATION.\n" +
+               "  METHOD blah.\n" +
+               "  ENDMETHOD.\n" +
+               "ENDCLASS."));
+
+    expect(classes.getExceptions()).to.have.string("CLASS zcx_exception");
+  });
+});
