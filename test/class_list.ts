@@ -76,3 +76,25 @@ describe("classes 4, exception class", () => {
     expect(classes.getExceptions()).to.have.string("CLASS zcx_exception");
   });
 });
+
+describe("classes 5, windows newline", () => {
+  it("something", () => {
+    let classes = new ClassList();
+
+    classes.push(
+      new File("zcl_class.clas.abap",
+               "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\r\n" +
+               "  PUBLIC SECTION.\r\n" +
+               "    CLASS-METHODS: blah.\r\n" +
+               "ENDCLASS.\r\n" +
+               "CLASS zcl_class IMPLEMENTATION.\r\n" +
+               "  METHOD blah.\r\n" +
+               "  ENDMETHOD.\r\n" +
+               "ENDCLASS."));
+
+    expect(classes.getDeferred().split("\n").length).to.equal(2);
+    expect(classes.getDefinitions().split("\n").length).to.equal(5);
+    expect(classes.getImplementations().split("\n").length).to.equal(5);
+    expect(classes.getResult().split("\n").length).to.equal(10);
+  });
+});

@@ -14,7 +14,7 @@ export default class ClassList {
   }
 
   public push(f: File): void {
-    let match = f.getContents().match(/^((.|\n)*ENDCLASS\.)\s*(CLASS(.|\n)*)$/i);
+    let match = f.getContents().match(/^((.|\s)*ENDCLASS\.)\s*(CLASS(.|\s)*)$/i);
     if (!match || !match[1] || !match[2] || !match[3]) {
       throw "error parsing class: " + f.getFilename();
     }
