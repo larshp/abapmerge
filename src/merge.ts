@@ -22,7 +22,10 @@ export default class Merge {
       let f = this.files.get(i);
       if (f.getFilename().match(/\.clas\.abap$/)) {
         f.markUsed();
-        this.classes.push(f);
+        this.classes.pushClass(f);
+      } else if (f.getFilename().match(/\.intf\.abap$/)) {
+        f.markUsed();
+        this.classes.pushInterface(f);
       }
     }
   }

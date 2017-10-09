@@ -8,7 +8,7 @@ describe("classes 1, test", () => {
   it("something", () => {
     let classes = new ClassList();
 
-    classes.push(
+    classes.pushClass(
       new File("zcl_class.clas.abap",
                "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
                "  PUBLIC SECTION.\n" +
@@ -31,7 +31,7 @@ describe("classes 2, parser error", () => {
 
     let run = function () {
       let classes = new ClassList();
-      classes.push(new File("zcl_class.clas.abap", "foo boo moo"));
+      classes.pushClass(new File("zcl_class.clas.abap", "foo boo moo"));
     };
 
 // tslint:disable-next-line:no-invalid-this
@@ -43,7 +43,7 @@ describe("classes 3, remove public", () => {
   it("something", () => {
     let classes = new ClassList();
 
-    classes.push(
+    classes.pushClass(
       new File("zcl_class.clas.abap",
                "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
                "  PUBLIC SECTION.\n" +
@@ -62,7 +62,7 @@ describe("classes 4, exception class", () => {
   it("something", () => {
     let classes = new ClassList();
 
-    classes.push(
+    classes.pushClass(
       new File("zcx_exception.clas.abap",
                "CLASS zcl_exception DEFINITION PUBLIC CREATE PUBLIC.\n" +
                "  PUBLIC SECTION.\n" +
@@ -81,7 +81,7 @@ describe("classes 5, windows newline", () => {
   it("something", () => {
     let classes = new ClassList();
 
-    classes.push(
+    classes.pushClass(
       new File("zcl_class.clas.abap",
                "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\r\n" +
                "  PUBLIC SECTION.\r\n" +
@@ -98,3 +98,19 @@ describe("classes 5, windows newline", () => {
     expect(classes.getResult().split("\n").length).to.equal(10);
   });
 });
+
+
+describe("classes 6, interface", () => {
+  it("something", () => {
+    let classes = new ClassList();
+
+    classes.pushInterface(
+      new File("zif_test.intf.abap",
+               "INTERFACE zif_test PUBLIC.\n" +
+               "TYPES: ty_type TYPE c LENGTH 6.\n" +
+               "ENDINTERFACE."));
+
+    expect(classes.getInterfaces().split("\n").length).to.equal(3);
+  });
+});
+

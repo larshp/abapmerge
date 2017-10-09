@@ -5,16 +5,18 @@ export default class ClassList {
   private exceptions: string;
   private definitions: string;
   private implementations: string;
+  private interfaces: string;
 
   public constructor() {
     this.exceptions = "";
     this.deferred = "";
     this.definitions = "";
     this.implementations = "";
+    this.interfaces = "";
   }
 
-  public push(f: File): void {
-    let match = f.getContents().match(/^((.|\s)*ENDCLASS\.)\s*(CLASS(.|\s)*)$/i);
+  public pushClass(f: File): void {
+    let match = f.getContents().match(/^(([\s\S])*ENDCLASS\.)\s*(CLASS(.|\s)*)$/i);
     if (!match || !match[1] || !match[2] || !match[3]) {
       throw "error parsing class: " + f.getFilename();
     }
@@ -31,9 +33,18 @@ export default class ClassList {
     }
   }
 
+  public pushInterface(f: File): void {
+    let match = f.getContents().match(/^([\s\S]+) PUBLIC([\s\S]+)$/i);
+    if (!match || !match[1] || !match[2]) {
+      throw "error parsing interface: " + f.getFilename();
+    }
+    this.interfaces = this.interfaces + match[1] + match[2];
+  }
+
   public getResult(): string {
     return this.exceptions +
       this.deferred +
+      this.interfaces +
       this.definitions +
       this.implementations;
   }
@@ -52,6 +63,10 @@ export default class ClassList {
 
   public getImplementations(): string {
     return this.implementations;
+  }
+
+  public getInterfaces(): string {
+    return this.interfaces;
   }
 
   private removePublic(name: string, s: string): string {
