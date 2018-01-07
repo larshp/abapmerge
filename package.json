@@ -1,6 +1,6 @@
 {
   "name": "abapmerge",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Merge ABAP INCLUDEs into single file",
   "bin": {
     "abapmerge": "./abapmerge"
@@ -28,7 +28,7 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.0.48",
-    "browserify": "^14.4.0",
+    "browserify": "^15.0.0",
     "chai": "^4.1.1",
     "mocha": "^4.0.1",
     "tslint": "^5.7.0",

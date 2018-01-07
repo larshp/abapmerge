@@ -49,7 +49,7 @@ export default class FileList {
   public checkFiles(): void {
     const unusedFiles = this.files
       .filter(i => !i.wasUsed() && i.isABAP())
-      .map(i => i.getName().toLowerCase())
+      .map(i => i.getFilename().toLowerCase())
       .join(", ");
 
     if (unusedFiles) {

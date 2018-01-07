@@ -68,7 +68,7 @@ describe("test 6, not all files used", () => {
     files.push(new File("zmain.abap", "report zmain.\ninclude zinc1."));
     files.push(new File("zinc1.abap", "write / 'foo'."));
     files.push(new File("zinc2.abap", "write / 'bar'."));
-    expect(Merge.merge.bind(Merge, files, "zmain")).to.throw("Not all files used: [zinc2]");
+    expect(Merge.merge.bind(Merge, files, "zmain")).to.throw("Not all files used: [zinc2.abap]");
   });
 });
 

@@ -23,6 +23,8 @@ export default class Merge {
       if (f.getFilename().match(/\.clas\.abap$/)) {
         f.markUsed();
         this.classes.pushClass(f);
+      } else if (f.getFilename().match(/\.clas\.testclasses\.abap$/)) {
+        f.markUsed();
       } else if (f.getFilename().match(/\.intf\.abap$/)) {
         f.markUsed();
         this.classes.pushInterface(f);
