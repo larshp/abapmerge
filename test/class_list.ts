@@ -114,3 +114,30 @@ describe("classes 6, interface", () => {
   });
 });
 
+
+describe("classes 7, sequenced by inheritance", () => {
+  it("something", () => {
+    let classes = new ClassList();
+    classes.pushClass(
+      new File("zcl_abapgit_syntax_abap.clas.abap",
+               "CLASS zcl_abapgit_syntax_abap DEFINITION\n" +
+               "  PUBLIC\n" +
+               "  INHERITING FROM zcl_abapgit_syntax_highlighter\n" +
+               "  CREATE PUBLIC .\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcl_abapgit_syntax_abap IMPLEMENTATION.\n" +
+               "ENDCLASS."));
+
+    classes.pushClass(
+      new File("zcl_abapgit_syntax_highlighter.clas.abap",
+               "CLASS zcl_abapgit_syntax_highlighter DEFINITION\n" +
+               "  PUBLIC\n" +
+               "  ABSTRACT\n" +
+               "  CREATE PUBLIC .\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcl_abapgit_syntax_highlighter IMPLEMENTATION.\n" +
+               "ENDCLASS."));
+
+    expect(classes.getDefinitions().split("\n")[0].indexOf("CLASS zcl_abapgit_syntax_highlighter")).to.equal(0);
+  });
+});

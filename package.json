@@ -1,13 +1,13 @@
 {
   "name": "abapmerge",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "Merge ABAP INCLUDEs into single file",
   "bin": {
     "abapmerge": "./abapmerge"
   },
   "main": "build/merge.js",
   "scripts": {
-    "pretest": "tsc --pretty && mocha --recursive build/test",
+    "pretest": "tsc --pretty && mocha --recursive --reporter progress build/test",
     "test": "tslint ./src/*.ts ./test/*.ts",
     "posttest": "browserify build/src/web.js -o web/bundle.js"
   },

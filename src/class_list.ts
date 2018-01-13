@@ -6,6 +6,7 @@ export default class ClassList {
   private definitions: string;
   private implementations: string;
   private interfaces: string;
+  private supers: string[];
 
   public constructor() {
     this.exceptions = "";
@@ -13,6 +14,7 @@ export default class ClassList {
     this.definitions = "";
     this.implementations = "";
     this.interfaces = "";
+    this.supers = [];
   }
 
   public pushClass(f: File): void {
@@ -23,12 +25,22 @@ export default class ClassList {
     let name = f.getFilename().split(".")[0];
     let def = this.removePublic(name, match[1]);
 
+    let superMatch = def.match(/INHERITING FROM (\w+)/i);
+    if (superMatch && superMatch[1]) {
+      this.supers.push(superMatch[1]);
+    }
+
     if (name.match(/^.?CX_/i)) {
 // the DEFINITION DEFERRED does not work very well for exception classes
       this.exceptions = this.exceptions + def + "\n" + match[3] + "\n";
     } else {
       this.deferred = this.deferred + "CLASS " + name + " DEFINITION DEFERRED.\n";
-      this.definitions = this.definitions + def + "\n";
+      if (this.supers.indexOf(name) >= 0) {
+// this is just a quick workaround, TODO
+        this.definitions = def + this.definitions + "\n";
+      } else {
+        this.definitions = this.definitions + def + "\n";
+      }
       this.implementations = this.implementations + match[3] + "\n";
     }
   }
