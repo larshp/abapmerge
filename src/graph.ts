@@ -16,23 +16,23 @@ export default class Graph<T> {
   }
 
   public removeNode(key: String) {
-    for (let node of this.nodes) {
-      if (node[0] === key) {
-        const index = this.nodes.indexOf(node);
-        this.nodes.splice(index, 1);
-      }
-    }
-
-    for (let edge of this.edges) {
-      if (edge[1] === key) {
-        const index = this.edges.indexOf(edge);
-        this.edges.splice(index, 1);
-      }
-    }
+    this.nodes = this.nodes.filter((n) => { return n[0] !== key; });
+    this.edges = this.edges.filter((e) => { return e[1] !== key; });
   }
 
-  public countNodes() {
+  public toString(): String {
+    const nodes = this.nodes.reduce((a, n) => { return a + n[0] + ", "; }, "");
+    const edges = this.edges.reduce((a, e) => { return a + e[0] + "->" + e[1] + ", "; }, "");
+
+    return nodes + "\n" + edges;
+  }
+
+  public countNodes(): number {
     return this.nodes.length;
+  }
+
+  public countEdges(): number {
+    return this.edges.length;
   }
 
   public popLeaf(): T {
@@ -51,6 +51,6 @@ export default class Graph<T> {
       }
     }
 
-    throw "No leaf found";
+    throw "No leaf found: " + this.toString();
   }
 }

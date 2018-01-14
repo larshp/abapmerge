@@ -16,3 +16,22 @@ describe("graph 1, test", () => {
     expect(g.popLeaf()).to.equal("value1");
   });
 });
+
+
+describe("graph 2, test", () => {
+  it("something", () => {
+    let g = new Graph<String>();
+
+    g.addNode("node1", "value1");
+    g.addNode("node2", "value2");
+    g.addNode("node3", "value3");
+
+    g.addEdge("node1", "node3");
+    g.addEdge("node2", "node3");
+
+    expect(g.popLeaf()).to.equal("value3");
+
+    expect(g.countNodes()).to.equal(2);
+    expect(g.countEdges()).to.equal(0);
+  });
+});
