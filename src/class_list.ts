@@ -25,7 +25,9 @@ export default class ClassList {
   }
 
   public getDeferred(): string {
-    return this.classes.reduce((a, c) => { return "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a; }, "");
+    let classes = this.classes.reduce((a, c) => { return "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a; }, "");
+    let interfaces = this.interfaces.reduce((a, c) => { return "INTERFACE " + c.getName() + " DEFERRED.\n" + a; }, "");
+    return interfaces + classes;
   }
 
   public getDefinitions(): string {
