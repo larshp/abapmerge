@@ -127,12 +127,9 @@ describe("classes 6, interface", () => {
   });
 });
 
-
 describe("classes 7, sequenced by inheritance", () => {
   it("something", () => {
-    let files = new FileList();
-
-    files.push(new File(
+    const file1 = new File(
       "zcl_abapgit_syntax_abap.clas.abap",
       "CLASS zcl_abapgit_syntax_abap DEFINITION\n" +
       "  PUBLIC\n" +
@@ -140,9 +137,9 @@ describe("classes 7, sequenced by inheritance", () => {
       "  CREATE PUBLIC .\n" +
       "ENDCLASS.\n" +
       "CLASS zcl_abapgit_syntax_abap IMPLEMENTATION.\n" +
-      "ENDCLASS."));
+      "ENDCLASS.");
 
-    files.push(new File(
+    const file2 = new File(
       "zcl_abapgit_syntax_highlighter.clas.abap",
       "CLASS zcl_abapgit_syntax_highlighter DEFINITION\n" +
       "  PUBLIC\n" +
@@ -150,10 +147,14 @@ describe("classes 7, sequenced by inheritance", () => {
       "  CREATE PUBLIC .\n" +
       "ENDCLASS.\n" +
       "CLASS zcl_abapgit_syntax_highlighter IMPLEMENTATION.\n" +
-      "ENDCLASS."));
+      "ENDCLASS.");
 
-    let classes = new ClassList(files);
+    let files = [file1, file2];
+    let classes = new ClassList(new FileList(files));
 
+    expect(classes.getDefinitions().split("\n")[0].indexOf("CLASS zcl_abapgit_syntax_highlighter")).to.equal(0);
+
+    classes = new ClassList( new FileList(files.reverse()));
     expect(classes.getDefinitions().split("\n")[0].indexOf("CLASS zcl_abapgit_syntax_highlighter")).to.equal(0);
   });
 });

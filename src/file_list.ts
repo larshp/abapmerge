@@ -3,8 +3,12 @@ import File from "./file";
 export default class FileList {
   private files: File[];
 
-  public constructor() {
+  public constructor(files?: File[]) {
     this.files = [];
+
+    if (files) {
+      files.forEach((f) => { this.push(f); });
+    }
   }
 
   public push(f: File) {

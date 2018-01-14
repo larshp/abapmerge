@@ -1,51 +1,60 @@
 import File from "./file";
 import FileList from "./file_list";
+import Class from "./class";
+import Graph from "./graph";
 
 export default class ClassList {
-  private deferred: string;
-  private exceptions: string;
-  private definitions: string;
-  private implementations: string;
-  private interfaces: string;
-  private supers: string[];
+  private interfaces: Class[];
+  private classes: Class[];
+  private exceptions: Class[];
 
   public constructor(list: FileList) {
-    this.exceptions = "";
-    this.deferred = "";
-    this.definitions = "";
-    this.implementations = "";
-    this.interfaces = "";
-    this.supers = [];
+    this.interfaces = [];
+    this.classes = [];
+    this.exceptions = [];
 
     this.parseFiles(list);
   }
 
   public getResult(): string {
-    return this.exceptions +
-      this.deferred +
-      this.interfaces +
-      this.definitions +
-      this.implementations;
+    return this.getExceptions() +
+      this.getDeferred() +
+      this.getInterfaces() +
+      this.getDefinitions() +
+      this.getImplementations();
   }
 
   public getDeferred(): string {
-    return this.deferred;
+    return this.classes.reduce((a, c) => { return "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a; }, "");
   }
 
   public getDefinitions(): string {
-    return this.definitions;
+    let g = new Graph<Class>();
+
+    this.classes.forEach((c) => {
+      g.addNode(c.getName(), c);
+      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
+    });
+
+    let result = "";
+    while (g.countNodes() > 0) {
+      let leaf = g.popLeaf();
+      result = result + leaf.getDefinition() + "\n";
+    }
+
+    return result;
   }
 
   public getExceptions(): string {
-    return this.exceptions;
+    return this.exceptions.reduce((a, c) => { return c.getDefinition() + "" + c.getImplementation() + "\n" + a; }, "");
   }
 
   public getImplementations(): string {
-    return this.implementations;
+    return this.classes.reduce((a, c) => { return c.getImplementation() + "\n" + a; }, "");
   }
 
   public getInterfaces(): string {
-    return this.interfaces;
+    return this.interfaces.reduce((a, c) => { return c.getDefinition() + a; }, "");
   }
 
   private parseFiles(list: FileList) {
@@ -72,22 +81,18 @@ export default class ClassList {
     let def = this.removePublic(name, match[1]);
 
     let superMatch = def.match(/INHERITING FROM (\w+)/i);
+    let dependencies = [];
     if (superMatch && superMatch[1]) {
-      this.supers.push(superMatch[1]);
+      dependencies.push(superMatch[1]);
     }
+
+    let cls = new Class(name, def, match[3], dependencies);
 
     if (name.match(/^.?CX_/i)) {
 // the DEFINITION DEFERRED does not work very well for exception classes
-      this.exceptions = this.exceptions + def + "\n" + match[3] + "\n";
+      this.exceptions.push(cls);
     } else {
-      this.deferred = this.deferred + "CLASS " + name + " DEFINITION DEFERRED.\n";
-      if (this.supers.indexOf(name) >= 0) {
-// this is just a quick workaround, TODO
-        this.definitions = def + this.definitions + "\n";
-      } else {
-        this.definitions = this.definitions + def + "\n";
-      }
-      this.implementations = this.implementations + match[3] + "\n";
+      this.classes.push(cls);
     }
   }
 
@@ -96,7 +101,7 @@ export default class ClassList {
     if (!match || !match[1] || !match[2]) {
       throw "error parsing interface: " + f.getFilename();
     }
-    this.interfaces = this.interfaces + match[1] + match[2];
+    this.interfaces.push(new Class(f.getFilename().split(".")[0], match[1] + match[2]));
   }
 
   private removePublic(name: string, s: string): string {
