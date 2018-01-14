@@ -9,14 +9,10 @@ export default class Merge {
   public static merge(files: FileList, main: string): string {
     this.classesHandled = false;
     this.files = files;
-    this.analyzeClasses();
+    this.classes = new ClassList(this.files);
     let result = this.analyze(this.files.fileByName(main));
     this.files.checkFiles();
     return this.appendTimestamp(result);
-  }
-
-  private static analyzeClasses() {
-    this.classes = new ClassList(this.files);
   }
 
   private static appendTimestamp(contents: string) {
@@ -39,7 +35,7 @@ export default class Merge {
           include[1] = include[1].replace(/\//g, "#");
         }
       }
-      let pragma  = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
+      let pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
       if (include) {
         if (this.classesHandled === false) {
 // global classes are placed before the first INCLUDE
@@ -63,7 +59,7 @@ export default class Merge {
       }
     }
 
-    return output;
+    return output.replace(/\n\n\n/g, "\n");
   }
 
   private static processPragma(indent: string, pragma: string) {

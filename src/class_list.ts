@@ -46,7 +46,7 @@ export default class ClassList {
   }
 
   public getExceptions(): string {
-    return this.exceptions.reduce((a, c) => { return c.getDefinition() + "" + c.getImplementation() + "\n" + a; }, "");
+    return this.exceptions.reduce((a, c) => { return c.getDefinition() + "\n" + c.getImplementation() + "\n" + a; }, "");
   }
 
   public getImplementations(): string {
