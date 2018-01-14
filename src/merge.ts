@@ -16,20 +16,7 @@ export default class Merge {
   }
 
   private static analyzeClasses() {
-    this.classes = new ClassList();
-
-    for (let i = 0; i < this.files.length(); i++) {
-      let f = this.files.get(i);
-      if (f.getFilename().match(/\.clas\.abap$/)) {
-        f.markUsed();
-        this.classes.pushClass(f);
-      } else if (f.getFilename().match(/\.clas\.testclasses\.abap$/)) {
-        f.markUsed();
-      } else if (f.getFilename().match(/\.intf\.abap$/)) {
-        f.markUsed();
-        this.classes.pushInterface(f);
-      }
-    }
+    this.classes = new ClassList(this.files);
   }
 
   private static appendTimestamp(contents: string) {
