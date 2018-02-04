@@ -108,7 +108,7 @@ describe("test 9, @@abapmerge commands", () => {
     files.push(new File("js/script.js", "alert(\"Hello world!\");\n"));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(26);
+    expect(result.split("\n").length).to.equal(27);
   });
 });
 
@@ -138,6 +138,30 @@ describe("test 11, simple class", () => {
                "ENDCLASS."));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(20);
+    expect(result.split("\n").length).to.equal(21);
+  });
+});
+
+describe("test 12, @@abapmerge in class", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
+    files.push(new File("zinc1.abap", "write / 'foo'."));
+    files.push(new File("style.css", "body {\nbackground: red;\n}"));
+    files.push(
+      new File("zcl_class.clas.abap",
+               "CLASS zcl_class DEFINITION PUBLIC CREATE PUBLIC.\n" +
+               "  PUBLIC SECTION.\n" +
+               "    CLASS-METHODS: blah.\n" +
+               "ENDCLASS.\n" +
+               "CLASS zcl_class IMPLEMENTATION.\n" +
+               "  METHOD blah.\n" +
+               "* @@abapmerge include style.css > write '$$'.\n" +
+               "  ENDMETHOD.\n" +
+               "ENDCLASS."));
+
+    let result = Merge.merge(files, "zmain");
+    expect(result).to.be.a("string");
+    expect(result.indexOf("background")).to.be.above(0);
   });
 });

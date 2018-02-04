@@ -1,4 +1,5 @@
 import FileList from "./file_list";
+import Pragma from "./pragma";
 import ClassList from "./class_list";
 
 export default class Merge {
@@ -8,7 +9,7 @@ export default class Merge {
 
   public static merge(files: FileList, main: string): string {
     this.classesHandled = false;
-    this.files = files;
+    this.files = Pragma.handle(files);
     this.classes = new ClassList(this.files);
     let result = this.analyze(this.files.fileByName(main));
     this.files.checkFiles();
@@ -35,7 +36,7 @@ export default class Merge {
           include[1] = include[1].replace(/\//g, "#");
         }
       }
-      let pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
+//      let pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
       if (include) {
         if (this.classesHandled === false) {
 // global classes are placed before the first INCLUDE
@@ -46,7 +47,8 @@ export default class Merge {
           this.comment(include[1]) +
           this.analyze(this.files.fileByName(include[1])) +
           "\n";
-      } else if (pragma) {
+/*
+} else if (pragma) {
         let indent = (pragma[1] === "*") ? "" : pragma[2];
         let result = this.processPragma(indent, pragma[3]);
         if (result) {
@@ -54,60 +56,13 @@ export default class Merge {
         } else {
           output += line + "\n";
         }
+        */
       } else {
         output = output + line + "\n";
       }
     }
 
     return output.replace(/\n\n\n/g, "\n");
-  }
-
-  private static processPragma(indent: string, pragma: string) {
-
-    /* Pragmas has the following format
-     * @@abapmerge command params
-     * if written as " comment, then indentation before " is also used for output
-     * Currently supported pragmas:
-     * - include {filename} > {string wrapper}
-     *      {filename} - path to the file relative to script execution dir (argv[0])
-     *      {string wrapper} is a pattern where $$ is replaced by the include line
-     *      $$ is escaped - ' replaced to '' (to fit in abap string), use $$$ to avoid escaping
-     *      e.g. include somestyle.css > APPEND '$$' TO styletab.
-     */
-
-    let result = "";
-    let cmd    = pragma.match(/(\S+)\s+(.*)/);
-
-    switch (cmd[1].toLowerCase()) {
-      case "include":
-        let params = pragma.match(/(\S+)\s*>\s*(.*)/i);
-        if (!params) { break; }
-
-        let lines = this.files.otherByName(params[1])
-          .replace("\t", "  ")
-          .split("\n")
-          .map(i => i.replace("\r", ""));
-
-        if (lines.length > 0 && !lines[lines.length - 1]) {
-          lines.pop(); // remove empty string
-        }
-
-        const template = params[2];
-        result = this.comment(params[1]);
-        result += lines
-          .map(line => {
-            let render = template.replace("$$$", line); // unescaped
-            render = render.replace("$$", line.replace(/'/g, "''")); // escape ' -> ''
-            return indent + render;
-          })
-          .join("\n");
-
-        break;
-
-      default: break;
-    }
-
-    return result;
   }
 
   private static comment(name: string): string {
