@@ -158,3 +158,35 @@ describe("classes 7, sequenced by inheritance", () => {
     expect(classes.getDefinitions().split("\n")[0].indexOf("CLASS zcl_abapgit_syntax_highlighter")).to.equal(0);
   });
 });
+
+describe("classes 8, exceptions sequenced by inheritance", () => {
+  it("something", () => {
+    const file1 = new File(
+      "zcx_abapgit_2fa_unsupported.clas.abap",
+      "CLASS zcx_abapgit_2fa_unsupported DEFINITION\n" +
+      "  PUBLIC\n" +
+      "  INHERITING FROM ZCX_ABAPGIT_2FA_ERROR\n" +
+      "  FINAL\n" +
+      "  CREATE PUBLIC .\n" +
+      "ENDCLASS.\n" +
+      "CLASS zcx_abapgit_2fa_unsupported IMPLEMENTATION.\n" +
+      "ENDCLASS.");
+
+    const file2 = new File(
+      "zcx_abapgit_2fa_error.clas.abap",
+      "CLASS zcx_abapgit_2fa_error DEFINITION\n" +
+      "  INHERITING FROM CX_STATIC_CHECK\n" +
+      "  CREATE PUBLIC .\n" +
+      "ENDCLASS.\n" +
+      "CLASS zcx_abapgit_2fa_error IMPLEMENTATION.\n" +
+      "ENDCLASS.");
+
+    let files = [file1, file2];
+    let classes = new ClassList(new FileList(files));
+
+    expect(classes.getExceptions().split("\n")[0].indexOf("CLASS zcx_abapgit_2fa_error")).to.equal(0);
+
+    classes = new ClassList( new FileList(files.reverse()));
+    expect(classes.getExceptions().split("\n")[0].indexOf("CLASS zcx_abapgit_2fa_error")).to.equal(0);
+  });
+});

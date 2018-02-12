@@ -48,7 +48,20 @@ export default class ClassList {
   }
 
   public getExceptions(): string {
-    return this.exceptions.reduce((a, c) => { return c.getDefinition() + "\n" + c.getImplementation() + "\n" + a; }, "");
+    let g = new Graph<Class>();
+
+    this.exceptions.forEach((c) => {
+      g.addNode(c.getName(), c);
+      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
+    });
+
+    let result = "";
+    while (g.countNodes() > 0) {
+      let leaf = g.popLeaf();
+      result = result + leaf.getDefinition() + "\n" + leaf.getImplementation() + "\n";
+    }
+
+    return result;
   }
 
   public getImplementations(): string {
@@ -82,10 +95,11 @@ export default class ClassList {
     let name = f.getFilename().split(".")[0];
     let def = this.removePublic(name, match[1]);
 
-    let superMatch = def.match(/INHERITING FROM (\w+)/i);
+    let superMatch = def.match(/INHERITING FROM (Z\w+)/i);
+//    console.dir(superMatch);
     let dependencies = [];
     if (superMatch && superMatch[1]) {
-      dependencies.push(superMatch[1]);
+      dependencies.push(superMatch[1].toLowerCase());
     }
 
     let cls = new Class(name, def, match[3], dependencies);
