@@ -93,7 +93,7 @@ export default class ClassList {
       throw "error parsing class: " + f.getFilename();
     }
     let name = f.getFilename().split(".")[0];
-    let def = this.removePublic(name, match[1]);
+    let def = this.makeLocal(name, match[1]);
 
     let superMatch = def.match(/INHERITING FROM (Z\w+)/i);
 //    console.dir(superMatch);
@@ -120,8 +120,11 @@ export default class ClassList {
     this.interfaces.push(new Class(f.getFilename().split(".")[0], match[1] + match[2]));
   }
 
-  private removePublic(name: string, s: string): string {
-    let reg = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+PUBLIC", "i");
-    return s.replace(reg, "CLASS " + name + " DEFINITION");
+  private makeLocal(name: string, s: string): string {
+    let reg1 = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+PUBLIC", "i");
+    let ret = s.replace(reg1, "CLASS " + name + " DEFINITION");
+    let reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_ABAPGIT", "i");
+    ret = ret.replace(reg2, "FRIENDS ZCL_ABAPGIT");
+    return ret;
   }
 }

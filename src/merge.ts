@@ -36,7 +36,6 @@ export default class Merge {
           include[1] = include[1].replace(/\//g, "#");
         }
       }
-//      let pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
       if (include) {
         if (this.classesHandled === false) {
 // global classes are placed before the first INCLUDE
@@ -47,16 +46,6 @@ export default class Merge {
           this.comment(include[1]) +
           this.analyze(this.files.fileByName(include[1])) +
           "\n";
-/*
-} else if (pragma) {
-        let indent = (pragma[1] === "*") ? "" : pragma[2];
-        let result = this.processPragma(indent, pragma[3]);
-        if (result) {
-          output += result + "\n";
-        } else {
-          output += line + "\n";
-        }
-        */
       } else {
         output = output + line + "\n";
       }
