@@ -69,7 +69,20 @@ export default class ClassList {
   }
 
   public getInterfaces(): string {
-    return this.interfaces.reduce((a, c) => { return c.getDefinition() + a; }, "");
+    let g = new Graph<Class>();
+
+    this.interfaces.forEach((c) => {
+      g.addNode(c.getName(), c);
+      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
+    });
+
+    let result = "";
+    while (g.countNodes() > 0) {
+      let leaf = g.popLeaf();
+      result = result + leaf.getDefinition() + "\n";
+    }
+
+    return result;
   }
 
   private parseFiles(list: FileList) {
@@ -117,7 +130,14 @@ export default class ClassList {
     if (!match || !match[1] || !match[2]) {
       throw "error parsing interface: " + f.getFilename();
     }
-    this.interfaces.push(new Class(f.getFilename().split(".")[0], match[1] + match[2]));
+    let depMatch = f.getContents().match(/TYPE\sZIF_\w+/ig);
+    let dependencies = [];
+    if (depMatch) {
+      for (let dep of depMatch) {
+        dependencies.push(dep.substr(5).toLowerCase());
+      }
+    }
+    this.interfaces.push(new Class(f.getFilename().split(".")[0], match[1] + match[2], "", dependencies));
   }
 
   private makeLocal(name: string, s: string): string {

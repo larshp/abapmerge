@@ -123,7 +123,7 @@ describe("classes 6, interface", () => {
 
     let classes = new ClassList(files);
 
-    expect(classes.getInterfaces().split("\n").length).to.equal(3);
+    expect(classes.getInterfaces().split("\n").length).to.equal(4);
   });
 });
 
@@ -188,5 +188,29 @@ describe("classes 8, exceptions sequenced by inheritance", () => {
 
     classes = new ClassList( new FileList(files.reverse()));
     expect(classes.getExceptions().split("\n")[0].indexOf("CLASS zcx_abapgit_2fa_error")).to.equal(0);
+  });
+});
+
+describe("interfaces 1, dependencies", () => {
+  it("something", () => {
+    const file1 = new File(
+      "zif_intf1.intf.abap",
+      "INTERFACE zif_intf1 PUBLIC.\n" +
+      "ENDINTERFACE.");
+
+    const file2 = new File(
+      "zif_intf2.intf.abap",
+      "INTERFACE zif_intf2 PUBLIC.\n" +
+      "METHODS read RETURNING VALUE(rt_foo) TYPE zif_intf1=>ty_moo.\n" +
+      "METHODS blah RETURNING VALUE(rt_bar) TYPE zif_intf1=>ty_boo.\n" +
+      "ENDINTERFACE.");
+
+    let files = [file1, file2];
+    let classes = new ClassList(new FileList(files));
+
+    expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
+
+    classes = new ClassList( new FileList(files.reverse()));
+    expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
   });
 });
