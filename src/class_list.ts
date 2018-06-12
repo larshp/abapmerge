@@ -32,13 +32,12 @@ export default class ClassList {
     return interfaces + classes;
   }
 
-  public getDefinitions(): string {
-    let g = new Graph<Class>();
+  public getImplementations(): string {
+    return this.classes.reduce((a, c) => { return c.getImplementation() + "\n" + a; }, "");
+  }
 
-    this.classes.forEach((c) => {
-      g.addNode(c.getName(), c);
-      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
-    });
+  public getDefinitions(): string {
+    let g = this.buildDependenciesGraph(this.classes);
 
     let result = "";
     while (g.countNodes() > 0) {
@@ -50,12 +49,7 @@ export default class ClassList {
   }
 
   public getExceptions(): string {
-    let g = new Graph<Class>();
-
-    this.exceptions.forEach((c) => {
-      g.addNode(c.getName(), c);
-      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
-    });
+    let g = this.buildDependenciesGraph(this.exceptions);
 
     let result = "";
     while (g.countNodes() > 0) {
@@ -66,17 +60,8 @@ export default class ClassList {
     return result;
   }
 
-  public getImplementations(): string {
-    return this.classes.reduce((a, c) => { return c.getImplementation() + "\n" + a; }, "");
-  }
-
   public getInterfaces(): string {
-    let g = new Graph<Class>();
-
-    this.interfaces.forEach((c) => {
-      g.addNode(c.getName(), c);
-      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
-    });
+    let g = this.buildDependenciesGraph(this.interfaces);
 
     let result = "";
     while (g.countNodes() > 0) {
@@ -85,6 +70,17 @@ export default class ClassList {
     }
 
     return result;
+  }
+
+  private buildDependenciesGraph(list: Class[]): Graph<Class> {
+    let g = new Graph<Class>();
+
+    list.forEach((c) => {
+      g.addNode(c.getName(), c);
+      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
+    });
+
+    return g;
   }
 
   private parseFiles(list: FileList) {
