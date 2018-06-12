@@ -214,3 +214,18 @@ describe("interfaces 1, dependencies", () => {
     expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
   });
 });
+
+describe("interfaces 2, reference to self", () => {
+  it("something", () => {
+    const file1 = new File(
+      "zif_intf1.intf.abap",
+      "INTERFACE zif_intf1 PUBLIC.\n" +
+      "METHODS read RETURNING VALUE(rt_foo) TYPE zif_intf1=>ty_moo.\n" +
+      "ENDINTERFACE.");
+
+    let files = [file1];
+    let classes = new ClassList(new FileList(files));
+
+    expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
+  });
+});
