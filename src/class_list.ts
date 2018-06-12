@@ -2,6 +2,8 @@ import File from "./file";
 import FileList from "./file_list";
 import Class from "./class";
 import Graph from "./graph";
+import InterfaceParser from "./interface_parser";
+import ClassParser from "./class_parser";
 
 export default class ClassList {
   private interfaces: Class[];
@@ -69,7 +71,20 @@ export default class ClassList {
   }
 
   public getInterfaces(): string {
-    return this.interfaces.reduce((a, c) => { return c.getDefinition() + a; }, "");
+    let g = new Graph<Class>();
+
+    this.interfaces.forEach((c) => {
+      g.addNode(c.getName(), c);
+      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
+    });
+
+    let result = "";
+    while (g.countNodes() > 0) {
+      let leaf = g.popLeaf();
+      result = result + leaf.getDefinition() + "\n";
+    }
+
+    return result;
   }
 
   private parseFiles(list: FileList) {
@@ -88,23 +103,9 @@ export default class ClassList {
   }
 
   private pushClass(f: File): void {
-    let match = f.getContents().match(/^(([\s\S])*ENDCLASS\.)\s*(CLASS(.|\s)*)$/i);
-    if (!match || !match[1] || !match[2] || !match[3]) {
-      throw "error parsing class: " + f.getFilename();
-    }
-    let name = f.getFilename().split(".")[0];
-    let def = this.makeLocal(name, match[1]);
+    let cls = ClassParser.parse(f);
 
-    let superMatch = def.match(/INHERITING FROM (Z\w+)/i);
-//    console.dir(superMatch);
-    let dependencies = [];
-    if (superMatch && superMatch[1]) {
-      dependencies.push(superMatch[1].toLowerCase());
-    }
-
-    let cls = new Class(name, def, match[3], dependencies);
-
-    if (name.match(/^.?CX_/i)) {
+    if (cls.getName().match(/^.?CX_/i)) {
 // the DEFINITION DEFERRED does not work very well for exception classes
       this.exceptions.push(cls);
     } else {
@@ -113,18 +114,6 @@ export default class ClassList {
   }
 
   private pushInterface(f: File): void {
-    let match = f.getContents().match(/^([\s\S]+) PUBLIC([\s\S]+)$/i);
-    if (!match || !match[1] || !match[2]) {
-      throw "error parsing interface: " + f.getFilename();
-    }
-    this.interfaces.push(new Class(f.getFilename().split(".")[0], match[1] + match[2]));
-  }
-
-  private makeLocal(name: string, s: string): string {
-    let reg1 = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+PUBLIC", "i");
-    let ret = s.replace(reg1, "CLASS " + name + " DEFINITION");
-    let reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_ABAPGIT", "i");
-    ret = ret.replace(reg2, "FRIENDS ZCL_ABAPGIT");
-    return ret;
+    this.interfaces.push(InterfaceParser.parse(f));
   }
 }
