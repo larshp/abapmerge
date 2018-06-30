@@ -135,10 +135,10 @@ describe("test 11, simple class", () => {
                "CLASS zcl_class IMPLEMENTATION.\n" +
                "  METHOD blah.\n" +
                "  ENDMETHOD.\n" +
-               "ENDCLASS."));
+               "ENDCLASS.\n"));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(21);
+    expect(result.split("\n").length).to.equal(20);
   });
 });
 
@@ -172,5 +172,121 @@ describe("test 13, skip function groups", () => {
     files.push(new File("zmain.abap", "REPORT zmain."));
     files.push(new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."));
     expect(Merge.merge(files, "zmain")).to.be.a("string");
+  });
+});
+
+describe("test 14, include classes event without INCLUDE", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain13.prog.abap", "REPORT zmain13.\n" +
+                                             "\n" +
+                                             "write: 'Hello, world!'.\n"));
+    files.push(new File("zcl_main.clas.abap", "class zcl_main defintion.\n" +
+                                              "endclass.\n" +
+                                              "class zcl_main implementation.\n" +
+                                              "endclass.\n"));
+
+    const exp = "REPORT zmain13.\n" +
+      "\n" +
+      "CLASS zcl_main DEFINITION DEFERRED.\n" +
+      "class zcl_main defintion.\n" +
+      "endclass.\n" +
+      "class zcl_main implementation.\n" +
+      "endclass.\n" +
+      "write: 'Hello, world!'.\n" +
+      "****************************************************\n";
+
+    let result = Merge.merge(files, "zmain13");
+
+    expect(result.substr(0, exp.length)).to.equal(exp);
+  });
+});
+
+describe("test 15, included classes are placed after whitespace and comments", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain13.prog.abap", "REPORT zmain13.\n" +
+                                             "* Comment asterisk\n" +
+                                             "write: 'Hello, world!'.\n"));
+
+    files.push(new File("zcl_main.clas.abap", "class zcl_main defintion.\n" +
+                                              "endclass.\n" +
+                                              "class zcl_main implementation.\n" +
+                                              "endclass.\n"));
+
+    const exp = "REPORT zmain13.\n" +
+      "* Comment asterisk\n" +
+      "CLASS zcl_main DEFINITION DEFERRED.\n" +
+      "class zcl_main defintion.\n" +
+      "endclass.\n" +
+      "class zcl_main implementation.\n" +
+      "endclass.\n" +
+      "write: 'Hello, world!'.\n" +
+      "****************************************************\n";
+
+    let result = Merge.merge(files, "zmain13");
+
+    expect(result.substr(0, exp.length)).to.equal(exp);
+  });
+});
+
+describe("test 16, REPORT with LINE-SIZE", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain14.prog.abap", "REPORT zmain14 LINE-SIZE 100.\n" +
+                                           "\n" +
+                                           "write: 'Hello, world!'.\n"));
+    files.push(new File("zcl_main.clas.abap", "class zcl_main defintion.\n" +
+                                              "endclass.\n" +
+                                              "class zcl_main implementation.\n" +
+                                              "endclass.\n"));
+
+    const exp = "REPORT zmain14 LINE-SIZE 100.\n" +
+      "\n" +
+      "CLASS zcl_main DEFINITION DEFERRED.\n" +
+      "class zcl_main defintion.\n" +
+      "endclass.\n" +
+      "class zcl_main implementation.\n" +
+      "endclass.\n" +
+      "write: 'Hello, world!'.\n" +
+      "****************************************************\n";
+
+    let result = Merge.merge(files, "zmain14");
+
+    expect(result.substr(0, exp.length)).to.equal(exp);
+  });
+});
+
+describe("test 17, included classes are placed after whitespace and comments", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain17.prog.abap", "REPORT zmain17 LINE-SIZE 100.\n" +
+                                             "\n" +
+                                             "* Comment asterisk\n" +
+                                             "* Epic success!\n" +
+                                             "\n" +
+                                             "write: 'Hello, world!'.\n"));
+
+    files.push(new File("zcl_main.clas.abap", "class zcl_main defintion.\n" +
+                                              "endclass.\n" +
+                                              "class zcl_main implementation.\n" +
+                                              "endclass.\n"));
+
+    const exp = "REPORT zmain17 LINE-SIZE 100.\n" +
+      "\n" +
+      "* Comment asterisk\n" +
+      "* Epic success!\n" +
+      "\n" +
+      "CLASS zcl_main DEFINITION DEFERRED.\n" +
+      "class zcl_main defintion.\n" +
+      "endclass.\n" +
+      "class zcl_main implementation.\n" +
+      "endclass.\n" +
+      "write: 'Hello, world!'.\n" +
+      "****************************************************\n";
+
+    let result = Merge.merge(files, "zmain17");
+
+    expect(result.substr(0, exp.length)).to.equal(exp);
   });
 });

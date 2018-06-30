@@ -5,16 +5,14 @@ import ClassList from "./class_list";
 export default class Merge {
   private static files: FileList;
   private static classes: ClassList;
-  private static classesHandled: boolean;
 
   public static merge(files: FileList, main: string): string {
-    this.classesHandled = false;
     this.files = files;
 
     this.files = this.skipFUGR(this.files);
     this.files = Pragma.handle(this.files);
     this.classes = new ClassList(this.files);
-    let result = this.analyze(this.files.fileByName(main));
+    let result = this.analyze(main, this.files.fileByName(main));
     this.files.checkFiles();
     return this.appendTimestamp(result);
   }
@@ -40,11 +38,37 @@ export default class Merge {
       "****************************************************\n";
   }
 
-  private static analyze(contents: string) {
+  private static analyze(main: string, contents: string) {
     let output = "";
     let lines = contents.split("\n").map(i => i.replace("\r", ""));
 
-    for (let line of lines) {
+    let lineNo = 0;
+    if (main !== null) {
+      while (lineNo < lines.length) {
+        let line = lines[lineNo++];
+        output += line + "\n";
+
+        let report = line.match(/^\s*REPORT\s+(\w+)(\s+[^.*]*\.|\s*\.)$/im);
+        if (report && (report[1].toLowerCase() === main.toLowerCase())) {
+          break;
+        }
+      }
+
+      while (lineNo < lines.length) {
+        let line = lines[lineNo];
+
+        if (!line.match(/^((\*.*)|(\s*))$/im)) {
+          output += this.classes.getResult();
+          break;
+        }
+
+        output += line + "\n";
+        ++lineNo;
+      }
+    }
+
+    for ( ; lineNo < lines.length; ++lineNo) {
+      let line = lines[lineNo];
       let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
       if (!include) {
 // try namespaced
@@ -54,14 +78,9 @@ export default class Merge {
         }
       }
       if (include) {
-        if (this.classesHandled === false) {
-// global classes are placed before the first INCLUDE
-          output = output + this.classes.getResult();
-          this.classesHandled = true;
-        }
         output = output +
           this.comment(include[1]) +
-          this.analyze(this.files.fileByName(include[1])) +
+          this.analyze(null, this.files.fileByName(include[1])) +
           "\n";
       } else {
         output = output + line + "\n";
