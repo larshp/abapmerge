@@ -3,7 +3,7 @@ import FileList from "./file_list";
 import Class from "./class";
 import Graph from "./graph";
 import InterfaceParser from "./interface_parser";
-import ClassParser from "./class_parser";
+import { ClassParser } from "./class_parser";
 
 export default class ClassList {
   private interfaces: Class[];
@@ -88,7 +88,7 @@ export default class ClassList {
       let f = list.get(i);
       if (f.getFilename().match(/\.clas\.abap$/)) {
         f.markUsed();
-        this.pushClass(f);
+        this.pushClass(f, list);
       } else if (f.getFilename().match(/\.clas\.testclasses\.abap$/)) {
         f.markUsed();
       } else if (f.getFilename().match(/\.intf\.abap$/)) {
@@ -98,9 +98,8 @@ export default class ClassList {
     }
   }
 
-  private pushClass(f: File): void {
-    let cls = ClassParser.parse(f);
-
+  private pushClass(f: File, list: FileList): void {
+    let cls = ClassParser.parse(f, list);
     if (cls.getName().match(/^.?CX_/i)) {
 // the DEFINITION DEFERRED does not work very well for exception classes
       this.exceptions.push(cls);
