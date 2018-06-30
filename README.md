@@ -15,6 +15,23 @@ Test online: http://larshp.github.io/abapmerge/
 
 * `npm test`
 
+### How it works
+
+abapmerge takes a path to the main report and analyzes its code and all files
+stored in the same directory and all sub-directories.
+
+The resulting code consists of the code of all found ABAP classes and
+interfaces, regardless of their production use in any part of the resulting
+report, and contents of ABAP includes found in the main report or the included
+reports.
+
+abapmerge expects that the whole directory structure should result into a
+single executable program and, hence, if it finds an ABAP report that is not
+directly or indirectly included in the main report, abapmerge terminates its
+processing without issuing the input.
+
+abapmerge requires file naming schema compatible with the schema used by [abapGit](https://github.com/larshp/abapgit/).
+
 ### Additional features
 
 Abapmerge supports pragmas that can be written inside an abap comment. If written as " comment, then indentation before " is also used for output.
