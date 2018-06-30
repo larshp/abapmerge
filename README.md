@@ -43,6 +43,10 @@ Currently supported pragmas:
   - {filename} - path to the file relative to script execution dir (argv[0])
   - {string wrapper} is a pattern where `$$` is replaced by the include line
   - `$$` is escaped - ' replaced to '' (to fit in abap string), use `$$$` to skip escaping
+- **main** void
+  - must be included at the very first line of a ABAP program that should be
+    treated as a standalone main report and abamerge should not die with an error
+    if the program is never included.
 
 Example
 

@@ -290,3 +290,27 @@ describe("test 17, included classes are placed after whitespace and comments", (
     expect(result.substr(0, exp.length)).to.equal(exp);
   });
 });
+
+describe("test 18, @@abapmerge w/ main no failure", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
+    files.push(new File("zmain2.prog.abap", "\" @@abapmerge main void\n" +
+                                            "REPORT zmain2.\n\nINCLUDE zinc1."));
+    files.push(new File("zinc1.abap", "write / 'foo'."));
+
+    let result = Merge.merge(files, "zmain");
+    expect(result).to.be.a("string");
+  });
+});
+
+describe("test 19, @@abapmerge w/o main causes failure", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
+    files.push(new File("zmain2.prog.abap", "REPORT zmain2.\n\nINCLUDE zinc1."));
+    files.push(new File("zinc1.abap", "write / 'foo'."));
+
+    expect(Merge.merge.bind(Merge, files, "zmain")).to.throw("Not all files used: [zmain2.prog.abap]");
+  });
+});

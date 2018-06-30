@@ -34,4 +34,16 @@ export default class File {
   public isABAP() {
     return this.filename.match(/.abap$/) !== null;
   }
+
+  public isPROG(): boolean {
+    return this.filename.match(/prog.abap$/) !== null;
+  }
+
+  public isMain(): boolean {
+    if (!this.isPROG()) {
+      return false;
+    }
+
+    return !!this.contents.match(/^(\*|\s*")\s*@@abapmerge\s+main\s+void/i);
+  }
 }
