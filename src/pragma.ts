@@ -22,7 +22,7 @@ export default class Pragma {
         if (pragma) {
           let indent = (pragma[1] === "*") ? "" : pragma[2];
           let presult = this.processPragma(indent, pragma[3]);
-          if (result) {
+          if (presult) {
             output += presult + "\n";
           } else {
             output += line + "\n";
