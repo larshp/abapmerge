@@ -9,11 +9,28 @@ export default class Merge {
 
   public static merge(files: FileList, main: string): string {
     this.classesHandled = false;
-    this.files = Pragma.handle(files);
+    this.files = files;
+
+    this.files = this.skipFUGR(this.files);
+    this.files = Pragma.handle(this.files);
     this.classes = new ClassList(this.files);
     let result = this.analyze(this.files.fileByName(main));
     this.files.checkFiles();
     return this.appendTimestamp(result);
+  }
+
+  private static skipFUGR(files: FileList): FileList {
+    let result = new FileList();
+
+    for (let i = 0; i < files.length(); i++) {
+      let file = files.get(i);
+      if (file.getFilename().match(/\.fugr\./) ) {
+        continue;
+      }
+      result.push(file);
+    }
+
+    return result;
   }
 
   private static appendTimestamp(contents: string) {

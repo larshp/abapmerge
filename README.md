@@ -5,7 +5,7 @@
 
 # abapmerge
 
-Merge ABAP INCLUDEs into single file
+Merge ABAP INCLUDEs into single file. Function groups are skipped
 
 Test online: http://larshp.github.io/abapmerge/
 
