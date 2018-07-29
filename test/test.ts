@@ -165,3 +165,12 @@ describe("test 12, @@abapmerge in class", () => {
     expect(result.indexOf("background")).to.be.above(0);
   });
 });
+
+describe("test 13, skip function groups", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain."));
+    files.push(new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."));
+    expect(Merge.merge(files, "zmain")).to.be.a("string");
+  });
+});
