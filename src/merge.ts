@@ -14,7 +14,7 @@ export default class Merge {
     this.classes = new ClassList(this.files);
     let result = this.analyze(main, this.files.fileByName(main));
     this.files.checkFiles();
-    return this.appendTimestamp(result);
+    return this.appendFooter(result);
   }
 
   private static skipFUGR(files: FileList): FileList {
@@ -31,10 +31,10 @@ export default class Merge {
     return result;
   }
 
-  private static appendTimestamp(contents: string) {
+  private static appendFooter(contents: string) {
     return contents +
       "****************************************************\n" +
-      "* abapmerge - " + new Date().toJSON() + "\n" +
+      "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
       "****************************************************\n";
   }
 

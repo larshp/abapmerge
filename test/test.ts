@@ -314,3 +314,14 @@ describe("test 19, @@abapmerge w/o main causes failure", () => {
     expect(Merge.merge.bind(Merge, files, "zmain")).to.throw("Not all files used: [zmain2.prog.abap]");
   });
 });
+
+describe("test 20, include abapmerge version number in footer", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
+    files.push(new File("zinc1.abap", "write / 'foo'."));
+
+    let result = Merge.merge(files, "zmain");
+    expect(result).to.match(/\* abapmerge (?:(\d+\.[.\d]*\d+))/);
+  });
+});
