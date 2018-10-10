@@ -51,7 +51,7 @@ function setupReader(file) {
   let reader = new FileReader();
 
   reader.onload = function() {
-    files.push(new File(fname(name), reader.result));
+    files.push(new File(fname(name), reader.result as string));
     redraw();
   };
 
