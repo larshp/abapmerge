@@ -325,3 +325,18 @@ describe("test 20, include abapmerge version number in footer", () => {
     expect(result).to.match(/\* abapmerge (?:(\d+\.[.\d]*\d+))/);
   });
 });
+
+describe("test 21, interface defintion should not cross 2 lines", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain.\nINCLUDE zinc1."));
+    files.push(new File("zinc1.abap", "write / 'foo'."));
+    files.push(new File("zif_foo.intf.abap", "INTERFACE zif_foo\n    PUBLIC.\nENDINTERFACE."));
+    const result = Merge.merge(files, "zmain");
+    const split = result.split("\n");
+    expect(result).to.be.a("string");
+    expect(split.indexOf("REPORT zmain.")).to.equal(0);
+    expect(split.indexOf("INTERFACE zif_foo DEFERRED.")).to.equal(1);
+    expect(split.indexOf("INTERFACE zif_foo.")).to.equal(2);
+  });
+});
