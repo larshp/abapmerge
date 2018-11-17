@@ -340,3 +340,18 @@ describe("test 21, interface defintion should not cross 2 lines", () => {
     expect(split.indexOf("INTERFACE zif_foo.")).to.equal(2);
   });
 });
+
+describe("test 22, interface with comment", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain.\nINCLUDE zinc1."));
+    files.push(new File("zinc1.abap", "write / 'foo'."));
+    files.push(new File("zif_foo.intf.abap", "* some comment\nINTERFACE zif_foo\n    PUBLIC.\nENDINTERFACE."));
+    const result = Merge.merge(files, "zmain");
+    const split = result.split("\n");
+    expect(result).to.be.a("string");
+    expect(split.indexOf("REPORT zmain.")).to.equal(0);
+    expect(split.indexOf("INTERFACE zif_foo DEFERRED.")).to.equal(1);
+    expect(split.indexOf("INTERFACE zif_foo.")).to.equal(2);
+  });
+});

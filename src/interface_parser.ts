@@ -6,7 +6,7 @@ export default class InterfaceParser {
   public static parse(f: File): Class {
 
     let self = f.getFilename().split(".")[0];
-    let match = f.getContents().match(/^\s*(INTERFACE\s+\S+)\s+PUBLIC([\s\S]+)$/i);
+    let match = f.getContents().match(/^[\s\S]*(INTERFACE\s+\S+)\s+PUBLIC([\s\S]+)$/i);
     if (!match || !match[1] || !match[2]) {
       throw "error parsing interface: " + f.getFilename();
     }
