@@ -171,7 +171,16 @@ describe("test 13, skip function groups", () => {
     let files = new FileList();
     files.push(new File("zmain.abap", "REPORT zmain."));
     files.push(new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."));
-    expect(Merge.merge(files, "zmain")).to.be.a("string");
+    expect(Merge.merge(files, "zmain", {skipFUGR: true})).to.be.a("string");
+  });
+});
+
+describe("test 13b, skip function groups, error", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain."));
+    files.push(new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."));
+    expect(() => { Merge.merge(files, "zmain"); }).to.throw();
   });
 });
 

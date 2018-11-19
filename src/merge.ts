@@ -6,10 +6,12 @@ export default class Merge {
   private static files: FileList;
   private static classes: ClassList;
 
-  public static merge(files: FileList, main: string): string {
+  public static merge(files: FileList, main: string, options?: {skipFUGR: boolean}): string {
     this.files = files;
 
-    this.files = this.skipFUGR(this.files);
+    if (options && options.skipFUGR) {
+      this.files = this.skipFUGR(this.files);
+    }
     this.files = Pragma.handle(this.files);
     this.classes = new ClassList(this.files);
     let result = this.analyze(main, this.files.fileByName(main));

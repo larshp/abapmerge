@@ -23,18 +23,44 @@ class Logic {
 
     return out;
   }
+
+  public static parseArgs(): {main: string, dir: string, skipFUGR: boolean} {
+    let arg = process.argv.slice(2);
+    let skipFUGR = false;
+
+    console.dir(arg);
+
+    if (arg.length === 0) {
+      throw new Error("Supply filename\n");
+    }
+
+    let index = arg.indexOf("-f");
+    if (index >= 0) {
+      skipFUGR = true;
+      arg.splice(index, 1);
+    }
+
+    if (!fs.existsSync(arg[0])) {
+      throw new Error("File " + path + " does not exist\n");
+    }
+
+    let dir = path.dirname(arg[0]);
+    let main = path.basename(arg[0]);
+
+    return {main, dir, skipFUGR};
+  }
+
+  public static run() {
+    let output = "";
+    try {
+      let parsed = Logic.parseArgs();
+      output = Merge.merge(Logic.readFiles(parsed.dir), parsed.main.split(".")[0]);
+    } catch (e) {
+      output = e.message;
+    }
+    process.stdout.write(output);
+  }
+
 }
 
-let arg = process.argv.slice(2);
-let output = "";
-
-if (arg.length === 0) {
-  output = "Supply filename\n";
-} else {
-  let dir = path.dirname(arg[0]);
-  let main = path.basename(arg[0]);
-
-  output = Merge.merge(Logic.readFiles(dir), main.split(".")[0]);
-}
-
-process.stdout.write(output);
+Logic.run();
