@@ -7,6 +7,7 @@
   },
   "main": "build/merge.js",
   "scripts": {
+    "build": "tsc --pretty",
     "pretest": "tsc --pretty && mocha --recursive --reporter progress build/test",
     "test": "tslint ./src/*.ts ./test/*.ts",
     "posttest": "browserify build/src/web.js -o web/bundle.js"
