@@ -36,7 +36,7 @@ export default class FileList {
       }
     }
 
-    throw "file not found: " + name;
+    throw Error(`file not found: ${name}`);
   }
 
   public otherByName(name: string): string {
@@ -47,7 +47,7 @@ export default class FileList {
       }
     }
 
-    throw "file not found: " + name;
+    throw Error(`file not found: ${name}`);
   }
 
   public checkFiles(): void {
@@ -57,7 +57,7 @@ export default class FileList {
       .join(", ");
 
     if (unusedFiles) {
-      throw "Not all files used: [" + unusedFiles + "]";
+      throw Error(`Not all files used: [${unusedFiles}]`);
     }
   }
 
