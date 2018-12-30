@@ -37,6 +37,8 @@ export default class Merge {
     return contents +
       "****************************************************\n" +
       "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
+      "INTERFACE lif_abapmerge_marker.\n" +
+      "ENDINTERFACE.\n" +
       "****************************************************\n";
   }
 
