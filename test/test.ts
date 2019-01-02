@@ -108,7 +108,7 @@ describe("test 9, @@abapmerge commands", () => {
     files.push(new File("js/script.js", "alert(\"Hello world!\");\n"));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(27);
+    expect(result.split("\n").length).to.equal(29);
   });
 });
 
@@ -138,7 +138,7 @@ describe("test 11, simple class", () => {
                "ENDCLASS.\n"));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(20);
+    expect(result.split("\n").length).to.equal(22);
   });
 });
 
