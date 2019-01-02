@@ -28,7 +28,7 @@ class Logic {
     let arg = process.argv.slice(2);
     let skipFUGR = false;
 
-    console.dir(arg);
+//    console.dir(arg);
 
     if (arg.length === 0) {
       throw new Error("Supply filename\n");
@@ -54,10 +54,11 @@ class Logic {
     let output = "";
     try {
       let parsed = Logic.parseArgs();
-      output = Merge.merge(Logic.readFiles(parsed.dir), parsed.main.split(".")[0]);
+      output = Merge.merge(Logic.readFiles(parsed.dir), parsed.main.split(".")[0], {skipFUGR: parsed.skipFUGR});
     } catch (e) {
-      output = e.message;
+      output = e.message ? e.message : e;
     }
+    if (output === undefined) { throw new Error("output undefined, hmm?"); }
     process.stdout.write(output);
   }
 
