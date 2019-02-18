@@ -30,7 +30,7 @@
     "@types/node": "^11.9.0",
     "browserify": "^16.2.1",
     "chai": "^4.1.2",
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.0",
     "tslint": "^5.11.0",
     "typescript": "^3.1.1"
   }
