@@ -14,7 +14,7 @@ export default class Merge {
     }
     this.files = PragmaProcessor.process(this.files);
     this.classes = new ClassList(this.files);
-    let result = this.analyze(main, this.files.fileByName(main));
+    let result = this.analyze(main, this.files.fileByName(main).getContents());
     this.files.checkFiles();
     return result;
   }
@@ -85,7 +85,7 @@ export default class Merge {
       if (include) {
         output = output +
           this.comment(include[1]) +
-          this.analyze(null, this.files.fileByName(include[1])) +
+          this.analyze(null, this.files.fileByName(include[1]).getContents()) +
           "\n";
       } else {
         output += line + "\n";

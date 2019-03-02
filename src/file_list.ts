@@ -28,11 +28,11 @@ export default class FileList implements Iterable<File> {
     return this.files[i];
   }
 
-  public fileByName(name: string): string {
+  public fileByName(name: string): File {
     for (let f of this.files) {
       if (f.getName().toLowerCase() === name.toLowerCase() && f.isABAP()) {
         f.markUsed();
-        return f.getContents();
+        return f;
       }
     }
 
