@@ -11,13 +11,13 @@ class Logic {
     let out: FileList = new FileList();
 
     for (let file of files) {
-      let full = dir + "/" + file;
+      let filepath = path.join(dir, file);
 
-      if (fs.lstatSync(full).isFile()) {
-        let contents = fs.readFileSync(full, "utf8");
+      if (fs.lstatSync(filepath).isFile()) {
+        let contents = fs.readFileSync(filepath, "utf8");
         out.push(new File(file, contents));
       } else {
-        out = out.concat(this.readFiles(full, pre + file + "/"));
+        out = out.concat(this.readFiles(filepath, path.join(pre, file)));
       }
     }
 
@@ -28,10 +28,8 @@ class Logic {
     let arg = process.argv.slice(2);
     let skipFUGR = false;
 
-//    console.dir(arg);
-
     if (arg.length === 0) {
-      throw new Error("Supply filename\n");
+      throw new Error("Supply filename");
     }
 
     let index = arg.indexOf("-f");
@@ -41,7 +39,7 @@ class Logic {
     }
 
     if (!fs.existsSync(arg[0])) {
-      throw new Error("File " + path + " does not exist\n");
+      throw new Error(`File ${path} does not exist`);
     }
 
     let dir = path.dirname(arg[0]);
@@ -53,8 +51,9 @@ class Logic {
   public static run() {
     let output = "";
     try {
-      let parsed = Logic.parseArgs();
-      output = Merge.merge(Logic.readFiles(parsed.dir), parsed.main.split(".")[0], {skipFUGR: parsed.skipFUGR});
+      const parsedArgs = Logic.parseArgs();
+      const entryPoint = parsedArgs.main.split(".")[0];
+      output = Merge.merge(Logic.readFiles(parsedArgs.dir), entryPoint, {skipFUGR: parsedArgs.skipFUGR});
     } catch (e) {
       output = e.message ? e.message : e;
     }
