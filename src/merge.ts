@@ -16,7 +16,17 @@ export default class Merge {
     this.classes = new ClassList(this.files);
     let result = this.analyze(main, this.files.fileByName(main));
     this.files.checkFiles();
-    return this.appendFooter(result);
+    return result;
+  }
+
+  public static appendFooter(contents: string) {
+    return contents +
+      "****************************************************\n" +
+      "INTERFACE lif_abapmerge_marker.\n" +
+      "ENDINTERFACE.\n" +
+      "****************************************************\n" +
+      "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
+      "****************************************************\n";
   }
 
   private static skipFUGR(files: FileList): FileList {
@@ -33,19 +43,9 @@ export default class Merge {
     return result;
   }
 
-  private static appendFooter(contents: string) {
-    return contents +
-      "****************************************************\n" +
-      "INTERFACE lif_abapmerge_marker.\n" +
-      "ENDINTERFACE.\n" +
-      "****************************************************\n" +
-      "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
-      "****************************************************\n";
-  }
-
   private static analyze(main: string, contents: string) {
     let output = "";
-    let lines = contents.split("\n").map(i => i.replace("\r", ""));
+    let lines = contents.split("\n");
 
     let lineNo = 0;
     if (main !== null) {
@@ -76,7 +76,7 @@ export default class Merge {
       let line = lines[lineNo];
       let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
       if (!include) {
-// try namespaced
+        // try namespaced
         include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
         if (include) {
           include[1] = include[1].replace(/\//g, "#");
@@ -88,11 +88,11 @@ export default class Merge {
           this.analyze(null, this.files.fileByName(include[1])) +
           "\n";
       } else {
-        output = output + line + "\n";
+        output += line + "\n";
       }
     }
 
-    return output.replace(/\n\n\n/g, "\n");
+    return output.replace(/\n{3}|\n{2}$/g, "\n");
   }
 
   private static comment(name: string): string {

@@ -5,23 +5,31 @@ import FileList from "./file_list";
 import Merge from "./merge";
 
 class Logic {
+  private static textFiles = new Set([".abap", ".xml", ".css", ".js"]);
 
   public static readFiles(dir: string, pre = ""): FileList {
     let files = fs.readdirSync(dir);
-    let out: FileList = new FileList();
+    let list: FileList = new FileList();
 
     for (let file of files) {
       let filepath = path.join(dir, file);
 
       if (fs.lstatSync(filepath).isFile()) {
-        let contents = fs.readFileSync(filepath, "utf8");
-        out.push(new File(file, contents));
+        if (Logic.textFiles.has(path.extname(filepath).toLowerCase())) {
+          let contents = fs.readFileSync(filepath, "utf8")
+            .replace(/\t/g, "  ") // remove tabs
+            .replace(/\r/g, "");  // unify EOL
+          list.push(new File(file, contents));
+        } else {
+          let buffer = fs.readFileSync(filepath);
+          list.push(new File(file, buffer));
+        }
       } else {
-        out = out.concat(this.readFiles(filepath, path.join(pre, file)));
+        list = list.concat(this.readFiles(filepath, path.join(pre, file)));
       }
     }
 
-    return out;
+    return list;
   }
 
   public static parseArgs(): {main: string, dir: string, skipFUGR: boolean} {
@@ -54,6 +62,7 @@ class Logic {
       const parsedArgs = Logic.parseArgs();
       const entryPoint = parsedArgs.main.split(".")[0];
       output = Merge.merge(Logic.readFiles(parsedArgs.dir), entryPoint, {skipFUGR: parsedArgs.skipFUGR});
+      output = Merge.appendFooter(output);
     } catch (e) {
       output = e.message ? e.message : e;
     }
