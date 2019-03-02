@@ -39,11 +39,11 @@ export default class FileList implements Iterable<File> {
     throw Error(`file not found: ${name}`);
   }
 
-  public otherByName(name: string): string {
+  public otherByName(name: string): File {
     for (let f of this.files) {
       if (f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP()) {
         f.markUsed();
-        return f.getContents();
+        return f;
       }
     }
 

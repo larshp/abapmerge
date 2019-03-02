@@ -89,6 +89,9 @@ export default class PragmaProcessor {
       case "include":
         result.push(...this.pragmaInclude(indent, commandParams));
         break;
+      case "include-base64":
+        result.push(...this.pragmaIncludeBase64(indent, commandParams));
+        break;
 
       default: break;
     }
@@ -101,13 +104,13 @@ export default class PragmaProcessor {
     if (!params) return [];
     const filename = params[1];
     const template = params[2];
-    const result = [];
 
-    const lines = this.files.otherByName(filename).split("\n");
+    const lines = this.files.otherByName(filename).getContents().split("\n");
     if (lines.length > 0 && !lines[lines.length - 1]) {
       lines.pop(); // remove empty string
     }
 
+    const result = [];
     result.push(...this.comment(filename));
     result.push(...lines.map(line => {
       let render = template.replace("$$$", line); // unescaped
@@ -117,4 +120,23 @@ export default class PragmaProcessor {
 
     return result;
   }
+
+  private pragmaIncludeBase64(indent: string, includeParams: string): string[] {
+    const params = includeParams.match(/(\S+)\s*>\s*(.*)/i);
+    if (!params) return [];
+    const filename = params[1];
+    const template = params[2];
+
+    const lines = this.files.otherByName(filename)
+      .getBlob()
+      .toString("base64")
+      .match(/.{1,60}/g);
+    if (lines.length === 0) return [];
+
+    return [
+      ...this.comment(filename),
+      ...lines.map(line => indent + template.replace(/\${2,3}/, line)),
+    ];
+  }
+
 }
