@@ -1,6 +1,6 @@
 import File from "./file";
 
-export default class FileList {
+export default class FileList implements Iterable<File> {
   private files: File[];
 
   public constructor(files?: File[]) {
@@ -61,4 +61,7 @@ export default class FileList {
     }
   }
 
+  public [Symbol.iterator](): IterableIterator<File> {
+    return this.files[Symbol.iterator]();
+  }
 }
