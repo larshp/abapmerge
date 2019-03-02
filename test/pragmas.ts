@@ -1,4 +1,4 @@
-// import { expect } from "chai";
+import { expect } from "chai";
 import PragmaProcessor from "../src/pragma";
 import File from "../src/file";
 import FileList from "../src/file_list";
@@ -24,7 +24,18 @@ describe("Pragma include", () => {
       ],
     });
 
-    const output = PragmaProcessor.process(files);
-    console.log(output);
+    const newList = PragmaProcessor.process(files, { noComments: true });
+    expect(newList.length()).to.equal(2);
+
+    const main = newList.get(0);
+
+    expect(main.getContents()).to.equal([
+      "REPORT zmain.",
+      "  append 'Hello' to tab.",
+      "  append 'World' to tab.",
+    ].join("\n"));
+
+    const inc = newList.get(1);
+    expect(inc.wasUsed()).to.equal(true);
   });
 });

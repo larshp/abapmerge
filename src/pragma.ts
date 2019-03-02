@@ -9,8 +9,8 @@ export default class PragmaProcessor {
   private files: FileList;
   private opts: IPragmaOpts;
 
-  public static process(files: FileList): FileList {
-    const instance = new PragmaProcessor(files);
+  public static process(files: FileList, opts?: IPragmaOpts): FileList {
+    const instance = new PragmaProcessor(files, opts);
     return instance.processFiles();
   }
 
@@ -20,39 +20,54 @@ export default class PragmaProcessor {
   }
 
   public processFiles(): FileList {
-    let result = new FileList();
+    let newFiles = new FileList();
 
     for (const file of this.files) {
-      let lines = file.getContents().split("\n").map(j => j.replace("\r", ""));
-      let output = "";
+      if (file.isBinary() || !file.isABAP()) {
+        newFiles.push(file);
+        continue;
+      }
+
+      let lines = file.getContents().split("\n");
+      let hasPragma = false;
+      let output = [];
+
       for (let line of lines) {
         let pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
         if (pragma) {
-          let indent = (pragma[1] === "*") ? "" : pragma[2];
-          let presult = this.processPragma(indent, pragma[3]);
-          if (presult) {
-            output += presult + "\n";
+          const pragmaCmd = pragma[3];
+          const indent = (pragma[1] === "*") ? "" : pragma[2];
+          const processed = this.processPragma(indent, pragmaCmd);
+          if (processed && processed.length > 0) {
+            hasPragma = true;
+            output.push(...processed);
           } else {
-            output += line + "\n";
+            output.push(line);
           }
         } else {
-          output = output + line + "\n";
+          output.push(line);
         }
       }
 
-      result.push(new File(file.getFilename(), output));
+      newFiles.push(hasPragma
+        ? new File(file.getFilename(), output.join("\n"))
+        : file);
     }
 
-    return result;
+    return newFiles;
   }
 
-  private comment(name: string): string {
-    return "****************************************************\n" +
-           "* abapmerge Pragma - " + name.toUpperCase() + "\n" +
-           "****************************************************\n";
+  private comment(name: string): string[] {
+    return this.opts.noComments
+      ? []
+      : [
+        "****************************************************",
+        "* abapmerge Pragma - " + name.toUpperCase(),
+        "****************************************************",
+      ];
   }
 
-  private processPragma(indent: string, pragma: string) {
+  private processPragma(indent: string, pragma: string): string[] {
 
     /* Pragmas has the following format
      * @@abapmerge command params
@@ -65,36 +80,14 @@ export default class PragmaProcessor {
      *      e.g. include somestyle.css > APPEND '$$' TO styletab.
      */
 
-    let result = "";
+    let result = [];
     const cmdMatch = pragma.match(/(\S+)\s+(.*)/);
     const command = cmdMatch[1].toLowerCase();
     const commandParams = cmdMatch[2];
 
     switch (command) {
       case "include":
-        const params = commandParams.match(/(\S+)\s*>\s*(.*)/i);
-        if (!params) { break; }
-        const filename = params[1];
-        const template = params[2];
-
-        const lines = this.files.otherByName(filename)
-          .replace(/\t/g, "  ")
-          .replace(/\r/g, "")
-          .split("\n");
-
-        if (lines.length > 0 && !lines[lines.length - 1]) {
-          lines.pop(); // remove empty string
-        }
-
-        if (!this.opts.noComments) result = this.comment(filename);
-        result += lines
-          .map(line => {
-            let render = template.replace("$$$", line); // unescaped
-            render = render.replace("$$", line.replace(/'/g, "''")); // escape ' -> ''
-            return indent + render;
-          })
-          .join("\n");
-
+        result.push(...this.pragmaInclude(indent, commandParams));
         break;
 
       default: break;
@@ -103,4 +96,25 @@ export default class PragmaProcessor {
     return result;
   }
 
+  private pragmaInclude(indent: string, includeParams: string): string[] {
+    const params = includeParams.match(/(\S+)\s*>\s*(.*)/i);
+    if (!params) return [];
+    const filename = params[1];
+    const template = params[2];
+    const result = [];
+
+    const lines = this.files.otherByName(filename).split("\n");
+    if (lines.length > 0 && !lines[lines.length - 1]) {
+      lines.pop(); // remove empty string
+    }
+
+    result.push(...this.comment(filename));
+    result.push(...lines.map(line => {
+      let render = template.replace("$$$", line); // unescaped
+      render = render.replace("$$", line.replace(/'/g, "''")); // escape ' -> ''
+      return indent + render;
+    }));
+
+    return result;
+  }
 }
