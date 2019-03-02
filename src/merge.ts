@@ -1,5 +1,5 @@
 import FileList from "./file_list";
-import Pragma from "./pragma";
+import PragmaProcessor from "./pragma";
 import ClassList from "./class_list";
 
 export default class Merge {
@@ -12,7 +12,7 @@ export default class Merge {
     if (options && options.skipFUGR) {
       this.files = this.skipFUGR(this.files);
     }
-    this.files = Pragma.process(this.files);
+    this.files = PragmaProcessor.process(this.files);
     this.classes = new ClassList(this.files);
     let result = this.analyze(main, this.files.fileByName(main));
     this.files.checkFiles();

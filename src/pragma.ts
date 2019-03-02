@@ -1,24 +1,28 @@
 import FileList from "./file_list";
 import File from "./file";
 
-export default class Pragma {
+export interface IPragmaOpts {
+  noComments?: boolean;
+}
+
+export default class PragmaProcessor {
   private files: FileList;
+  private opts: IPragmaOpts;
 
   public static process(files: FileList): FileList {
-    const instance = new Pragma(files);
+    const instance = new PragmaProcessor(files);
     return instance.processFiles();
   }
 
-  constructor(files: FileList) {
+  constructor(files: FileList, opts?: IPragmaOpts) {
     this.files = files;
+    this.opts = opts || {};
   }
 
-  private processFiles(): FileList {
+  public processFiles(): FileList {
     let result = new FileList();
 
-    for (let i = 0; i < this.files.length(); i++) {
-      let file = this.files.get(i);
-
+    for (const file of this.files) {
       let lines = file.getContents().split("\n").map(j => j.replace("\r", ""));
       let output = "";
       for (let line of lines) {
@@ -82,7 +86,7 @@ export default class Pragma {
           lines.pop(); // remove empty string
         }
 
-        result = this.comment(filename);
+        if (!this.opts.noComments) result = this.comment(filename);
         result += lines
           .map(line => {
             let render = template.replace("$$$", line); // unescaped
