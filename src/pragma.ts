@@ -2,18 +2,22 @@ import FileList from "./file_list";
 import File from "./file";
 
 export default class Pragma {
-  private static files: FileList;
+  private files: FileList;
 
-  public static handle(files: FileList): FileList {
-    this.files = files;
-    return this.processFiles(files);
+  public static process(files: FileList): FileList {
+    const instance = new Pragma(files);
+    return instance.processFiles();
   }
 
-  private static processFiles(files: FileList): FileList {
+  constructor(files: FileList) {
+    this.files = files;
+  }
+
+  private processFiles(): FileList {
     let result = new FileList();
 
-    for (let i = 0; i < files.length(); i++) {
-      let file = files.get(i);
+    for (let i = 0; i < this.files.length(); i++) {
+      let file = this.files.get(i);
 
       let lines = file.getContents().split("\n").map(j => j.replace("\r", ""));
       let output = "";
@@ -38,13 +42,13 @@ export default class Pragma {
     return result;
   }
 
-  private static comment(name: string): string {
+  private comment(name: string): string {
     return "****************************************************\n" +
            "* abapmerge Pragma - " + name.toUpperCase() + "\n" +
            "****************************************************\n";
   }
 
-  private static processPragma(indent: string, pragma: string) {
+  private processPragma(indent: string, pragma: string) {
 
     /* Pragmas has the following format
      * @@abapmerge command params
@@ -58,24 +62,27 @@ export default class Pragma {
      */
 
     let result = "";
-    let cmd    = pragma.match(/(\S+)\s+(.*)/);
+    const cmdMatch = pragma.match(/(\S+)\s+(.*)/);
+    const command = cmdMatch[1].toLowerCase();
+    const commandParams = cmdMatch[2];
 
-    switch (cmd[1].toLowerCase()) {
+    switch (command) {
       case "include":
-        let params = pragma.match(/(\S+)\s*>\s*(.*)/i);
+        const params = commandParams.match(/(\S+)\s*>\s*(.*)/i);
         if (!params) { break; }
+        const filename = params[1];
+        const template = params[2];
 
-        let lines = this.files.otherByName(params[1])
-          .replace("\t", "  ")
-          .split("\n")
-          .map(i => i.replace("\r", ""));
+        const lines = this.files.otherByName(filename)
+          .replace(/\t/g, "  ")
+          .replace(/\r/g, "")
+          .split("\n");
 
         if (lines.length > 0 && !lines[lines.length - 1]) {
           lines.pop(); // remove empty string
         }
 
-        const template = params[2];
-        result = this.comment(params[1]);
+        result = this.comment(filename);
         result += lines
           .map(line => {
             let render = template.replace("$$$", line); // unescaped

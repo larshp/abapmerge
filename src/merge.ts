@@ -12,7 +12,7 @@ export default class Merge {
     if (options && options.skipFUGR) {
       this.files = this.skipFUGR(this.files);
     }
-    this.files = Pragma.handle(this.files);
+    this.files = Pragma.process(this.files);
     this.classes = new ClassList(this.files);
     let result = this.analyze(main, this.files.fileByName(main));
     this.files.checkFiles();
