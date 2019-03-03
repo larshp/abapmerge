@@ -1,14 +1,19 @@
+type FileContent = string | Buffer;
 export default class File {
   private filename: string;
-  private contents: string;
+  private contents: FileContent;
   private isUsed: boolean;
 
 // object names are unique across packages in ABAP, so
 // the folder name is not part of this class
-  public constructor(filename: string, c: string) {
+  public constructor(filename: string, c: FileContent) {
     this.filename = filename;
     this.contents = c;
     this.isUsed   = false;
+  }
+
+  public isBinary(): boolean {
+    return typeof this.contents !== "string";
   }
 
   public getName(): string {
@@ -20,7 +25,13 @@ export default class File {
   }
 
   public getContents(): string {
-    return this.contents;
+    if (this.isBinary()) throw Error(`Binary file accessed as string [${this.filename}]`);
+    return this.contents as string;
+  }
+
+  public getBlob(): Buffer {
+    if (!this.isBinary()) throw Error(`Text file accessed as blob [${this.filename}]`);
+    return this.contents as Buffer;
   }
 
   public wasUsed(): boolean {
@@ -40,10 +51,10 @@ export default class File {
   }
 
   public isMain(): boolean {
-    if (!this.isPROG()) {
+    if (!this.isPROG() || this.isBinary()) {
       return false;
     }
 
-    return !!this.contents.match(/^(\*|\s*")\s*@@abapmerge\s+main\s+void/i);
+    return !!this.getContents().match(/^(\*|\s*")\s*@@abapmerge\s+main\s+void/i);
   }
 }

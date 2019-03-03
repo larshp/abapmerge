@@ -1,5 +1,5 @@
 import FileList from "./file_list";
-import Pragma from "./pragma";
+import PragmaProcessor from "./pragma";
 import ClassList from "./class_list";
 
 export default class Merge {
@@ -12,11 +12,21 @@ export default class Merge {
     if (options && options.skipFUGR) {
       this.files = this.skipFUGR(this.files);
     }
-    this.files = Pragma.handle(this.files);
+    this.files = PragmaProcessor.process(this.files);
     this.classes = new ClassList(this.files);
-    let result = this.analyze(main, this.files.fileByName(main));
+    let result = this.analyze(main, this.files.fileByName(main).getContents());
     this.files.checkFiles();
-    return this.appendFooter(result);
+    return result;
+  }
+
+  public static appendFooter(contents: string) {
+    return contents +
+      "****************************************************\n" +
+      "INTERFACE lif_abapmerge_marker.\n" +
+      "ENDINTERFACE.\n" +
+      "****************************************************\n" +
+      "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
+      "****************************************************\n";
   }
 
   private static skipFUGR(files: FileList): FileList {
@@ -33,19 +43,9 @@ export default class Merge {
     return result;
   }
 
-  private static appendFooter(contents: string) {
-    return contents +
-      "****************************************************\n" +
-      "INTERFACE lif_abapmerge_marker.\n" +
-      "ENDINTERFACE.\n" +
-      "****************************************************\n" +
-      "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
-      "****************************************************\n";
-  }
-
   private static analyze(main: string, contents: string) {
     let output = "";
-    let lines = contents.split("\n").map(i => i.replace("\r", ""));
+    let lines = contents.split("\n");
 
     let lineNo = 0;
     if (main !== null) {
@@ -76,7 +76,7 @@ export default class Merge {
       let line = lines[lineNo];
       let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
       if (!include) {
-// try namespaced
+        // try namespaced
         include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
         if (include) {
           include[1] = include[1].replace(/\//g, "#");
@@ -85,14 +85,14 @@ export default class Merge {
       if (include) {
         output = output +
           this.comment(include[1]) +
-          this.analyze(null, this.files.fileByName(include[1])) +
+          this.analyze(null, this.files.fileByName(include[1]).getContents()) +
           "\n";
       } else {
-        output = output + line + "\n";
+        output += line + "\n";
       }
     }
 
-    return output.replace(/\n\n\n/g, "\n");
+    return output.replace(/\n{3}|\n{2}$/g, "\n");
   }
 
   private static comment(name: string): string {

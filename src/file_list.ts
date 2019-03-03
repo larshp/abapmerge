@@ -1,6 +1,6 @@
 import File from "./file";
 
-export default class FileList {
+export default class FileList implements Iterable<File> {
   private files: File[];
 
   public constructor(files?: File[]) {
@@ -28,26 +28,26 @@ export default class FileList {
     return this.files[i];
   }
 
-  public fileByName(name: string): string {
+  public fileByName(name: string): File {
     for (let f of this.files) {
       if (f.getName().toLowerCase() === name.toLowerCase() && f.isABAP()) {
         f.markUsed();
-        return f.getContents();
+        return f;
       }
     }
 
-    throw "file not found: " + name;
+    throw Error(`file not found: ${name}`);
   }
 
-  public otherByName(name: string): string {
+  public otherByName(name: string): File {
     for (let f of this.files) {
       if (f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP()) {
         f.markUsed();
-        return f.getContents();
+        return f;
       }
     }
 
-    throw "file not found: " + name;
+    throw Error(`file not found: ${name}`);
   }
 
   public checkFiles(): void {
@@ -57,8 +57,11 @@ export default class FileList {
       .join(", ");
 
     if (unusedFiles) {
-      throw "Not all files used: [" + unusedFiles + "]";
+      throw Error(`Not all files used: [${unusedFiles}]`);
     }
   }
 
+  public [Symbol.iterator](): IterableIterator<File> {
+    return this.files[Symbol.iterator]();
+  }
 }

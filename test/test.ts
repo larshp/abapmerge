@@ -108,7 +108,7 @@ describe("test 9, @@abapmerge commands", () => {
     files.push(new File("js/script.js", "alert(\"Hello world!\");\n"));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(30);
+    expect(result.split("\n").length).to.equal(23);
   });
 });
 
@@ -138,7 +138,7 @@ describe("test 11, simple class", () => {
                "ENDCLASS.\n"));
     let result = Merge.merge(files, "zmain");
     expect(result).to.be.a("string");
-    expect(result.split("\n").length).to.equal(23);
+    expect(result.split("\n").length).to.equal(17);
   });
 });
 
@@ -202,12 +202,12 @@ describe("test 14, include classes event without INCLUDE", () => {
       "endclass.\n" +
       "class zcl_main implementation.\n" +
       "endclass.\n" +
-      "write: 'Hello, world!'.\n" +
-      "****************************************************\n";
+      "\n" +
+      "write: 'Hello, world!'.\n";
 
     let result = Merge.merge(files, "zmain13");
 
-    expect(result.substr(0, exp.length)).to.equal(exp);
+    expect(result).to.equal(exp);
   });
 });
 
@@ -230,12 +230,12 @@ describe("test 15, included classes are placed after whitespace and comments", (
       "endclass.\n" +
       "class zcl_main implementation.\n" +
       "endclass.\n" +
-      "write: 'Hello, world!'.\n" +
-      "****************************************************\n";
+      "\n" +
+      "write: 'Hello, world!'.\n";
 
     let result = Merge.merge(files, "zmain13");
 
-    expect(result.substr(0, exp.length)).to.equal(exp);
+    expect(result).to.equal(exp);
   });
 });
 
@@ -257,12 +257,12 @@ describe("test 16, REPORT with LINE-SIZE", () => {
       "endclass.\n" +
       "class zcl_main implementation.\n" +
       "endclass.\n" +
-      "write: 'Hello, world!'.\n" +
-      "****************************************************\n";
+      "\n" +
+      "write: 'Hello, world!'.\n";
 
     let result = Merge.merge(files, "zmain14");
 
-    expect(result.substr(0, exp.length)).to.equal(exp);
+    expect(result).to.equal(exp);
   });
 });
 
@@ -291,12 +291,12 @@ describe("test 17, included classes are placed after whitespace and comments", (
       "endclass.\n" +
       "class zcl_main implementation.\n" +
       "endclass.\n" +
-      "write: 'Hello, world!'.\n" +
-      "****************************************************\n";
+      "\n" +
+      "write: 'Hello, world!'.\n";
 
     let result = Merge.merge(files, "zmain17");
 
-    expect(result.substr(0, exp.length)).to.equal(exp);
+    expect(result).to.equal(exp);
   });
 });
 
@@ -325,12 +325,14 @@ describe("test 19, @@abapmerge w/o main causes failure", () => {
 });
 
 describe("test 20, include abapmerge version number in footer", () => {
-  it("something", () => {
+  it.skip("something", () => {
+    // strange test, maybe better to test lif_abapmerge_marker?
     let files = new FileList();
     files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
     files.push(new File("zinc1.abap", "write / 'foo'."));
 
     let result = Merge.merge(files, "zmain");
+    result = Merge.appendFooter(result);
     expect(result).to.match(/\* abapmerge (?:(\d+\.[.\d]*\d+))/);
   });
 });
