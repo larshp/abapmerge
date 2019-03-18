@@ -11,8 +11,9 @@ export default class InterfaceParser {
       throw "error parsing interface: " + f.getFilename();
     }
 
-    let depMatch = f.getContents().match(/TYPE\sZIF_\w+/ig);
     let dependencies = [];
+
+    let depMatch = f.getContents().match(/(TYPE|INTERFACES)\sZIF_\w+/ig);
     if (depMatch) {
       for (let dep of depMatch) {
         let name = dep.substr(5).toLowerCase();
