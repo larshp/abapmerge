@@ -64,12 +64,13 @@ class Logic {
       const entryPoint = parsedArgs.main.split(".")[0];
       output = Merge.merge(Logic.readFiles(parsedArgs.dir), entryPoint, {skipFUGR: parsedArgs.skipFUGR});
       output = Merge.appendFooter(output);
+      process.stdout.write(output);
     } catch (e) {
       output = e.message ? e.message : e;
       retval = 1;
+      process.stderr.write(output);
     }
     if (output === undefined) { throw new Error("output undefined, hmm?"); }
-    process.stdout.write(output);
     return retval;
   }
 
