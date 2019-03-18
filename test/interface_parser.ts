@@ -16,5 +16,7 @@ describe("interface_parser 1", () => {
     const result = InterfaceParser.parse(f);
 
     expect(result.getDependencies().length).to.equal(2);
+    expect(result.getDependencies()).to.contain("zif_abapgit_gui_event_handler");
+    expect(result.getDependencies()).to.contain("zif_abapgit_gui_renderable");
   });
 });

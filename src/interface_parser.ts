@@ -13,7 +13,7 @@ export default class InterfaceParser {
 
     let dependencies = [];
 
-    let depMatch = f.getContents().match(/(TYPE|INTERFACES)\sZIF_\w+/ig);
+    let depMatch = f.getContents().match(/TYPE\s(ZIF_\w+)/ig);
     if (depMatch) {
       for (let dep of depMatch) {
         let name = dep.substr(5).toLowerCase();
@@ -22,6 +22,17 @@ export default class InterfaceParser {
         }
       }
     }
+
+    depMatch = f.getContents().match(/INTERFACES\s(ZIF_\w+)/ig);
+    if (depMatch) {
+      for (let dep of depMatch) {
+        let name = dep.substr(11).toLowerCase();
+        if (dependencies.indexOf(name) === -1 && name !== self) {
+          dependencies.push(name);
+        }
+      }
+    }
+
     return new Class(self, match[1] + match[2], "", dependencies);
 
   }
