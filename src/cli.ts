@@ -57,6 +57,7 @@ class Logic {
   }
 
   public static run() {
+    let retval = 0;
     let output = "";
     try {
       const parsedArgs = Logic.parseArgs();
@@ -65,11 +66,13 @@ class Logic {
       output = Merge.appendFooter(output);
     } catch (e) {
       output = e.message ? e.message : e;
+      retval = 1;
     }
     if (output === undefined) { throw new Error("output undefined, hmm?"); }
     process.stdout.write(output);
+    return retval;
   }
 
 }
 
-Logic.run();
+process.exit(Logic.run());
