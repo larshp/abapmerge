@@ -7,3 +7,4 @@ output.abap
 coverage
 .nyc_output
 .vscode/
+dummy*.abap
