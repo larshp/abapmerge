@@ -6,5 +6,4 @@ web/bundle.js
 output.abap
 coverage
 .nyc_output
-
-package-lock.json
+.vscode/
