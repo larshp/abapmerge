@@ -78,7 +78,7 @@ class Logic {
     try {
       const parsedArgs = Logic.parseArgs();
       output = Merge.merge(Logic.readFiles(parsedArgs.entryDir), parsedArgs.entryObjectName, { skipFUGR: parsedArgs.skipFUGR });
-      output = Merge.appendFooter(output);
+      output = Merge.appendFooter(output, PackageInfo.version);
       process.stdout.write(output);
     } catch (e) {
       output = e.message ? e.message : e;

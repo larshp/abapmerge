@@ -19,13 +19,13 @@ export default class Merge {
     return result;
   }
 
-  public static appendFooter(contents: string) {
+  public static appendFooter(contents: string, version: string): string {
     return contents +
       "****************************************************\n" +
       "INTERFACE lif_abapmerge_marker.\n" +
       "ENDINTERFACE.\n" +
       "****************************************************\n" +
-      "* abapmerge " + process.env.npm_package_version + " - " + new Date().toJSON() + "\n" +
+      "* abapmerge " + version + " - " + new Date().toJSON() + "\n" +
       "****************************************************\n";
   }
 

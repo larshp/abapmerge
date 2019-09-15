@@ -332,7 +332,7 @@ describe("test 20, include abapmerge version number in footer", () => {
     files.push(new File("zinc1.abap", "write / 'foo'."));
 
     let result = Merge.merge(files, "zmain");
-    result = Merge.appendFooter(result);
+    result = Merge.appendFooter(result, "1.0.0");
     expect(result).to.match(/\* abapmerge (?:(\d+\.[.\d]*\d+))/);
   });
 });
