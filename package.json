@@ -10,10 +10,10 @@
     "build": "tsc --pretty",
     "buildw": "tsc -w --pretty",
     "testw": "mocha --recursive --watch build/test",
-    "pretest": "tsc --pretty && mocha --recursive --reporter progress build/test",
-    "test": "tslint ./src/*.ts ./test/*.ts",
+    "pretest": "npm run build",
+    "test": "mocha --recursive --reporter progress build/test",
     "lint": "tslint ./src/*.ts ./test/*.ts",
-    "posttest": "browserify build/src/web.js -o web/bundle.js"
+    "browserify": "browserify build/src/web.js -o web/bundle.js"
   },
   "repository": {
     "type": "git",
