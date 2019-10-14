@@ -7,7 +7,9 @@
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "sourceMap": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true
         },
     "filesGlob": [
         "./**/*.ts"

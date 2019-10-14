@@ -3,6 +3,15 @@ import * as path from "path";
 import File from "./file";
 import FileList from "./file_list";
 import Merge from "./merge";
+import commander from "commander";
+import PackageInfo from "../package.json";
+
+interface ICliArgs {
+  entryFilename: string;
+  entryObjectName: string;
+  entryDir: string;
+  skipFUGR: boolean;
+}
 
 class Logic {
   private static textFiles = new Set([".abap", ".xml", ".css", ".js"]);
@@ -32,28 +41,35 @@ class Logic {
     return list;
   }
 
-  public static parseArgs(): {main: string, dir: string, skipFUGR: boolean} {
-    let arg = process.argv.slice(2);
-    let skipFUGR = false;
+  public static parseArgs(): ICliArgs {
 
-    if (arg.length === 0) {
-      throw new Error("Supply filename");
+    commander
+      .description(PackageInfo.description)
+      .version(PackageInfo.version)
+      .option("-f, --skip-fugr", "ignore unused function groups", false)
+      .arguments("<entrypoint>");
+    commander.parse(process.argv);
+
+    if (!commander.args.length) {
+      throw Error("Specify entrypoint file name");
+    } else if (commander.args.length > 1) {
+      throw Error("Specify just one entrypoint");
     }
 
-    let index = arg.indexOf("-f");
-    if (index >= 0) {
-      skipFUGR = true;
-      arg.splice(index, 1);
+    const entrypoint = commander.args[0];
+    if (!fs.existsSync(entrypoint)) {
+      throw new Error(`File "${entrypoint}" does not exist`);
     }
 
-    if (!fs.existsSync(arg[0])) {
-      throw new Error(`File ${path} does not exist`);
-    }
+    let entryDir = path.dirname(entrypoint);
+    let entryFilename = path.basename(entrypoint);
 
-    let dir = path.dirname(arg[0]);
-    let main = path.basename(arg[0]);
-
-    return {main, dir, skipFUGR};
+    return {
+      entryDir,
+      entryFilename,
+      entryObjectName: entryFilename.split(".")[0],
+      skipFUGR: commander.skipFugr,
+    };
   }
 
   public static run() {
@@ -61,16 +77,15 @@ class Logic {
     let output = "";
     try {
       const parsedArgs = Logic.parseArgs();
-      const entryPoint = parsedArgs.main.split(".")[0];
-      output = Merge.merge(Logic.readFiles(parsedArgs.dir), entryPoint, {skipFUGR: parsedArgs.skipFUGR});
-      output = Merge.appendFooter(output);
+      output = Merge.merge(Logic.readFiles(parsedArgs.entryDir), parsedArgs.entryObjectName, { skipFUGR: parsedArgs.skipFUGR });
+      output = Merge.appendFooter(output, PackageInfo.version);
       process.stdout.write(output);
     } catch (e) {
       output = e.message ? e.message : e;
       retval = 1;
       process.stderr.write(output);
     }
-    if (output === undefined) { throw new Error("output undefined, hmm?"); }
+    if (output === undefined) throw new Error("output undefined, hmm?");
     return retval;
   }
 
