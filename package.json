@@ -29,16 +29,16 @@
   },
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^12.7.5",
-    "browserify": "^16.2.1",
+    "@types/chai": "^4.2.3",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.7.12",
+    "browserify": "^16.5.0",
     "chai": "^4.2.0",
-    "mocha": "^6.0.2",
-    "tslint": "^5.13.1",
-    "typescript": "^3.3.3333"
+    "mocha": "^6.2.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4"
   },
   "dependencies": {
-    "commander": "^3.0.1"
+    "commander": "^3.0.2"
   }
 }
