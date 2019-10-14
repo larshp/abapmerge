@@ -13,7 +13,8 @@
     "pretest": "npm run build",
     "test": "mocha --recursive --reporter progress build/test",
     "lint": "tslint ./src/*.ts ./test/*.ts",
-    "browserify": "browserify build/src/web.js -o web/bundle.js"
+    "browserify": "browserify build/src/web.js -o web/bundle.js",
+    "prepublishOnly": "rm -rf build && npm run test"
   },
   "repository": {
     "type": "git",
