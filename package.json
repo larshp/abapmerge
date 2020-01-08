@@ -35,11 +35,11 @@
     "@types/node": "^13.1.4",
     "browserify": "^16.5.0",
     "chai": "^4.2.0",
-    "mocha": "^6.2.1",
+    "mocha": "^7.0.0",
     "tslint": "^5.20.1",
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "commander": "^3.0.2"
+    "commander": "^4.1.0"
   }
 }
