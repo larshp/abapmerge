@@ -11,6 +11,7 @@ interface ICliArgs {
   entryObjectName: string;
   entryDir: string;
   skipFUGR: boolean;
+  noFooter: boolean;
 }
 
 class Logic {
@@ -47,6 +48,7 @@ class Logic {
       .description(PackageInfo.description)
       .version(PackageInfo.version)
       .option("-f, --skip-fugr", "ignore unused function groups", false)
+      .option("--without-footer", "do not append footers", false)
       .arguments("<entrypoint>");
     commander.parse(process.argv);
 
@@ -69,6 +71,7 @@ class Logic {
       entryFilename,
       entryObjectName: entryFilename.split(".")[0],
       skipFUGR: commander.skipFugr,
+      noFooter: commander.withoutFooter,
     };
   }
 
@@ -78,7 +81,9 @@ class Logic {
     try {
       const parsedArgs = Logic.parseArgs();
       output = Merge.merge(Logic.readFiles(parsedArgs.entryDir), parsedArgs.entryObjectName, { skipFUGR: parsedArgs.skipFUGR });
-      output = Merge.appendFooter(output, PackageInfo.version);
+      if (parsedArgs.noFooter === false) {
+        output = Merge.appendFooter(output, PackageInfo.version);
+      }
       process.stdout.write(output);
     } catch (e) {
       output = e.message ? e.message : e;
