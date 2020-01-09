@@ -50,7 +50,7 @@ export default class Logic {
       .version(PackageInfo.version)
       .option("-f, --skip-fugr", "ignore unused function groups", false)
       .option("--without-footer", "do not append footers", false)
-      .option("-r, --replace-report-name <newreportname>","replaces REPORT clause name in main source code")
+      .option("-c, --change-report-name <newreportname>","changes REPORT clause name in source code")
       .arguments("<entrypoint>");
     commander.parse(process.argv);
 
@@ -68,12 +68,14 @@ export default class Logic {
     let entryDir = path.dirname(entrypoint);
     let entryFilename = path.basename(entrypoint);
 
+    console.log(commander)
+
     return {
       entryDir,
       entryFilename,
       entryObjectName: entryFilename.split(".")[0],
       skipFUGR: commander.skipFugr,
-      newReportClauseName: commander.replaceReportName,
+      newReportClauseName: commander.changeReportName,
       noFooter: commander.withoutFooter,
     };
   }
