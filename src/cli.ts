@@ -12,6 +12,7 @@ interface ICliArgs {
   entryDir: string;
   skipFUGR: boolean;
   noFooter: boolean;
+  newReportName: string;
 }
 
 class Logic {
@@ -26,9 +27,10 @@ class Logic {
 
       if (fs.lstatSync(filepath).isFile()) {
         if (Logic.textFiles.has(path.extname(filepath).toLowerCase())) {
-          let contents = fs.readFileSync(filepath, "utf8")
+          let contents = fs
+            .readFileSync(filepath, "utf8")
             .replace(/\t/g, "  ") // remove tabs
-            .replace(/\r/g, "");  // unify EOL
+            .replace(/\r/g, ""); // unify EOL
           list.push(new File(file, contents));
         } else {
           let buffer = fs.readFileSync(filepath);
@@ -43,12 +45,15 @@ class Logic {
   }
 
   public static parseArgs(): ICliArgs {
-
     commander
       .description(PackageInfo.description)
       .version(PackageInfo.version)
       .option("-f, --skip-fugr", "ignore unused function groups", false)
       .option("--without-footer", "do not append footers", false)
+      .option(
+        "-c, --change-report-name <newreportname>",
+        "changes report name in REPORT clause in source code",
+      )
       .arguments("<entrypoint>");
     commander.parse(process.argv);
 
@@ -72,6 +77,7 @@ class Logic {
       entryObjectName: entryFilename.split(".")[0],
       skipFUGR: commander.skipFugr,
       noFooter: commander.withoutFooter,
+      newReportName: commander.changeReportname,
     };
   }
 
@@ -80,7 +86,11 @@ class Logic {
     let output = "";
     try {
       const parsedArgs = Logic.parseArgs();
-      output = Merge.merge(Logic.readFiles(parsedArgs.entryDir), parsedArgs.entryObjectName, { skipFUGR: parsedArgs.skipFUGR });
+      output = Merge.merge(
+        Logic.readFiles(parsedArgs.entryDir),
+        parsedArgs.entryObjectName,
+        { skipFUGR: parsedArgs.skipFUGR },
+      );
       if (parsedArgs.noFooter === false) {
         output = Merge.appendFooter(output, PackageInfo.version);
       }
@@ -93,7 +103,6 @@ class Logic {
     if (output === undefined) throw new Error("output undefined, hmm?");
     return retval;
   }
-
 }
 
 process.exit(Logic.run());

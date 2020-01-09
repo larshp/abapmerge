@@ -6,7 +6,7 @@ export default class Merge {
   private static files: FileList;
   private static classes: ClassList;
 
-  public static merge(files: FileList, main: string, options?: {skipFUGR: boolean}): string {
+  public static merge(files: FileList, main: string, options?: {skipFUGR?: boolean, newReportName?: string}): string {
     this.files = files;
 
     if (options && options.skipFUGR) {
@@ -14,7 +14,13 @@ export default class Merge {
     }
     this.files = PragmaProcessor.process(this.files);
     this.classes = new ClassList(this.files);
-    let result = this.analyze(main, this.files.fileByName(main).getContents());
+
+    let newReportName;
+    if (options && options.newReportName) {
+      newReportName = options.newReportName;
+    }
+
+    let result = this.analyze(main, this.files.fileByName(main).getContents(), newReportName);
     this.files.checkFiles();
     return result;
   }
@@ -43,18 +49,29 @@ export default class Merge {
     return result;
   }
 
-  private static analyze(main: string, contents: string) {
+  private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
     let lines = contents.split("\n");
+    let isMainReport = false;
 
     let lineNo = 0;
     if (main !== null) {
       while (lineNo < lines.length) {
         let line = lines[lineNo++];
+        let regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)$/im;
+        let reportClauseMatches = line.match(regexReportClause);
+
+        if (reportClauseMatches) {
+          isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase();
+          if (newReportName) {
+            line = line.replace( regexReportClause, `$1${newReportName}$3`);
+          }
+        }
+
         output += line + "\n";
 
-        let report = line.match(/^\s*REPORT\s+(\w+)(\s+[^.*]*\.|\s*\.)$/im);
-        if (report && (report[1].toLowerCase() === main.toLowerCase())) {
+        if (isMainReport) {
+          isMainReport = false;
           break;
         }
       }
