@@ -366,3 +366,36 @@ describe("test 22, interface with comment", () => {
     expect(split.indexOf("INTERFACE zif_foo.")).to.equal(2);
   });
 });
+
+describe("test 23, replace report clause name by options", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain."));
+    const result = Merge.merge(files, "zmain", {newReportClauseName: "zmain_test"});
+    const split = result.split("\n");
+    expect(result).to.be.a("string");
+    expect(split.indexOf("REPORT zmain_test.")).to.equal(0);
+  });
+});
+
+describe("test 24, replace report clause name by options with LINE-SIZE", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("zmain.abap", "REPORT zmain LINE-SIZE 100."));
+    const result = Merge.merge(files, "zmain", {newReportClauseName: "zmain_test"});
+    const split = result.split("\n");
+    expect(result).to.be.a("string");
+    expect(split.indexOf("REPORT zmain_test LINE-SIZE 100.")).to.equal(0);
+  });
+});
+
+describe("test 25, replace report clause name by options when report name has namespace", () => {
+  it("something", () => {
+    let files = new FileList();
+    files.push(new File("#prod#main.abap", "REPORT /prod/main."));
+    const result = Merge.merge(files, "#prod#main", {newReportClauseName: "/prod/main_test"});
+    const split = result.split("\n");
+    expect(result).to.be.a("string");
+    expect(split.indexOf("REPORT /prod/main_test.")).to.equal(0);
+  });
+});

@@ -30,7 +30,7 @@ export default class FileList implements Iterable<File> {
 
   public fileByName(name: string): File {
     for (let f of this.files) {
-      if (f.getName().toLowerCase() === name.toLowerCase() && f.isABAP()) {
+      if (f.getName().replace("#","/").toLowerCase() === name.replace("#","/").toLowerCase() && f.isABAP()) {
         f.markUsed();
         return f;
       }
