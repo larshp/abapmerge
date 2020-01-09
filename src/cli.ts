@@ -68,8 +68,6 @@ export default class Logic {
     let entryDir = path.dirname(entrypoint);
     let entryFilename = path.basename(entrypoint);
 
-    console.log(commander)
-
     return {
       entryDir,
       entryFilename,
