@@ -11,10 +11,11 @@ interface ICliArgs {
   entryObjectName: string;
   entryDir: string;
   skipFUGR: boolean;
+  newReportClauseName: string;
   noFooter: boolean;
 }
 
-class Logic {
+export default class Logic {
   private static textFiles = new Set([".abap", ".xml", ".css", ".js"]);
 
   public static readFiles(dir: string, pre = ""): FileList {
@@ -49,6 +50,7 @@ class Logic {
       .version(PackageInfo.version)
       .option("-f, --skip-fugr", "ignore unused function groups", false)
       .option("--without-footer", "do not append footers", false)
+      .option("-r, --replace-report-name <newreportname>","replaces REPORT clause name in main source code")
       .arguments("<entrypoint>");
     commander.parse(process.argv);
 
@@ -71,6 +73,7 @@ class Logic {
       entryFilename,
       entryObjectName: entryFilename.split(".")[0],
       skipFUGR: commander.skipFugr,
+      newReportClauseName: commander.replaceReportName,
       noFooter: commander.withoutFooter,
     };
   }
@@ -80,7 +83,12 @@ class Logic {
     let output = "";
     try {
       const parsedArgs = Logic.parseArgs();
-      output = Merge.merge(Logic.readFiles(parsedArgs.entryDir), parsedArgs.entryObjectName, { skipFUGR: parsedArgs.skipFUGR });
+      output = Merge.merge(Logic.readFiles(parsedArgs.entryDir), 
+                            parsedArgs.entryObjectName, 
+                            { 
+                              skipFUGR: parsedArgs.skipFUGR, 
+                              newReportClauseName: parsedArgs.newReportClauseName 
+                            });
       if (parsedArgs.noFooter === false) {
         output = Merge.appendFooter(output, PackageInfo.version);
       }
