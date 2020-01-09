@@ -15,7 +15,7 @@ interface ICliArgs {
   noFooter: boolean;
 }
 
-export default class Logic {
+class Logic {
   private static textFiles = new Set([".abap", ".xml", ".css", ".js"]);
 
   public static readFiles(dir: string, pre = ""): FileList {
