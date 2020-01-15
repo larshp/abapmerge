@@ -15,7 +15,7 @@ interface ICliArgs {
   newReportName: string;
 }
 
-class Logic {
+export class Logic {
   private static textFiles = new Set([".abap", ".xml", ".css", ".js"]);
 
   public static readFiles(dir: string, pre = ""): FileList {
@@ -44,7 +44,7 @@ class Logic {
     return list;
   }
 
-  public static parseArgs(): ICliArgs {
+  public static parseArgs(args: string[]): ICliArgs {
     commander
       .description(PackageInfo.description)
       .version(PackageInfo.version)
@@ -55,7 +55,7 @@ class Logic {
         "changes report name in REPORT clause in source code",
       )
       .arguments("<entrypoint>");
-    commander.parse(process.argv);
+    commander.parse(args);
 
     if (!commander.args.length) {
       throw Error("Specify entrypoint file name");
@@ -77,19 +77,22 @@ class Logic {
       entryObjectName: entryFilename.split(".")[0],
       skipFUGR: commander.skipFugr,
       noFooter: commander.withoutFooter,
-      newReportName: commander.changeReportname,
+      newReportName: commander.changeReportName,
     };
   }
 
-  public static run() {
+  public static run(args: string[]) {
     let retval = 0;
     let output = "";
     try {
-      const parsedArgs = Logic.parseArgs();
+      const parsedArgs = Logic.parseArgs(args);
       output = Merge.merge(
         Logic.readFiles(parsedArgs.entryDir),
         parsedArgs.entryObjectName,
-        { skipFUGR: parsedArgs.skipFUGR },
+        {
+          skipFUGR: parsedArgs.skipFUGR,
+          newReportName: parsedArgs.newReportName,
+        },
       );
       if (parsedArgs.noFooter === false) {
         output = Merge.appendFooter(output, PackageInfo.version);
@@ -105,4 +108,4 @@ class Logic {
   }
 }
 
-process.exit(Logic.run());
+// process.exit(Logic.run());
