@@ -3,7 +3,7 @@ import { Logic } from "../src/cli";
 
 let expect = chai.expect;
 
-let args:string[];
+let args: string[];
 
 describe("CLI parse arguments", () => {
 
@@ -35,10 +35,10 @@ describe("CLI parse arguments", () => {
       entryObjectName: "cli",
       skipFUGR: false,
       noFooter: false,
-      newReportName: undefined
-    }
-    expect(parsedArgs).to.be.not.null;
-    expect(parsedArgs).eql(parsedArgsExpected);
+      newReportName: undefined,
+    };
+    chai.assert.isNotNull(parsedArgs);
+    chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
   });
 
   it("skipFugr option", () => {
@@ -51,10 +51,10 @@ describe("CLI parse arguments", () => {
       entryObjectName: "cli",
       skipFUGR: true,
       noFooter: false,
-      newReportName: undefined
-    }
-    expect(parsedArgs).to.be.not.null;
-    expect(parsedArgs).eql(parsedArgsExpected);
+      newReportName: undefined,
+    };
+    chai.assert.isNotNull(parsedArgs);
+    chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
   });
 
   it("noFooter option", () => {
@@ -68,10 +68,10 @@ describe("CLI parse arguments", () => {
       entryObjectName: "cli",
       skipFUGR: true,
       noFooter: true,
-      newReportName: undefined
-    }
-    expect(parsedArgs).to.be.not.null;
-    expect(parsedArgs).eql(parsedArgsExpected);
+      newReportName: undefined,
+    };
+    chai.assert.isNotNull(parsedArgs);
+    chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
   });
 
   it("newReportName option", () => {
@@ -87,28 +87,28 @@ describe("CLI parse arguments", () => {
       entryObjectName: "cli",
       skipFUGR: true,
       noFooter: true,
-      newReportName: "znewname"
-    }
-    expect(parsedArgs).to.be.not.null;
-    expect(parsedArgs).eql(parsedArgsExpected);
+      newReportName: "znewname",
+    };
+    chai.assert.isNotNull(parsedArgs);
+    chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
   });
 });
 
-function captureStream(stream){
-  var oldWrite = stream.write;
-  var buf = '';
-  stream.write = function(chunk){
+function captureStream(stream) {
+  let oldWrite = stream.write;
+  let buf = "";
+  stream.write = function(chunk) {
     buf += chunk.toString(); // chunk is a String or Buffer
     oldWrite.apply(stream, arguments);
-  }
+  };
 
   return {
-    unhook: function unhook(){
+    unhook: function unhook() {
      stream.write = oldWrite;
     },
-    captured: function(){
+    captured: function() {
       return buf;
-    }
+    },
   };
 }
 
@@ -122,6 +122,6 @@ describe("Logic Run", () => {
 
   it("entrypoint file name error", () => {
     Logic.run(args);
-    expect(stderr.captured()).equal("Specify entrypoint file name")
+    expect(stderr.captured()).equal("Specify entrypoint file name");
   });
 });

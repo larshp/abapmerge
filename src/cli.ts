@@ -89,9 +89,9 @@ export class Logic {
       output = Merge.merge(
         Logic.readFiles(parsedArgs.entryDir),
         parsedArgs.entryObjectName,
-        { 
+        {
           skipFUGR: parsedArgs.skipFUGR,
-          newReportName: parsedArgs.newReportName 
+          newReportName: parsedArgs.newReportName,
         },
       );
       if (parsedArgs.noFooter === false) {

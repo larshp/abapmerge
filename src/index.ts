@@ -1,3 +1,3 @@
-import { Logic } from './cli';
+import { Logic } from "./cli";
 
 process.exit(Logic.run(process.argv));
