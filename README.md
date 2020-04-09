@@ -27,6 +27,8 @@ processing without issuing the input.
 
 abapmerge requires file naming schema compatible with the schema used by [abapGit](https://github.com/larshp/abapgit/).
 
+Global classes FOR TESTING are skipped.
+
 ### Additional features
 
 Abapmerge supports pragmas that can be written inside an abap comment. If written as " comment, then indentation before " is also used for output.

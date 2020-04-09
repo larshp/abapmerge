@@ -141,12 +141,18 @@ export class ClassParser {
       dependencies.push(superMatch[1].toLowerCase());
     }
 
-    return new Class(publicClass.name, publicClass.def, publicClass.imp, dependencies);
+    const testing = publicClass.def.match(/ FOR TESTING/i) !== null;
+
+    return new Class(publicClass.name, publicClass.def, testing, publicClass.imp, dependencies);
   }
 
   private static makeLocal(name: string, s: string): string {
-    let reg1 = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+PUBLIC", "i");
-    let ret = s.replace(reg1, "CLASS " + name + " DEFINITION");
+    let reg1 = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+(ABSTRACT\\s+)?PUBLIC", "i");
+
+    const addAbstract = s.match(/\s+ABSTRACT\s+?PUBLIC/i) !== null;
+
+    let ret = s.replace(reg1, "CLASS " + name + " DEFINITION" + (addAbstract ? " ABSTRACT" : ""));
+
     let reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_ABAPGIT", "i");
     ret = ret.replace(reg2, "FRIENDS ZCL_ABAPGIT");
     return ret;

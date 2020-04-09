@@ -1,9 +1,7 @@
-import * as chai from "chai";
+import {expect} from "chai";
 import Merge from "../src/merge";
 import File from "../src/file";
 import FileList from "../src/file_list";
-
-let expect = chai.expect;
 
 describe("test 1, one include", () => {
   it("something", () => {

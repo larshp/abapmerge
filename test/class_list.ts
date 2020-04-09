@@ -229,3 +229,20 @@ describe("interfaces 2, reference to self", () => {
     expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
   });
 });
+
+describe("classes, remove PUBLIC, combined with abstract", () => {
+  it("something", () => {
+    let files = new FileList();
+
+    files.push(new File(
+      "zcl_class.clas.abap",
+      "CLASS zcl_class DEFINITION ABSTRACT PUBLIC CREATE PUBLIC.\n" +
+      "ENDCLASS.\n" +
+      "CLASS zcl_class IMPLEMENTATION.\n" +
+      "ENDCLASS."));
+
+    let classes = new ClassList(files);
+
+    expect(classes.getDefinitions()).to.have.string("CLASS zcl_class DEFINITION ABSTRACT CREATE PUBLIC.");
+  });
+});

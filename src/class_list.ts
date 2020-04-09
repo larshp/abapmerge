@@ -100,6 +100,9 @@ export default class ClassList {
 
   private pushClass(f: File, list: FileList): void {
     let cls = ClassParser.parse(f, list);
+    if (cls.isForTesting() === true) {
+      return; // skip global test classes
+    }
     if (cls.getName().match(/^.?CX_/i)) {
 // the DEFINITION DEFERRED does not work very well for exception classes
       this.exceptions.push(cls);

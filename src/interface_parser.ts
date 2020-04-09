@@ -33,7 +33,7 @@ export default class InterfaceParser {
       }
     }
 
-    return new Class(self, match[1] + match[2], "", dependencies);
+    return new Class(self, match[1] + match[2], false, "", dependencies);
 
   }
 
