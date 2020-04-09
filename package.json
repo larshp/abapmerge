@@ -13,7 +13,6 @@
     "pretest": "npm run build",
     "test": "mocha --recursive --reporter progress build/test",
     "lint": "tslint ./src/*.ts ./test/*.ts",
-    "browserify": "browserify build/src/web.js -o web/bundle.js",
     "prepublishOnly": "rm -rf build && npm run test"
   },
   "repository": {
@@ -30,14 +29,13 @@
   },
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.7",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^13.1.6",
-    "browserify": "^16.5.0",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.11.1",
     "chai": "^4.2.0",
-    "mocha": "^7.0.0",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "mocha": "^7.1.1",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "commander": "^4.1.0"
