@@ -37,12 +37,6 @@
       140
     ],
     "member-access": true,
-    "member-ordering": [
-      true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
-    ],
     "no-angle-bracket-type-assertion": true,
     "no-any": false,
     "no-arg": true,

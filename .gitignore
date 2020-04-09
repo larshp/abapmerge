@@ -1,10 +1,6 @@
-# Artifacts
 build/
-typings/
 node_modules/
-web/bundle.js
-output.abap
 coverage
 .nyc_output
 .vscode/
-dummy*.abap
+*.abap

@@ -12,6 +12,7 @@
     "testw": "mocha --recursive --watch build/test",
     "pretest": "npm run build",
     "test": "mocha --recursive --reporter progress build/test",
+    "posttest": "npm run lint",
     "lint": "tslint ./src/*.ts ./test/*.ts",
     "prepublishOnly": "rm -rf build && npm run test"
   },
@@ -38,6 +39,6 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "commander": "^4.1.0"
+    "commander": "^5.0.0"
   }
 }
