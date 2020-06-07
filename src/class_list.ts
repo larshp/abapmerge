@@ -9,11 +9,13 @@ export default class ClassList {
   private interfaces: Class[];
   private classes: Class[];
   private exceptions: Class[];
+  private testclasses: Class[];
 
   public constructor(list: FileList) {
     this.interfaces = [];
     this.classes = [];
     this.exceptions = [];
+    this.testclasses = [];
 
     this.parseFiles(list);
   }
@@ -96,11 +98,18 @@ export default class ClassList {
         this.pushInterface(f);
       }
     }
+    if (this.testclasses.length) {
+    // patch after the fact, as we don't know if a class is a test class until we parse it
+      const remover = ClassParser.createTestFriendsRemover(this.testclasses);
+      this.classes = this.classes.map(remover);
+      this.interfaces = this.interfaces.map(remover);
+    }
   }
 
   private pushClass(f: File, list: FileList): void {
     let cls = ClassParser.parse(f, list);
     if (cls.isForTesting() === true) {
+      this.testclasses.push(cls);
       return; // skip global test classes
     }
     if (cls.getName().match(/^.?CX_/i)) {

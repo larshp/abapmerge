@@ -157,4 +157,20 @@ export class ClassParser {
     ret = ret.replace(reg2, "FRIENDS ZCL_ABAPGIT");
     return ret;
   }
+
+  public static createTestFriendsRemover(testclasses: Class[]) {
+    const isNotTest = (name: string) => !testclasses.find(tc => tc.getName().toUpperCase() === name.toUpperCase());
+    return (cls: Class) => {
+      const reg = new RegExp(`CLASS\\s+${cls.getName()}\\s+DEFINITION[^\\.]*((?:global)?friends\\s+([^\\.]+))\\.`, "i");
+      const [frienddec, friendstr] = (cls.getDefinition().match(reg) || []).slice(1);
+      if (!friendstr) return cls;
+      const oldfriends = friendstr.split(/\s+/).filter(f => f);
+      const newfriends = oldfriends.filter(isNotTest);
+      if (newfriends.length === oldfriends.length) return cls;
+      const newfd = newfriends.length ? frienddec.replace(friendstr, newfriends.join(" ")) : "";
+      const newdef = cls.getDefinition().replace(frienddec, newfd );
+      const impl = cls.getImplementation();
+      return new Class(cls.getName(), newdef, cls.isForTesting(), impl && impl.toString(), cls.getDependencies());
+    };
+  }
 }
