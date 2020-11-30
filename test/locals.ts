@@ -4,7 +4,7 @@ import File from "../src/file";
 import FileList from "../src/file_list";
 
 describe("locals", () => {
-  it("class with locals, ", () => {
+  it("class with locals FRIENDS, not possible", () => {
 
     const abap1 = `CLASS zcl_locals_test DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
@@ -39,7 +39,6 @@ ENDCLASS.`;
     files.push(new File("zcl_locals_test.clas.locals_imp.abap", abap2));
     files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinclude."));
     files.push(new File("zinclude.abap", "WRITE / 'Hello World!'."));
-    const result = Merge.merge(files, "zmain");
-    expect(result).to.include("CLASS zcl_locals_test DEFINITION LOCAL FRIENDS");
+    expect(() => Merge.merge(files, "zmain")).to.throw("Cannot merge LOCAL FRIENDS");
   });
 });
