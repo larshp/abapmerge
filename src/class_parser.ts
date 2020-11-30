@@ -72,6 +72,10 @@ export class ClassParser {
 
     /* tslint:disable:no-conditional-assignment */
     while ((definition = regex.exec(local)) !== null) {
+      if (definition[1].toUpperCase().includes("DEFINITION LOCAL FRIENDS")) {
+        throw "Cannot merge LOCAL FRIENDS";
+      }
+
       let type = definition[2];
       let name = definition[3];
 
