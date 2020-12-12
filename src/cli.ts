@@ -3,7 +3,7 @@ import * as path from "path";
 import File from "./file";
 import FileList from "./file_list";
 import Merge from "./merge";
-import commander from "commander";
+import { Command } from "commander";
 import PackageInfo from "../package.json";
 
 interface ICliArgs {
@@ -45,7 +45,9 @@ export class Logic {
   }
 
   public static parseArgs(args: string[]): ICliArgs {
+    const commander = new Command();
     commander
+      .storeOptionsAsProperties(false)
       .description(PackageInfo.description)
       .version(PackageInfo.version)
       .option("-f, --skip-fugr", "ignore unused function groups", false)
@@ -68,16 +70,17 @@ export class Logic {
       throw new Error(`File "${entrypoint}" does not exist`);
     }
 
-    let entryDir = path.dirname(entrypoint);
-    let entryFilename = path.basename(entrypoint);
+    const entryDir = path.dirname(entrypoint);
+    const entryFilename = path.basename(entrypoint);
+    const cmdOpts = commander.opts();
 
     return {
       entryDir,
       entryFilename,
       entryObjectName: entryFilename.split(".")[0],
-      skipFUGR: commander.skipFugr,
-      noFooter: commander.withoutFooter,
-      newReportName: commander.changeReportName,
+      skipFUGR: cmdOpts.skipFugr,
+      noFooter: cmdOpts.withoutFooter,
+      newReportName: cmdOpts.changeReportName,
     };
   }
 
