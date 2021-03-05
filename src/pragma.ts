@@ -14,7 +14,7 @@ export default class PragmaProcessor {
     return instance.processFiles();
   }
 
-  constructor(files: FileList, opts?: IPragmaOpts) {
+  public constructor(files: FileList, opts?: IPragmaOpts) {
     this.files = files;
     this.opts = opts || {};
   }
@@ -69,7 +69,7 @@ export default class PragmaProcessor {
 
   private processPragma(indent: string, pragma: string): string[] {
 
-    /* Pragmas has the following format
+    /* pragmas has the following format
      * @@abapmerge command params
      * if written as " comment, then indentation before " is also used for output
      * Currently supported pragmas:

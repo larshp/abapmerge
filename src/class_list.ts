@@ -29,13 +29,13 @@ export default class ClassList {
   }
 
   public getDeferred(): string {
-    let classes = this.classes.reduce((a, c) => { return "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a; }, "");
-    let interfaces = this.interfaces.reduce((a, c) => { return "INTERFACE " + c.getName() + " DEFERRED.\n" + a; }, "");
+    let classes = this.classes.reduce((a, c) => "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a, "");
+    let interfaces = this.interfaces.reduce((a, c) => "INTERFACE " + c.getName() + " DEFERRED.\n" + a, "");
     return interfaces + classes;
   }
 
   public getImplementations(): string {
-    return this.classes.reduce((a, c) => { return c.getImplementation() + "\n" + a; }, "");
+    return this.classes.reduce((a, c) => c.getImplementation() + "\n" + a, "");
   }
 
   public getDefinitions(): string {
@@ -79,7 +79,7 @@ export default class ClassList {
 
     list.forEach((c) => {
       g.addNode(c.getName(), c);
-      c.getDependencies().forEach((d) => { g.addEdge(c.getName(), d); } );
+      c.getDependencies().forEach((d) => g.addEdge(c.getName(), d) );
     });
 
     return g;
@@ -113,7 +113,7 @@ export default class ClassList {
       return; // skip global test classes
     }
     if (cls.getName().match(/^.?CX_/i)) {
-// the DEFINITION DEFERRED does not work very well for exception classes
+      // the DEFINITION DEFERRED does not work very well for exception classes
       this.exceptions.push(cls);
     } else {
       this.classes.push(cls);

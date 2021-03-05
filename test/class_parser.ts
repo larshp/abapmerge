@@ -17,7 +17,7 @@ describe("class_parser 1, anonymizeTypeName contract", () => {
     expect(alias.substr(5, prefix.length)).to.equal(prefix);
     expect(alias.substr(0, 5)).to.equal(anotheralias.substr(0, 5));
     expect(alias.substring(5 + prefix.length + 1, alias.length - 1)).to.equal(
-            anotheralias.substring(5 + anotherprefix.length + 1, anotheralias.length - 1));
+      anotheralias.substring(5 + anotherprefix.length + 1, anotheralias.length - 1));
   });
 });
 
@@ -425,26 +425,26 @@ describe("class_parser 28, the method parse ", () => {
     let abapClass = ClassParser.parse(mainFile, files);
 
     expect(abapClass.getDefinition()).to.equal(
-            "class GiiGhQvMEsAOOpdApbtQhfRrLQpNLF DEFINITION DEFERRED.\n" +
-            "interface WboRqQvMEsAOOpdApbtQPWHIIjHuMM DEFERRED.\n" +
-            "* renamed: cl_parent :: lif_impl\n" +
-            "interface WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\n" +
-            "endinterface.\n" +
-            "* renamed: cl_parent :: lcl_impl_base\n" +
-            "class GiiGhQvMEsAOOpdApbtQhfRrLQpNLF definition.\n" +
-            "interfaces WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\n" +
-            "endclass.\n\n" +
-            "class cl_parent definition.\n" +
-            "private section.\n" +
-            "data: mo_impl typ ref to WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\n" +
-            "endclass.");
+      "class GiiGhQvMEsAOOpdApbtQhfRrLQpNLF DEFINITION DEFERRED.\n" +
+      "interface WboRqQvMEsAOOpdApbtQPWHIIjHuMM DEFERRED.\n" +
+      "* renamed: cl_parent :: lif_impl\n" +
+      "interface WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\n" +
+      "endinterface.\n" +
+      "* renamed: cl_parent :: lcl_impl_base\n" +
+      "class GiiGhQvMEsAOOpdApbtQhfRrLQpNLF definition.\n" +
+      "interfaces WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\n" +
+      "endclass.\n\n" +
+      "class cl_parent definition.\n" +
+      "private section.\n" +
+      "data: mo_impl typ ref to WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\n" +
+      "endclass.");
 
     expect(abapClass.getImplementation()).to.equal(
-            "class GiiGhQvMEsAOOpdApbtQvMjIdUypid DEFINITION DEFERRED.\n* renamed: cl_parent :: lcl_impl_prod\n" +
-            "class GiiGhQvMEsAOOpdApbtQvMjIdUypid definition inheriting from GiiGhQvMEsAOOpdApbtQhfRrLQpNLF.\n" +
-            "public section.\ninterfaces WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\nendclass.\n\n" +
-            "class cl_parent implementation.\nmethod constructor.\n" +
-            "mo_impl = cast WboRqQvMEsAOOpdApbtQPWHIIjHuMM(new GiiGhQvMEsAOOpdApbtQvMjIdUypid( )).\n" +
-            "endmethod.\nendclass.\n");
+      "class GiiGhQvMEsAOOpdApbtQvMjIdUypid DEFINITION DEFERRED.\n* renamed: cl_parent :: lcl_impl_prod\n" +
+      "class GiiGhQvMEsAOOpdApbtQvMjIdUypid definition inheriting from GiiGhQvMEsAOOpdApbtQhfRrLQpNLF.\n" +
+      "public section.\ninterfaces WboRqQvMEsAOOpdApbtQPWHIIjHuMM.\nendclass.\n\n" +
+      "class cl_parent implementation.\nmethod constructor.\n" +
+      "mo_impl = cast WboRqQvMEsAOOpdApbtQPWHIIjHuMM(new GiiGhQvMEsAOOpdApbtQvMjIdUypid( )).\n" +
+      "endmethod.\nendclass.\n");
   });
 });

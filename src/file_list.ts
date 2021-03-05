@@ -7,7 +7,7 @@ export default class FileList implements Iterable<File> {
     this.files = [];
 
     if (files) {
-      files.forEach((f) => { this.push(f); });
+      files.forEach((f) => this.push(f));
     }
   }
 

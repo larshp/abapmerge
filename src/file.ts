@@ -4,8 +4,8 @@ export default class File {
   private contents: FileContent;
   private isUsed: boolean;
 
-// object names are unique across packages in ABAP, so
-// the folder name is not part of this class
+  // object names are unique across packages in ABAP, so
+  // the folder name is not part of this class
   public constructor(filename: string, c: FileContent) {
     this.filename = filename;
     this.contents = c;

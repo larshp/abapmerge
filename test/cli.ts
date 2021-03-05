@@ -12,7 +12,7 @@ describe("CLI parse arguments", () => {
   });
 
   it("no arguments", () => {
-      expect(() => Logic.parseArgs(args)).to.throw("Specify entrypoint file name");
+    expect(() => Logic.parseArgs(args)).to.throw("Specify entrypoint file name");
   });
 
   it("too many entry points", () => {
@@ -104,7 +104,7 @@ function captureStream(stream) {
 
   return {
     unhook: function unhook() {
-     stream.write = oldWrite;
+      stream.write = oldWrite;
     },
     captured: function() {
       return buf;

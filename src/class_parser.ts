@@ -139,7 +139,7 @@ export class ClassParser {
     ClassParser.tryProcessLocalFile("def", publicClass, list);
 
     let superMatch = publicClass.def.match(/INHERITING FROM (Z\w+)/i);
-//    console.dir(superMatch);
+    // console.dir(superMatch);
     let dependencies = [];
     if (superMatch && superMatch[1]) {
       dependencies.push(superMatch[1].toLowerCase());

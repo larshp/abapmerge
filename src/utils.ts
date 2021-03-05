@@ -16,14 +16,14 @@ export default class Utils {
 
     for (let i = 0; i < input.length; ++i) {
       let char = input.charCodeAt(i);
-      /* tslint:disable:no-bitwise */
+      /* eslint-disable-next-line no-bitwise */
       hash = ( ( hash << 5 ) - hash ) + char;
-      /* tslint:disable:no-bitwise */
+      /* eslint-disable-next-line no-bitwise */
       hash = hash & hash;
     }
 
     if (hash < 0) {
-        return hash * -1;
+      return hash * -1;
     }
 
     return hash;
