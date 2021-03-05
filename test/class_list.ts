@@ -35,11 +35,10 @@ describe("classes 2, parser error", () => {
     let run = function () {
       let files = new FileList();
       files.push(new File("zcl_class.clas.abap", "foo boo moo"));
-// tslint:disable-next-line:no-unused-expression
       new ClassList(files);
     };
 
-// tslint:disable-next-line:no-invalid-this
+    // eslint-disable-next-line no-invalid-this
     expect(run.bind(this)).to.throw("error parsing class: zcl_class.clas.abap");
   });
 });

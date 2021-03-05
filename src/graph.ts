@@ -16,13 +16,13 @@ export default class Graph<T> {
   }
 
   public removeNode(key: String) {
-    this.nodes = this.nodes.filter((n) => { return n[0] !== key; });
-    this.edges = this.edges.filter((e) => { return e[1] !== key; });
+    this.nodes = this.nodes.filter((n) => n[0] !== key);
+    this.edges = this.edges.filter((e) => e[1] !== key);
   }
 
   public toString(): String {
-    const nodes = this.nodes.reduce((a, n) => { return a + n[0] + ", "; }, "");
-    const edges = this.edges.reduce((a, e) => { return a + e[0] + "->" + e[1] + ", "; }, "");
+    const nodes = this.nodes.reduce((a, n) => a + n[0] + ", ", "");
+    const edges = this.edges.reduce((a, e) => a + e[0] + "->" + e[1] + ", ", "");
 
     return nodes + "\n" + edges;
   }

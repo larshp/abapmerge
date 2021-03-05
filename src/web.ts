@@ -5,7 +5,7 @@ import Merge from "./merge";
 let files: FileList;
 
 function fname(s: string): string {
-    return s.split(".")[0];
+  return s.split(".")[0];
 }
 
 export function onClick(e) {
@@ -77,10 +77,10 @@ function handleDragOver(evt) {
   evt.dataTransfer.dropEffect = "copy"; // explicitly show this is a copy.
 }
 
-function setup_listeners() {
+function setupListeners() {
   let dropZone = document.getElementById("drop_zone");
   dropZone.addEventListener("dragover", handleDragOver, false);
   dropZone.addEventListener("drop", handleFileSelect, false);
 }
 
-document.body.onload = setup_listeners;
+document.body.onload = setupListeners;
