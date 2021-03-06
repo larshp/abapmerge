@@ -47,7 +47,7 @@ export default class FileList implements Iterable<File> {
     throw Error(`file not found: ${name}`);
   }
 
-  public checkFiles(): void {
+  public validateAllFilesUsed(): void {
     const unusedFiles = this.files
       .filter(i => !i.wasUsed() && (i.isABAP() && !i.isMain()))
       .map(i => i.getFilename().toLowerCase())

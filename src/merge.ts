@@ -21,13 +21,8 @@ export default class Merge {
     this.files = PragmaProcessor.process(this.files);
     this.classes = new ClassList(this.files);
 
-    let newReportName;
-    if (options.newReportName) {
-      newReportName = options.newReportName;
-    }
-
-    let result = this.analyze(main, this.files.fileByName(main).getContents(), newReportName);
-    this.files.checkFiles();
+    let result = this.analyze(main, this.files.fileByName(main).getContents(), options.newReportName);
+    this.files.validateAllFilesUsed();
 
     if (options.appendAbapmergeMarker) {
       result += new AbapmergeMarker().render();
