@@ -26,22 +26,22 @@ export default class FileList implements Iterable<File> {
   }
 
   public fileByName(name: string): File {
-    for (let f of this.files) {
-      if (f.getName().toLowerCase() === name.toLowerCase() && f.isABAP()) {
-        f.markUsed();
-        return f;
-      }
+    name = name.toLowerCase();
+    const file = this.files.find(f => f.getName().toLowerCase() === name.toLowerCase() && f.isABAP());
+    if (file) {
+      file.markUsed();
+      return file;
     }
 
     throw Error(`file not found: ${name}`);
   }
 
   public otherByName(name: string): File {
-    for (let f of this.files) {
-      if (f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP()) {
-        f.markUsed();
-        return f;
-      }
+    name = name.toLowerCase();
+    const file = this.files.find(f => f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP());
+    if (file) {
+      file.markUsed();
+      return file;
     }
 
     throw Error(`file not found: ${name}`);

@@ -2,14 +2,13 @@ type FileContent = string | Buffer;
 export default class File {
   private filename: string;
   private contents: FileContent;
-  private isUsed: boolean;
+  private isUsed: boolean = false;
 
   // object names are unique across packages in ABAP, so
   // the folder name is not part of this class
-  public constructor(filename: string, c: FileContent) {
+  public constructor(filename: string, content: FileContent) {
     this.filename = filename;
-    this.contents = c;
-    this.isUsed   = false;
+    this.contents = content;
   }
 
   public isBinary(): boolean {
@@ -42,7 +41,7 @@ export default class File {
     this.isUsed = true;
   }
 
-  public isABAP() {
+  public isABAP(): boolean {
     return this.filename.match(/.abap$/) !== null;
   }
 
