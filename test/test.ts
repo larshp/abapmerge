@@ -322,16 +322,18 @@ describe("test 19, @@abapmerge w/o main causes failure", () => {
   });
 });
 
-describe("test 20, include abapmerge version number in footer", () => {
-  it.skip("something", () => {
-    // strange test, maybe better to test lif_abapmerge_marker?
-    let files = new FileList();
-    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
-    files.push(new File("zinc1.abap", "write / 'foo'."));
+describe("test 20, abapmerge marker in footer", () => {
+  it("abapmerge marker in footer", () => {
+    let files = new FileList([
+      new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."),
+      new File("zinc1.abap", "write / 'foo'."),
+    ]);
 
-    let result = Merge.merge(files, "zmain");
-    result = Merge.appendFooter(result, "1.0.0");
+    let result = Merge.merge(files, "zmain", {
+      appendAbapmergeMarker: true,
+    });
     expect(result).to.match(/\* abapmerge (?:(\d+\.[.\d]*\d+))/);
+    expect(result).to.match(/^INTERFACE lif_abapmerge_marker\.$/m);
   });
 });
 

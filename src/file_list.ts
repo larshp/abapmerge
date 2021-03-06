@@ -4,11 +4,9 @@ export default class FileList implements Iterable<File> {
   private files: File[];
 
   public constructor(files?: File[]) {
-    this.files = [];
-
-    if (files) {
-      files.forEach((f) => this.push(f));
-    }
+    this.files = files
+      ? [].concat(files)
+      : [];
   }
 
   public push(f: File) {
@@ -16,8 +14,7 @@ export default class FileList implements Iterable<File> {
   }
 
   public concat(f: FileList) {
-    this.files = this.files.concat(f.files);
-    return this;
+    this.files.push(...f.files);
   }
 
   public length(): number {
