@@ -12,9 +12,11 @@
     "testw": "mocha --recursive --watch build/test",
     "pretest": "npm run build",
     "test": "mocha --recursive --reporter progress build/test",
+    "test:only": "mocha --recursive build/test",
     "posttest": "npm run lint",
     "lint": "eslint -c .eslintrc.js --ext .ts src test",
-    "prepublishOnly": "rm -rf build && npm run test"
+    "prepublishOnly": "rm -rf build && npm run test",
+    "sample": "node ./abapmerge sample/ztest.prog.abap"
   },
   "repository": {
     "type": "git",
