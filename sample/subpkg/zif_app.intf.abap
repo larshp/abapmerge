@@ -1,6 +1,6 @@
 interface zif_app
   public .
 
-  methods run.
+  methods run raising zcx_error.
 
 endinterface.
