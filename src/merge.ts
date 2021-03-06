@@ -37,17 +37,8 @@ export default class Merge {
   }
 
   private static skipFUGR(files: FileList): FileList {
-    let result = new FileList();
-
-    for (let i = 0; i < files.length(); i++) {
-      let file = files.get(i);
-      if (file.getFilename().match(/\.fugr\./) ) {
-        continue;
-      }
-      result.push(file);
-    }
-
-    return result;
+    const filesWithoutFugrs = [...files].filter(f => !f.getFilename().match(/\.fugr\./));
+    return new FileList(filesWithoutFugrs);
   }
 
   private static analyze(main: string, contents: string, newReportName?: string) {
