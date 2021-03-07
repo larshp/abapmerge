@@ -183,7 +183,7 @@ describe("test 13b, skip function groups, error", () => {
 });
 
 describe("test 14, include classes event without INCLUDE", () => {
-  it("something", () => {
+  it("include classes event without INCLUDE", () => {
     let files = new FileList();
     files.push(new File("zmain13.prog.abap", "REPORT zmain13.\n" +
                                              "\n" +

@@ -27,7 +27,7 @@ export default class ClassList {
       this.getInterfaces(),
       this.getDefinitions(),
       this.getImplementations(),
-    ].join("\n");
+    ].join("");
   }
 
   public getDeferred(): string {
