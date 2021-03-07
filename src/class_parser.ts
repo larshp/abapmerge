@@ -70,7 +70,6 @@ export class ClassParser {
     let regex = /^\s*((CLASS)\s+(\w+)\s+DEFINITION\s*[^\.]*|(INTERFACE)\s+(\w+)\s*)\./gim;
     let definition;
 
-    /* tslint:disable:no-conditional-assignment */
     while ((definition = regex.exec(local)) !== null) {
       if (definition[1].toUpperCase().includes("DEFINITION LOCAL FRIENDS")) {
         throw "Cannot merge LOCAL FRIENDS";
