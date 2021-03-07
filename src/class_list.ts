@@ -21,11 +21,13 @@ export default class ClassList {
   }
 
   public getResult(): string {
-    return this.getExceptions() +
-      this.getDeferred() +
-      this.getInterfaces() +
-      this.getDefinitions() +
-      this.getImplementations();
+    return [
+      this.getDeferred(),
+      this.getExceptions(),
+      this.getInterfaces(),
+      this.getDefinitions(),
+      this.getImplementations(),
+    ].join("\n");
   }
 
   public getDeferred(): string {
