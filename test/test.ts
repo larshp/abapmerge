@@ -165,20 +165,22 @@ describe("test 12, @@abapmerge in class", () => {
 });
 
 describe("test 13, skip function groups", () => {
-  it("something", () => {
-    let files = new FileList();
-    files.push(new File("zmain.abap", "REPORT zmain."));
-    files.push(new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."));
-    expect(Merge.merge(files, "zmain", {skipFUGR: true})).to.be.a("string");
+  it("skip function groups with skipFUGR", () => {
+    let files = new FileList([
+      new File("zmain.abap", "REPORT zmain."),
+      new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."),
+    ]);
+    const merged = Merge.merge(files, "zmain", {skipFUGR: true});
+    expect(merged).to.be.a("string");
+    expect(merged).not.to.match(/Hello/);
   });
-});
 
-describe("test 13b, skip function groups, error", () => {
-  it("something", () => {
-    let files = new FileList();
-    files.push(new File("zmain.abap", "REPORT zmain."));
-    files.push(new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."));
-    expect(() => Merge.merge(files, "zmain")).to.throw();
+  it("fails on function groups without skipFUGR", () => {
+    let files = new FileList([
+      new File("zmain.abap", "REPORT zmain."),
+      new File("zabapgit_unit_te.fugr.saplzabapgit_unit_te.abap", "WRITE / 'Hello World!'."),
+    ]);
+    expect(() => Merge.merge(files, "zmain", {skipFUGR: false})).to.throw(/Not all files used.*fugr/);
   });
 });
 
@@ -322,16 +324,18 @@ describe("test 19, @@abapmerge w/o main causes failure", () => {
   });
 });
 
-describe("test 20, include abapmerge version number in footer", () => {
-  it.skip("something", () => {
-    // strange test, maybe better to test lif_abapmerge_marker?
-    let files = new FileList();
-    files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."));
-    files.push(new File("zinc1.abap", "write / 'foo'."));
+describe("test 20, abapmerge marker in footer", () => {
+  it("abapmerge marker in footer", () => {
+    let files = new FileList([
+      new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinc1."),
+      new File("zinc1.abap", "write / 'foo'."),
+    ]);
 
-    let result = Merge.merge(files, "zmain");
-    result = Merge.appendFooter(result, "1.0.0");
+    let result = Merge.merge(files, "zmain", {
+      appendAbapmergeMarker: true,
+    });
     expect(result).to.match(/\* abapmerge (?:(\d+\.[.\d]*\d+))/);
+    expect(result).to.match(/^INTERFACE lif_abapmerge_marker\.$/m);
   });
 });
 

@@ -8,7 +8,6 @@ import PackageInfo from "../package.json";
 
 interface ICliArgs {
   entryFilename: string;
-  entryObjectName: string;
   entryDir: string;
   skipFUGR: boolean;
   noFooter: boolean;
@@ -18,15 +17,19 @@ interface ICliArgs {
 export class Logic {
   private static textFiles = new Set([".abap", ".xml", ".css", ".js"]);
 
-  public static readFiles(dir: string, pre = ""): FileList {
+  private static isTextFile(filepath: string): boolean {
+    return Logic.textFiles.has(path.extname(filepath).toLowerCase());
+  }
+
+  private static readFiles(dir: string, pre = ""): FileList {
     let files = fs.readdirSync(dir);
-    let list: FileList = new FileList();
+    let list = new FileList();
 
     for (let file of files) {
       let filepath = path.join(dir, file);
 
       if (fs.lstatSync(filepath).isFile()) {
-        if (Logic.textFiles.has(path.extname(filepath).toLowerCase())) {
+        if (Logic.isTextFile(filepath)) {
           let contents = fs
             .readFileSync(filepath, "utf8")
             .replace(/\t/g, "  ") // remove tabs
@@ -36,8 +39,9 @@ export class Logic {
           let buffer = fs.readFileSync(filepath);
           list.push(new File(file, buffer));
         }
+
       } else {
-        list = list.concat(this.readFiles(filepath, path.join(pre, file)));
+        list.concat(this.readFiles(filepath, path.join(pre, file)));
       }
     }
 
@@ -77,7 +81,6 @@ export class Logic {
     return {
       entryDir,
       entryFilename,
-      entryObjectName: entryFilename.split(".")[0],
       skipFUGR: cmdOpts.skipFugr,
       noFooter: cmdOpts.withoutFooter,
       newReportName: cmdOpts.changeReportName,
@@ -85,30 +88,25 @@ export class Logic {
   }
 
   public static run(args: string[]) {
-    let retval = 0;
-    let output = "";
     try {
+      let output = "";
       const parsedArgs = Logic.parseArgs(args);
+      const entryObjectName = parsedArgs.entryFilename.split(".")[0];
       output = Merge.merge(
         Logic.readFiles(parsedArgs.entryDir),
-        parsedArgs.entryObjectName,
+        entryObjectName,
         {
           skipFUGR: parsedArgs.skipFUGR,
           newReportName: parsedArgs.newReportName,
+          appendAbapmergeMarker: parsedArgs.noFooter === false,
         },
       );
-      if (parsedArgs.noFooter === false) {
-        output = Merge.appendFooter(output, PackageInfo.version);
-      }
       process.stdout.write(output);
+      if (output === undefined) throw new Error("output undefined, hmm?");
+      return 0;
     } catch (e) {
-      output = e.message ? e.message : e;
-      retval = 1;
-      process.stderr.write(output);
+      process.stderr.write(e.message || e.toString());
+      return 1;
     }
-    if (output === undefined) throw new Error("output undefined, hmm?");
-    return retval;
   }
 }
-
-// process.exit(Logic.run());

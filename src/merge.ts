@@ -1,52 +1,39 @@
 import FileList from "./file_list";
 import PragmaProcessor from "./pragma";
 import ClassList from "./class_list";
+import AbapmergeMarker from "./abapmerge_marker";
 
 export default class Merge {
   private static files: FileList;
   private static classes: ClassList;
 
-  public static merge(files: FileList, main: string, options?: {skipFUGR?: boolean, newReportName?: string}): string {
+  public static merge(files: FileList, main: string, options?: {
+    skipFUGR?: boolean;
+    newReportName?: string;
+    appendAbapmergeMarker?: boolean;
+  }): string {
     this.files = files;
+    if (!options) options = {};
 
-    if (options && options.skipFUGR) {
+    if (options.skipFUGR) {
       this.files = this.skipFUGR(this.files);
     }
     this.files = PragmaProcessor.process(this.files);
     this.classes = new ClassList(this.files);
 
-    let newReportName;
-    if (options && options.newReportName) {
-      newReportName = options.newReportName;
+    let result = this.analyze(main, this.files.fileByName(main).getContents(), options.newReportName);
+    this.files.validateAllFilesUsed();
+
+    if (options.appendAbapmergeMarker) {
+      result += new AbapmergeMarker().render();
     }
 
-    let result = this.analyze(main, this.files.fileByName(main).getContents(), newReportName);
-    this.files.checkFiles();
     return result;
-  }
-
-  public static appendFooter(contents: string, version: string): string {
-    return contents +
-      "****************************************************\n" +
-      "INTERFACE lif_abapmerge_marker.\n" +
-      "ENDINTERFACE.\n" +
-      "****************************************************\n" +
-      "* abapmerge " + version + " - " + new Date().toJSON() + "\n" +
-      "****************************************************\n";
   }
 
   private static skipFUGR(files: FileList): FileList {
-    let result = new FileList();
-
-    for (let i = 0; i < files.length(); i++) {
-      let file = files.get(i);
-      if (file.getFilename().match(/\.fugr\./) ) {
-        continue;
-      }
-      result.push(file);
-    }
-
-    return result;
+    const filesWithoutFugrs = [...files].filter(f => !f.getFilename().match(/\.fugr\./));
+    return new FileList(filesWithoutFugrs);
   }
 
   private static analyze(main: string, contents: string, newReportName?: string) {

@@ -16,7 +16,7 @@ function buildFileList(mock) {
 }
 
 describe("Pragma include", () => {
-  it("include", () => {
+  it("include a file with pragma", () => {
     let files = buildFileList({
       "zmain.abap": [
         "REPORT zmain.",
@@ -43,7 +43,7 @@ describe("Pragma include", () => {
     expect(inc.wasUsed()).to.equal(true);
   });
 
-  it("include base64", () => {
+  it("include a file with pragma, base64", () => {
     let files = buildFileList({
       "zmain.abap": [
         "REPORT zmain.",

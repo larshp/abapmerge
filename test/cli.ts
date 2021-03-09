@@ -32,7 +32,6 @@ describe("CLI parse arguments", () => {
     let parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "cli.js",
-      entryObjectName: "cli",
       skipFUGR: false,
       noFooter: false,
       newReportName: undefined,
@@ -48,7 +47,6 @@ describe("CLI parse arguments", () => {
     let parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "cli.js",
-      entryObjectName: "cli",
       skipFUGR: true,
       noFooter: false,
       newReportName: undefined,
@@ -65,7 +63,6 @@ describe("CLI parse arguments", () => {
     let parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "cli.js",
-      entryObjectName: "cli",
       skipFUGR: true,
       noFooter: true,
       newReportName: undefined,
@@ -84,7 +81,6 @@ describe("CLI parse arguments", () => {
     let parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "cli.js",
-      entryObjectName: "cli",
       skipFUGR: true,
       noFooter: true,
       newReportName: "znewname",

@@ -4,11 +4,9 @@ export default class FileList implements Iterable<File> {
   private files: File[];
 
   public constructor(files?: File[]) {
-    this.files = [];
-
-    if (files) {
-      files.forEach((f) => this.push(f));
-    }
+    this.files = files
+      ? [].concat(files)
+      : [];
   }
 
   public push(f: File) {
@@ -16,8 +14,7 @@ export default class FileList implements Iterable<File> {
   }
 
   public concat(f: FileList) {
-    this.files = this.files.concat(f.files);
-    return this;
+    this.files.push(...f.files);
   }
 
   public length(): number {
@@ -29,28 +26,28 @@ export default class FileList implements Iterable<File> {
   }
 
   public fileByName(name: string): File {
-    for (let f of this.files) {
-      if (f.getName().toLowerCase() === name.toLowerCase() && f.isABAP()) {
-        f.markUsed();
-        return f;
-      }
+    name = name.toLowerCase();
+    const file = this.files.find(f => f.getName().toLowerCase() === name.toLowerCase() && f.isABAP());
+    if (file) {
+      file.markUsed();
+      return file;
     }
 
     throw Error(`file not found: ${name}`);
   }
 
   public otherByName(name: string): File {
-    for (let f of this.files) {
-      if (f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP()) {
-        f.markUsed();
-        return f;
-      }
+    name = name.toLowerCase();
+    const file = this.files.find(f => f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP());
+    if (file) {
+      file.markUsed();
+      return file;
     }
 
     throw Error(`file not found: ${name}`);
   }
 
-  public checkFiles(): void {
+  public validateAllFilesUsed(): void {
     const unusedFiles = this.files
       .filter(i => !i.wasUsed() && (i.isABAP() && !i.isMain()))
       .map(i => i.getFilename().toLowerCase())
