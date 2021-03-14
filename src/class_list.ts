@@ -79,10 +79,11 @@ export default class ClassList {
   private buildDependenciesGraph(list: Class[]): Graph<Class> {
     let g = new Graph<Class>();
 
-    list.forEach((c) => {
-      g.addNode(c.getName(), c);
-      c.getDependencies().forEach((d) => g.addEdge(c.getName(), d) );
-    });
+    for (const c of list) {
+      const className = c.getName();
+      g.addNode(className, c);
+      for (const d of c.getDependencies()) g.addEdge(className, d);
+    }
 
     return g;
   }
