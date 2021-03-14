@@ -21,9 +21,8 @@ export default class Graph<T> {
   }
 
   public toString(): String {
-    const nodes = this.nodes.reduce((a, n) => a + n[0] + ", ", "");
-    const edges = this.edges.reduce((a, e) => a + e[0] + "->" + e[1] + ", ", "");
-
+    const nodes = this.nodes.map(n => n[0]).join(", ");
+    const edges = this.edges.map(e => e[0] + "->" + e[1]).join(", ");
     return nodes + "\n" + edges;
   }
 
@@ -51,6 +50,6 @@ export default class Graph<T> {
       }
     }
 
-    throw "No leaf found: " + this.toString();
+    throw Error("No leaf found: " + this);
   }
 }
