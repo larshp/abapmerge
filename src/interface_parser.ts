@@ -13,12 +13,24 @@ export default class InterfaceParser {
 
     const dependencies = new Set();
 
-    const typeDeps = f.getContents().matchAll(/TYPE\s+([^.,]+)?(ZIF_\w+)/ig);
+    // this should capture just elements of an interface "zif=>..."
+    // if interface itself is referred, then it is probably a REF TO
+    // REF TOs will be solved by deferred definitions are not taken into account
+    // (maybe it is wrong by the way, as it helps to identify cyclic dependencies)
+    const typeDeps = f.getContents().matchAll(/TYPE\s+([^.,]+)?(ZIF_\w+)(=?)/ig);
     if (typeDeps) {
       for (const dep of typeDeps) {
-        const name = dep[2].toLowerCase();
-        if (name !== self) {
-          dependencies.add(name);
+        const furtherIfElementMarker = dep[3];
+        if (!furtherIfElementMarker) {
+          const typeAtrrs = dep[1];
+          if (!/REF\s+TO/i.test(typeAtrrs)) {
+            throw new Error(`Unexpected interface ref: ${dep.toString()}`);
+          }
+          continue;
+        }
+        const ifName = dep[2].toLowerCase();
+        if (ifName !== self) {
+          dependencies.add(ifName);
         }
       }
     }
