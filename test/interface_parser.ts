@@ -4,14 +4,13 @@ import File from "../src/file";
 
 describe("interface_parser 1", () => {
   it("parses interface", () => {
-    const contents = "INTERFACE zif_abapgit_gui_page PUBLIC.\n" +
-      "  INTERFACES zif_abapgit_gui_event_handler.\n" +
-      "  INTERFACES zif_abapgit_gui_renderable.\n" +
-      "  ALIASES on_event FOR zif_abapgit_gui_event_handler~on_event.\n" +
-      "  ALIASES render FOR zif_abapgit_gui_renderable~render.\n" +
-      "ENDINTERFACE.";
-
-    const f = new File("zif_abapgit_gui_page.intf.abap", contents);
+    const f = new File("zif_abapgit_gui_page.intf.abap", `
+      INTERFACE zif_abapgit_gui_page PUBLIC.
+        INTERFACES zif_abapgit_gui_event_handler.
+        INTERFACES zif_abapgit_gui_renderable.
+        ALIASES on_event FOR zif_abapgit_gui_event_handler~on_event.
+        ALIASES render FOR zif_abapgit_gui_renderable~render.
+      ENDINTERFACE.`);
 
     const result = InterfaceParser.parse(f);
 
@@ -64,14 +63,35 @@ describe("interface_parser 1", () => {
     const f = new File("zif_my_interface.intf.abap", `
       INTERFACE zif_my_interface PUBLIC.
         TYPES ty_x TYPE zif_common_types=>ty_type1.
-        TYPES ty_z TYPE REF TO zif_log.
+        TYPES ty_z TYPE REF TO zif_some_other_if=>ty_obj.
       ENDINTERFACE.`);
 
     const result = InterfaceParser.parse(f);
 
     expect(result.getDependencies().length).to.equal(2);
     expect(result.getDependencies()).to.contain("zif_common_types");
-    expect(result.getDependencies()).to.contain("zif_log");
+    expect(result.getDependencies()).to.contain("zif_some_other_if");
+  });
+
+  it("parses interface and skips REF TO another interface", () => {
+    const f = new File("zif_my_interface.intf.abap", `
+      INTERFACE zif_my_interface PUBLIC.
+        TYPES ty_z TYPE REF TO zif_some_other_if.
+        TYPES ty_x TYPE TABLE OF REF TO zif_log.
+      ENDINTERFACE.`);
+
+    const result = InterfaceParser.parse(f);
+
+    expect(result.getDependencies().length).to.equal(0);
+  });
+
+  it("parses interface throws on missing REF TO and direct ref to interface", () => {
+    const f = new File("zif_my_interface.intf.abap", `
+      INTERFACE zif_my_interface PUBLIC.
+        TYPES ty_z TYPE zif_some_other_if~xyz. " ??? just to test it
+      ENDINTERFACE.`);
+
+    expect(() => InterfaceParser.parse(f)).throws();
   });
 
   it("parses interface with 'interfaces:'", () => {
