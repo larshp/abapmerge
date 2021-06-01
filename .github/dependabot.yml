@@ -7,19 +7,3 @@ updates:
     time: "04:00"
   open-pull-requests-limit: 10
   versioning-strategy: increase
-  ignore:
-  - dependency-name: typescript
-    versions:
-    - 4.2.2
-    - 4.2.3
-  - dependency-name: chai
-    versions:
-    - 4.3.0
-    - 4.3.3
-  - dependency-name: commander
-    versions:
-    - 7.0.0
-    - 7.1.0
-  - dependency-name: mocha
-    versions:
-    - 8.3.0
