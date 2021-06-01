@@ -9,8 +9,9 @@
         "sourceMap": true,
         "downlevelIteration": true,
         "esModuleInterop": true,
-        "resolveJsonModule": true
-        },
+        "resolveJsonModule": true,
+        "lib": ["es2020", "dom"]
+    },
     "filesGlob": [
         "./**/*.ts"
     ],

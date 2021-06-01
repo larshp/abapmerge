@@ -96,10 +96,10 @@ module.exports = {
             "error",
             "1tbs"
         ],
-        "capitalized-comments": [
-            "error",
-            "never"
-        ],
+        // "capitalized-comments": [
+        //     "error",
+        //     "never"
+        // ],
         "comma-dangle": [
             "error",
             "always-multiline"
