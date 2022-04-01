@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { expect } from "chai";
 import PragmaProcessor from "../src/pragma";
 import File from "../src/file";
