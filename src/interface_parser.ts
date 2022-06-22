@@ -23,6 +23,9 @@ export default class InterfaceParser {
         const furtherIfElementMarker = dep[3];
         if (!furtherIfElementMarker) {
           const typeAtrrs = dep[1];
+          if (typeAtrrs.endsWith("VALUE '")) {
+            continue;
+          }
           if (!/REF\s+TO/i.test(typeAtrrs)) {
             throw new Error(`Unexpected interface ref: ${dep.toString()}`);
           }
