@@ -176,4 +176,25 @@ ENDINTERFACE.`);
 
     expect(result.getDependencies().length).to.equal(1);
   });
+
+  it("parse zif_abapgit_repo_srv", () => {
+    const f = new File("zif_abapgit_repo_srv.intf.abap", `
+  INTERFACE zif_abapgit_repo_srv
+    PUBLIC .
+
+    METHODS purge
+      IMPORTING
+        !ii_repo      TYPE REF TO zif_abapgit_repo
+        !is_checks    TYPE zif_abapgit_definitions=>ty_delete_checks
+      RETURNING
+        VALUE(ri_log) TYPE REF TO zif_abapgit_log
+      RAISING
+        zcx_abapgit_exception .
+  ENDINTERFACE.`);
+
+    const result = InterfaceParser.parse(f);
+
+    expect(result.getDependencies().length).to.equal(1);
+    expect(result.getDependencies()[0]).to.equal("zif_abapgit_definitions");
+  });
 });

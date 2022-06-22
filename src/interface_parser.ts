@@ -17,7 +17,7 @@ export default class InterfaceParser {
     // if interface itself is referred, then it is probably a REF TO
     // REF TOs will be solved by deferred definitions are not taken into account
     // (maybe it is wrong by the way, as it helps to identify cyclic dependencies)
-    const typeDeps = f.getContents().matchAll(/TYPE\s+([^.,]+)?(ZIF_\w+)(=?)/ig);
+    const typeDeps = f.getContents().matchAll(/TYPE\s+([^.,\n]+)?(ZIF_\w+)(=?)/ig);
     if (typeDeps) {
       for (const dep of typeDeps) {
         const furtherIfElementMarker = dep[3];
