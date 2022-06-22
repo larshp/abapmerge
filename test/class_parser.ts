@@ -450,7 +450,7 @@ describe("class_parser 28, the method parse", () => {
 });
 
 describe("class_parser 29, multi occurrence on line", () => {
-  it.only("processes all files", () => {
+  it("processes all files", () => {
     let mainFile = new File(
       "cl_parent.clas.abap",
       `
