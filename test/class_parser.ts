@@ -388,7 +388,7 @@ describe("class_parser 27, renameLocalType interface in method implementation", 
   });
 });
 
-describe("class_parser 28, the method parse ", () => {
+describe("class_parser 28, the method parse", () => {
   it("processes all files", () => {
     let mainFile = new File(
       "cl_parent.clas.abap",
@@ -446,5 +446,45 @@ describe("class_parser 28, the method parse ", () => {
       "class cl_parent implementation.\nmethod constructor.\n" +
       "mo_impl = cast WboRqQvMEsAOOpdApbtQPWHIIjHuMM(new GiiGhQvMEsAOOpdApbtQvMjIdUypid( )).\n" +
       "endmethod.\nendclass.\n");
+  });
+});
+
+describe("class_parser 29, multi occurrence on line", () => {
+  it("processes all files", () => {
+    let mainFile = new File(
+      "cl_parent.clas.abap",
+      `
+class cl_parent definition.
+endclass.
+class cl_parent implementation.
+  method constructor.
+    CASE foo.
+      WHEN lif_kind=>bar OR lif_kind=>bar.
+    ENDCASE.
+  endmethod.
+endclass.`);
+
+    let defFile = new File(
+      "cl_parent.clas.locals_def.abap",
+      `
+interface lif_kind.
+  constants bar type c length 1 value 'A'.
+endinterface.`);
+
+    let files = new FileList();
+
+    files.push(mainFile);
+    files.push(defFile);
+
+    let abapClass = ClassParser.parse(mainFile, files);
+
+    expect(abapClass.getImplementation()).to.equal(`class cl_parent implementation.
+  method constructor.
+    CASE foo.
+      WHEN WboRqQvMEsAOOpdApbtQdAMURRqLkF=>bar OR WboRqQvMEsAOOpdApbtQdAMURRqLkF=>bar.
+    ENDCASE.
+  endmethod.
+endclass.`);
+
   });
 });

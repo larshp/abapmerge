@@ -40,7 +40,9 @@ export class ClassParser {
     let newCode = oldCode;
     for (let occurrence of occurrences) {
       let regexp = new RegExp(occurrence.regstr, "igm");
-      newCode = newCode.replace(regexp, occurrence.context + "$1" + newName + "$2");
+      while (newCode.match(regexp)) {
+        newCode = newCode.replace(regexp, occurrence.context + "$1" + newName + "$2");
+      }
     }
 
     return newCode;
