@@ -13,6 +13,7 @@
     "test": "npm run build && mocha --recursive --reporter progress build/test && npm run lint",
     "test:only": "mocha --recursive build/test",
     "lint": "eslint -c .eslintrc.js --ext .ts src test",
+    "publish:patch": "npm --no-git-tag-version version patch && rm -rf build && npm install && npm run test && npm publish --access public",
     "sample": "node ./abapmerge sample/ztest.prog.abap"
   },
   "repository": {
