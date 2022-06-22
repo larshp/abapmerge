@@ -2,6 +2,7 @@ npm-debug.log
 *.js.map
 .github
 test
-src
 sample
 tsconfig.json
+/src/*
+.eslintrc.js
