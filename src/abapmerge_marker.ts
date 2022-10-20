@@ -7,6 +7,7 @@ export default class AbapmergeMarker {
 INTERFACE lif_abapmerge_marker.
 * abapmerge ${ PackageInfo.version } - ${ new Date().toJSON() }
 ENDINTERFACE.
-****************************************************`;
+****************************************************
+`;
   }
 }
