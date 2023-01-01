@@ -36,7 +36,7 @@
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
     "chai": "^4.3.6",
-    "eslint": "^8.25.0",
+    "eslint": "^8.31.0",
     "eslint-plugin-jsdoc": "^39.3.14",
     "eslint-plugin-no-null": "^1.0.2",
     "mocha": "^10.1.0",
