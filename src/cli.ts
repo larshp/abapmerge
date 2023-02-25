@@ -77,10 +77,6 @@ export class Logic {
     }
 
     const entrypoint = commander.args[0];
-    if (!fs.existsSync(entrypoint)) {
-      throw new Error(`File "${entrypoint}" does not exist`);
-    }
-
     const entryDir = path.dirname(entrypoint);
     const entryFilename = path.basename(entrypoint);
     const cmdOpts = commander.opts();
@@ -98,6 +94,11 @@ export class Logic {
     try {
       let output = "";
       const parsedArgs = Logic.parseArgs(args);
+      const entrypoint = path.join(parsedArgs.entryDir, parsedArgs.entryFilename);
+      if (!fs.existsSync(entrypoint)) {
+        throw new Error(`File "${entrypoint}" does not exist`);
+      }
+
       const entryObjectName = parsedArgs.entryFilename.split(".")[0];
       output = Merge.merge(
         Logic.readFiles(parsedArgs.entryDir),

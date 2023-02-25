@@ -23,17 +23,18 @@ describe("CLI parse arguments", () => {
     expect(() => Logic.parseArgs(args)).to.throw("Specify just one entrypoint");
   });
 
-  it("entrypoint file does not exist", () => {
+  it.skip("entrypoint file does not exist", () => {
+    // skip, file existence check moved to `run`, proper implemention would suppose memfs or similar
     args.push("entrypoint_1");
     expect(() => Logic.parseArgs(args)).to.throw("File \"entrypoint_1\" does not exist");
   });
 
   it("entrypoint existing file", () => {
-    args.push(join(__dirname, "cli.ts"));
+    args.push(join(__dirname, "entry.abap"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.ts",
+      entryFilename: "entry.abap",
       skipFUGR: false,
       noFooter: false,
       newReportName: undefined,
@@ -44,11 +45,11 @@ describe("CLI parse arguments", () => {
 
   it("skipFugr option", () => {
     args.push("-f");
-    args.push(join(__dirname, "cli.ts"));
+    args.push(join(__dirname, "entry.abap"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.ts",
+      entryFilename: "entry.abap",
       skipFUGR: true,
       noFooter: false,
       newReportName: undefined,
@@ -60,11 +61,11 @@ describe("CLI parse arguments", () => {
   it("noFooter option", () => {
     args.push("-f");
     args.push("--without-footer");
-    args.push(join(__dirname, "cli.ts"));
+    args.push(join(__dirname, "entry.abap"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.ts",
+      entryFilename: "entry.abap",
       skipFUGR: true,
       noFooter: true,
       newReportName: undefined,
@@ -78,11 +79,11 @@ describe("CLI parse arguments", () => {
     args.push("--without-footer");
     args.push("-c");
     args.push("znewname");
-    args.push(join(__dirname, "cli.ts"));
+    args.push(join(__dirname, "entry.abap"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.ts",
+      entryFilename: "entry.abap",
       skipFUGR: true,
       noFooter: true,
       newReportName: "znewname",
