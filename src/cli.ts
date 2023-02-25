@@ -61,6 +61,13 @@ export class Logic {
         "changes report name in REPORT clause in source code",
       )
       .arguments("<entrypoint>");
+
+    commander.exitOverride((err) => {
+      if (err.code === "commander.missingArgument") {
+        throw Error("Specify entrypoint file name");
+      }
+      process.exit(err.exitCode);
+    });
     commander.parse(args);
 
     if (!commander.args.length) {

@@ -1,8 +1,10 @@
 import * as chai from "chai";
 import { Logic } from "../src/cli";
+import { join } from "path";
 
 let expect = chai.expect;
 
+let stderr;
 let args: string[];
 
 describe("CLI parse arguments", () => {
@@ -27,11 +29,11 @@ describe("CLI parse arguments", () => {
   });
 
   it("entrypoint existing file", () => {
-    args.push(__dirname.concat("/cli.js"));
+    args.push(join(__dirname, "cli.ts"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.js",
+      entryFilename: "cli.ts",
       skipFUGR: false,
       noFooter: false,
       newReportName: undefined,
@@ -42,11 +44,11 @@ describe("CLI parse arguments", () => {
 
   it("skipFugr option", () => {
     args.push("-f");
-    args.push(__dirname.concat("/cli.js"));
+    args.push(join(__dirname, "cli.ts"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.js",
+      entryFilename: "cli.ts",
       skipFUGR: true,
       noFooter: false,
       newReportName: undefined,
@@ -58,11 +60,11 @@ describe("CLI parse arguments", () => {
   it("noFooter option", () => {
     args.push("-f");
     args.push("--without-footer");
-    args.push(__dirname.concat("/cli.js"));
+    args.push(join(__dirname, "cli.ts"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.js",
+      entryFilename: "cli.ts",
       skipFUGR: true,
       noFooter: true,
       newReportName: undefined,
@@ -76,11 +78,11 @@ describe("CLI parse arguments", () => {
     args.push("--without-footer");
     args.push("-c");
     args.push("znewname");
-    args.push(__dirname.concat("/cli.js"));
+    args.push(join(__dirname, "cli.ts"));
     let parsedArgs = Logic.parseArgs(args);
     let parsedArgsExpected = {
       entryDir: __dirname,
-      entryFilename: "cli.js",
+      entryFilename: "cli.ts",
       skipFUGR: true,
       noFooter: true,
       newReportName: "znewname",
@@ -108,8 +110,6 @@ function captureStream(stream) {
   };
 }
 
-let stderr;
-
 describe("Logic Run", () => {
   beforeEach(() => {
     args = ["node_path", "abapmerge"];
@@ -118,6 +118,6 @@ describe("Logic Run", () => {
 
   it("entrypoint file name error", () => {
     Logic.run(args);
-    expect(stderr.captured()).equal("Specify entrypoint file name");
+    expect(stderr.captured()).equal("error: missing required argument 'entrypoint'\nSpecify entrypoint file name");
   });
 });
