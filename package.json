@@ -9,12 +9,13 @@
   "scripts": {
     "build": "tsc --pretty",
     "buildw": "tsc -w --pretty",
-    "testw": "mocha --recursive --watch build/test",
+    "testw": "ts-mocha test/**/*.ts --watch --watch-files **/*.ts",
     "test": "npm run build && mocha --recursive --reporter progress build/test && npm run lint",
-    "test:only": "mocha --recursive build/test",
+    "test:only": "ts-mocha test/**/*.ts",
     "lint": "eslint -c .eslintrc.js --ext .ts src test",
     "publish:patch": "npm --no-git-tag-version version patch && rm -rf build && npm install && npm run test && npm publish --access public",
-    "sample": "node ./abapmerge sample/ztest.prog.abap"
+    "sample": "node ./abapmerge sample/ztest.prog.abap",
+    "start": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,8 @@
     "eslint-plugin-jsdoc": "^40.0.0",
     "eslint-plugin-no-null": "^1.0.2",
     "mocha": "^10.2.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
   "dependencies": {
