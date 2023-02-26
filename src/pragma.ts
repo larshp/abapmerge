@@ -167,28 +167,25 @@ export default class PragmaProcessor {
 
 }
 
-// TODO: throw, not return
-
 class CuaConverter {
   public convert(xml: string, varName: string): string[] | null {
 
-    const options = {
+    const parser = new XMLParser({
       ignoreAttributes: true,
-      numberParseOptions: { leadingZeros: false, hex: true },
+      numberParseOptions: { leadingZeros: false, hex: true }, // to keep leading zeros
       isArray: (_name, jpath: string, _isLeafNode, _isAttribute) => {
-        // console.log(name, jpath, isLeafNode, isAttribute);
+        // single item tables are still arrays (all but ADM branch)
         if (!jpath.startsWith("abapGit.asx:abap.asx:values.CUA.")) return false;
         const path = jpath.split(".");
         if (path.length !== 6) return false;
         if (path[4] === "ADM") return false; // flat structure
         return true;
       },
-    };
-    const parser = new XMLParser(options);
+    });
     const parsed = parser.parse(xml);
-    if (!parsed) return null;
+    if (!parsed) throw Error("CuaConverter: XML parsing error");
     const cua = parsed?.abapGit?.["asx:abap"]?.["asx:values"]?.CUA;
-    if (!cua) return null;
+    if (!cua) return null; // cua is not found - nothing to convert but not an exception
 
     const defs: string[] = [];
     const code: string[] = [];
@@ -203,12 +200,12 @@ class CuaConverter {
         const itemName = `ls_${key}`;
         defs.push(`DATA ${itemName} LIKE LINE OF ${varName}-${key}.`);
         const attrs = Object.keys(node);
-        if (attrs.length !== 1) return null;
+        if (attrs.length !== 1) throw Error(`CuaConverter: unexpected structure of [${key}] node`);
         node = node[attrs[0]];
-        if (!Array.isArray(node)) return null;
-        for (const item of node) {
+        if (!Array.isArray(node)) throw Error(`CuaConverter: unexpected structure of [${key}/${attrs[0]}] node`);
+        for (const itemData of node) {
           code.push(`CLEAR ${itemName}.`);
-          code.push(...this.fillStruc(itemName, item));
+          code.push(...this.fillStruc(itemName, itemData));
           code.push(`APPEND ${itemName} TO ${varName}-${key}.`);
         }
       }
@@ -217,11 +214,6 @@ class CuaConverter {
     return [...defs, ...code];
   }
   private fillStruc(varName: string, obj: object): string[] {
-    const output: string[] = [];
-    // eslint-disable-next-line guard-for-in
-    for (const key in obj) {
-      output.push(`${varName}-${key.toLowerCase()} = '${obj[key]}'.`);
-    }
-    return output;
+    return [...Object.entries(obj)].map(([key, val]) => `${varName}-${key.toLowerCase()} = '${val}'.`);
   }
 }

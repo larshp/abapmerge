@@ -138,4 +138,33 @@ describe("Pragma include", () => {
     const inc = newList.get(1);
     expect(inc.wasUsed()).to.equal(true);
   });
+
+  it("include a cua from XML, negative", () => {
+    let files = buildFileList({
+      "zmain.abap": `
+        REPORT zmain.
+          " @@abapmerge include-cua some.xml > ls_cua
+      `.trim().split("\n"),
+      "some.xml": `
+        <?xml version="1.0" encoding="utf-8"?>
+        <abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
+        <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+          <asx:values>
+            <CUA>
+              <ADM>
+                <PFKCODE>000001</PFKCODE>
+              </ADM>
+              <STA>
+                <CODE>DECIDE_DIALOG</CODE>
+                <MODAL>P</MODAL>
+              </STA>
+          </CUA>
+          </asx:values>
+        </asx:abap>
+        </abapGit>
+      `,
+    });
+
+    expect(() => PragmaProcessor.process(files, { noComments: true })).to.throw();
+  });
 });
