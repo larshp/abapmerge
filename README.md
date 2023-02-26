@@ -6,20 +6,27 @@ Merge ABAP INCLUDEs into single file. Function groups are skipped
 
 ## Building
 
-* `npm install`
-* `npm test`
+- `npm install`
+- `npm test`
+- `abapmerge -h` - to see the parameters
+
+## Invocation example
+
+Take `src/zabapgit.prog.abap`, merge it, rename the program (`report` statement) to `zabapgit_standalone` and save to `zabapgit.abap` in the current directory.
+
+- `abapmerge -f src/zabapgit.prog.abap -c zabapgit_standalone -o zabapgit.abap`
 
 ## How it works
 
-abapmerge takes a path to the main report and analyzes its code and all files stored in the same directory and all sub-directories.
+Abapmerge takes a path to the main report and analyzes its code and all files stored in the same directory and all sub-directories.
 
 The resulting code consists of the code of all found ABAP classes and interfaces, regardless of their production use in any part of the resulting report, and contents of ABAP includes found in the main report or the included reports.
 
-abapmerge expects that the whole directory structure should result into a single executable program and, hence, if it finds an ABAP report that is not directly or indirectly included in the main report, abapmerge terminates its processing without issuing the input.
+Abapmerge expects that the whole directory structure should result into a single executable program and, hence, if it finds an ABAP report that is not directly or indirectly included in the main report, abapmerge terminates its processing without issuing the input.
 
-abapmerge requires file naming schema compatible with the schema used by [abapGit](https://github.com/larshp/abapgit/).
+Abapmerge requires file naming schema compatible with the schema used by [abapGit](https://github.com/larshp/abapgit).
 
-Global classes FOR TESTING are skipped.
+Global classes `FOR TESTING` are skipped.
 
 ## Pragmas
 
@@ -39,7 +46,7 @@ Currently supported pragmas:
 - **main** void
   - must be included at the very first line of a ABAP program that should be treated as a standalone main report and abamerge should not die with an error if the program is never included.
 
-### Example
+### Examples
 
 ```abap
 ...
