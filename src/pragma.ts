@@ -1,7 +1,6 @@
 import FileList from "./file_list";
 import File from "./file";
 import { XMLParser } from "fast-xml-parser";
-import { off } from 'process';
 
 export interface IPragmaOpts {
   noComments?: boolean;
