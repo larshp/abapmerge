@@ -117,12 +117,12 @@ describe("Pragma include", () => {
     expect(main.getContents()).to.equal(`
       REPORT zmain.
         DATA ls_cua TYPE ty_cua.
+        DATA ls_sta LIKE LINE OF ls_cua-sta.
+        DATA ls_fun LIKE LINE OF ls_cua-fun.
         ls_cua-adm-pfkcode = '000001'.
-        DATA ls_sta TYPE rsmpe_stat.
         ls_sta-code = 'DECIDE_DIALOG'.
         ls_sta-modal = 'P'.
         append ls_sta to ls_cua-sta.
-        DATA ls_fun TYPE rsmpe_funt.
         ls_fun-code = 'CANCEL'.
         ls_fun-textno = '001'.
         append ls_fun to ls_cua-fun.
