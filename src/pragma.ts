@@ -9,6 +9,7 @@ export interface IPragmaOpts {
 export default class PragmaProcessor {
   private files: FileList;
   private opts: IPragmaOpts;
+  private currentPragmaName: string;
 
   public static process(files: FileList, opts?: IPragmaOpts): FileList {
     const instance = new PragmaProcessor(files, opts);
@@ -63,7 +64,7 @@ export default class PragmaProcessor {
       ? []
       : [
         "****************************************************",
-        "* abapmerge Pragma - " + name.toUpperCase(),
+        `* abapmerge Pragma [${this.currentPragmaName}] - ${name.toUpperCase()}`,
         "****************************************************",
       ];
   }
@@ -90,6 +91,7 @@ export default class PragmaProcessor {
     const command = cmdMatch[1].toLowerCase();
     const commandParams = cmdMatch[2];
 
+    this.currentPragmaName = command; // hack for `comment()`
     switch (command) {
       case "include":
         result.push(...this.pragmaInclude(indent, commandParams));
