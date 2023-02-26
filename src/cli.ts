@@ -12,6 +12,7 @@ interface ICliArgs {
   skipFUGR: boolean;
   noFooter: boolean;
   newReportName: string;
+  outputFile: string;
 }
 
 export class Logic {
@@ -55,6 +56,7 @@ export class Logic {
       .description(PackageInfo.description)
       .version(PackageInfo.version)
       .option("-f, --skip-fugr", "ignore unused function groups", false)
+      .option("-o, --output <file>", "output to a file (instead of stdout)")
       .option("--without-footer", "do not append footers", false)
       .option(
         "-c, --change-report-name <newreportname>",
@@ -87,6 +89,7 @@ export class Logic {
       skipFUGR: cmdOpts.skipFugr,
       noFooter: cmdOpts.withoutFooter,
       newReportName: cmdOpts.changeReportName,
+      outputFile: cmdOpts.output,
     };
   }
 
@@ -109,7 +112,11 @@ export class Logic {
           appendAbapmergeMarker: parsedArgs.noFooter === false,
         },
       );
-      process.stdout.write(output);
+      if (parsedArgs.outputFile) {
+        fs.writeFileSync(parsedArgs.outputFile, output, "utf-8");
+      } else {
+        process.stdout.write(output);
+      }
       if (output === undefined) throw new Error("output undefined, hmm?");
       return 0;
     } catch (e) {
