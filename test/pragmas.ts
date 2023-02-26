@@ -69,43 +69,43 @@ describe("Pragma include", () => {
 
   it("include a cua from XML", () => {
     let files = buildFileList({
-      "zmain.abap": [
-        "REPORT zmain.",
-        "  DATA ls_cua TYPE ty_cua.",
-        "  \" @@abapmerge include-cua some.xml > ls_cua",
-      ],
+      "zmain.abap": `
+        REPORT zmain.
+          DATA ls_cua TYPE ty_cua.
+          " @@abapmerge include-cua some.xml > ls_cua
+      `.trim().split("\n"),
       "some.xml": `
-      <?xml version="1.0" encoding="utf-8"?>
-      <abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
-       <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
-        <asx:values>
-          <PROGDIR>
-            <NAME>SOME</NAME>
-          </PROGDIR>
-          <CUA>
-            <ADM>
-              <PFKCODE>000001</PFKCODE>
-            </ADM>
-            <STA>
-              <RSMPE_STAT>
-                <CODE>DECIDE_DIALOG</CODE>
-                <MODAL>P</MODAL>
-              </RSMPE_STAT>
-            </STA>
-            <FUN>
-              <RSMPE_FUNT>
-                <CODE>CANCEL</CODE>
-                <TEXTNO>001</TEXTNO>
-              </RSMPE_FUNT>
-              <RSMPE_FUNT>
-                <CODE>OK</CODE>
-                <TEXTNO>002</TEXTNO>
-              </RSMPE_FUNT>         
-            </FUN>
-         </CUA>
-        </asx:values>
-       </asx:abap>
-      </abapGit>
+        <?xml version="1.0" encoding="utf-8"?>
+        <abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
+        <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+          <asx:values>
+            <PROGDIR>
+              <NAME>SOME</NAME>
+            </PROGDIR>
+            <CUA>
+              <ADM>
+                <PFKCODE>000001</PFKCODE>
+              </ADM>
+              <STA>
+                <RSMPE_STAT>
+                  <CODE>DECIDE_DIALOG</CODE>
+                  <MODAL>P</MODAL>
+                </RSMPE_STAT>
+              </STA>
+              <FUN>
+                <RSMPE_FUNT>
+                  <CODE>CANCEL</CODE>
+                  <TEXTNO>001</TEXTNO>
+                </RSMPE_FUNT>
+                <RSMPE_FUNT>
+                  <CODE>OK</CODE>
+                  <TEXTNO>002</TEXTNO>
+                </RSMPE_FUNT>         
+              </FUN>
+          </CUA>
+          </asx:values>
+        </asx:abap>
+        </abapGit>
       `,
     });
 
@@ -114,22 +114,26 @@ describe("Pragma include", () => {
 
     const main = newList.get(0);
 
+    // Keep the indentation ! (to match the files above)
     expect(main.getContents()).to.equal(`
-      REPORT zmain.
-        DATA ls_cua TYPE ty_cua.
-        DATA ls_sta LIKE LINE OF ls_cua-sta.
-        DATA ls_fun LIKE LINE OF ls_cua-fun.
-        ls_cua-adm-pfkcode = '000001'.
-        ls_sta-code = 'DECIDE_DIALOG'.
-        ls_sta-modal = 'P'.
-        append ls_sta to ls_cua-sta.
-        ls_fun-code = 'CANCEL'.
-        ls_fun-textno = '001'.
-        append ls_fun to ls_cua-fun.
-        ls_fun-code = 'OK'.
-        ls_fun-textno = '002'.
-        append ls_fun to ls_cua-fun.
-    `);
+        REPORT zmain.
+          DATA ls_cua TYPE ty_cua.
+          DATA ls_sta LIKE LINE OF ls_cua-sta.
+          DATA ls_fun LIKE LINE OF ls_cua-fun.
+          ls_cua-adm-pfkcode = '000001'.
+          CLEAR ls_sta.
+          ls_sta-code = 'DECIDE_DIALOG'.
+          ls_sta-modal = 'P'.
+          APPEND ls_sta TO ls_cua-sta.
+          CLEAR ls_fun.
+          ls_fun-code = 'CANCEL'.
+          ls_fun-textno = '001'.
+          APPEND ls_fun TO ls_cua-fun.
+          CLEAR ls_fun.
+          ls_fun-code = 'OK'.
+          ls_fun-textno = '002'.
+          APPEND ls_fun TO ls_cua-fun.
+    `.trim());
 
     const inc = newList.get(1);
     expect(inc.wasUsed()).to.equal(true);
