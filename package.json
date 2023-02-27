@@ -1,6 +1,6 @@
 {
   "name": "abapmerge",
-  "version": "0.14.9",
+  "version": "0.15.0",
   "description": "Merge ABAP INCLUDEs into single file",
   "bin": {
     "abapmerge": "./abapmerge"
@@ -13,6 +13,7 @@
     "test": "npm run build && mocha --recursive --reporter progress build/test && npm run lint",
     "test:only": "ts-mocha test/**/*.ts",
     "lint": "eslint -c .eslintrc.js --ext .ts src test",
+    "publish:minor": "npm --no-git-tag-version version minor && rm -rf build && npm install && npm run test && npm publish --access public",
     "publish:patch": "npm --no-git-tag-version version patch && rm -rf build && npm install && npm run test && npm publish --access public",
     "sample": "node ./abapmerge sample/ztest.prog.abap",
     "start": "ts-node src/index.ts"
@@ -33,7 +34,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.14.1",
+    "@types/node": "^18.14.2",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "chai": "^4.3.7",
