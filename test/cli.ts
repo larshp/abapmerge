@@ -38,6 +38,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: false,
       noFooter: false,
       newReportName: undefined,
+      outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -53,6 +54,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: true,
       noFooter: false,
       newReportName: undefined,
+      outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -69,6 +71,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: true,
       noFooter: true,
       newReportName: undefined,
+      outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -87,6 +90,24 @@ describe("CLI parse arguments", () => {
       skipFUGR: true,
       noFooter: true,
       newReportName: "znewname",
+      outputFile: undefined,
+    };
+    chai.assert.isNotNull(parsedArgs);
+    chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
+  });
+
+  it("outputFile option", () => {
+    args.push("-o");
+    args.push("some.file");
+    args.push(join(__dirname, "entry.abap"));
+    let parsedArgs = Logic.parseArgs(args);
+    let parsedArgsExpected = {
+      entryDir: __dirname,
+      entryFilename: "entry.abap",
+      skipFUGR: false,
+      noFooter: false,
+      newReportName: undefined,
+      outputFile: "some.file",
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
