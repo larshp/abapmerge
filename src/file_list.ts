@@ -33,18 +33,18 @@ export default class FileList implements Iterable<File> {
       return file;
     }
 
-    throw Error(`file not found: ${name}`);
+    throw Error(`ABAP file not found: ${name}`);
   }
 
   public otherByName(name: string): File {
     name = name.toLowerCase();
-    const file = this.files.find(f => f.getFilename().toLowerCase() === name.toLowerCase() && !f.isABAP());
+    const file = this.files.find(f => (f.getFilename().toLowerCase() === name.toLowerCase() || f.getFilepath().toLowerCase() === name.toLowerCase()) && !f.isABAP());
     if (file) {
       file.markUsed();
       return file;
     }
 
-    throw Error(`file not found: ${name}`);
+    throw Error(`Other file not found: ${name}`);
   }
 
   public validateAllFilesUsed(): void {

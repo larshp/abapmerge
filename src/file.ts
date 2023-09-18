@@ -1,14 +1,20 @@
+import * as path from "path";
+
 type FileContent = string | Buffer;
 export default class File {
   private filename: string;
+  private dirname: string;
   private contents: FileContent;
   private isUsed: boolean = false;
+  private modified: boolean = false;
 
   // object names are unique across packages in ABAP, so
   // the folder name is not part of this class
-  public constructor(filename: string, content: FileContent) {
-    this.filename = filename;
+  public constructor(filename: string, content: FileContent, modified?: boolean) {
+    this.dirname = path.dirname(filename);
+    this.filename = path.basename(filename);
     this.contents = content;
+    this.modified = modified;
   }
 
   public isBinary(): boolean {
@@ -23,6 +29,10 @@ export default class File {
     return this.filename;
   }
 
+  public getFilepath(): string {
+    return path.join(this.dirname, this.filename);
+  }
+
   public getContents(): string {
     if (this.isBinary()) throw Error(`Binary file accessed as string [${this.filename}]`);
     return this.contents as string;
@@ -35,6 +45,10 @@ export default class File {
 
   public wasUsed(): boolean {
     return this.isUsed;
+  }
+
+  public isModified(): boolean {
+    return this.modified;
   }
 
   public markUsed() {

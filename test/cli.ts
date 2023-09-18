@@ -39,6 +39,7 @@ describe("CLI parse arguments", () => {
       noFooter: false,
       newReportName: undefined,
       outputFile: undefined,
+      runPreProcessorOnly: false,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -55,6 +56,7 @@ describe("CLI parse arguments", () => {
       noFooter: false,
       newReportName: undefined,
       outputFile: undefined,
+      runPreProcessorOnly: false,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -72,6 +74,7 @@ describe("CLI parse arguments", () => {
       noFooter: true,
       newReportName: undefined,
       outputFile: undefined,
+      runPreProcessorOnly: false,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -91,6 +94,7 @@ describe("CLI parse arguments", () => {
       noFooter: true,
       newReportName: "znewname",
       outputFile: undefined,
+      runPreProcessorOnly: false,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -108,6 +112,7 @@ describe("CLI parse arguments", () => {
       noFooter: false,
       newReportName: undefined,
       outputFile: "some.file",
+      runPreProcessorOnly: false,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);

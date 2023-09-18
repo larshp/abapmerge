@@ -13,6 +13,7 @@ interface ICliArgs {
   noFooter: boolean;
   newReportName: string;
   outputFile: string;
+  runPreProcessorOnly: boolean;
 }
 
 export class Logic {
@@ -35,10 +36,10 @@ export class Logic {
             .readFileSync(filepath, "utf8")
             .replace(/\t/g, "  ") // remove tabs
             .replace(/\r/g, ""); // unify EOL
-          list.push(new File(file, contents));
+          list.push(new File(filepath, contents));
         } else {
           let buffer = fs.readFileSync(filepath);
-          list.push(new File(file, buffer));
+          list.push(new File(filepath, buffer));
         }
 
       } else {
@@ -58,6 +59,7 @@ export class Logic {
       .option("-f, --skip-fugr", "ignore unused function groups", false)
       .option("-o, --output <file>", "output to a file (instead of stdout)")
       .option("--without-footer", "do not append footers", false)
+      .option("--run-pre-processor-only", "run pre-process and update files", false)
       .option(
         "-c, --change-report-name <newreportname>",
         "changes report name in REPORT clause in source code",
@@ -90,6 +92,7 @@ export class Logic {
       noFooter: cmdOpts.withoutFooter,
       newReportName: cmdOpts.changeReportName,
       outputFile: cmdOpts.output,
+      runPreProcessorOnly: cmdOpts.runPreProcessorOnly,
     };
   }
 
@@ -103,14 +106,30 @@ export class Logic {
       }
 
       const entryObjectName = parsedArgs.entryFilename.split(".")[0];
+      let files = Logic.readFiles(parsedArgs.entryDir);
+      let options = {
+        skipFUGR: parsedArgs.skipFUGR,
+        newReportName: parsedArgs.newReportName,
+        appendAbapmergeMarker: parsedArgs.noFooter === false,
+      };
+
+      if (parsedArgs.runPreProcessorOnly) {
+        files = Merge.preProcessFiles(files, options);
+        for (const file of files) {
+          if (file.isBinary() || !file.isModified()) {
+            continue;
+          }
+
+          fs.writeFileSync(file.getFilepath() + ".abapmerge", file.getContents(), "utf-8");
+        }
+
+        return 0;
+      }
+
       output = Merge.merge(
-        Logic.readFiles(parsedArgs.entryDir),
+        files,
         entryObjectName,
-        {
-          skipFUGR: parsedArgs.skipFUGR,
-          newReportName: parsedArgs.newReportName,
-          appendAbapmergeMarker: parsedArgs.noFooter === false,
-        },
+        options,
       );
       if (parsedArgs.outputFile) {
         fs.writeFileSync(parsedArgs.outputFile, output, "utf-8");
