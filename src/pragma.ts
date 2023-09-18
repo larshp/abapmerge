@@ -52,7 +52,7 @@ export default class PragmaProcessor {
       }
 
       newFiles.push(hasPragma
-        ? new File(file.getFilename(), output.join("\n"))
+        ? new File(file.getFilepath(), output.join("\n"), true)
         : file);
     }
 
