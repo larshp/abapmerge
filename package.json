@@ -33,7 +33,7 @@
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
     "@types/chai": "^4.3.5",
-    "@types/mocha": "^10.0.1",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -41,7 +41,7 @@
     "eslint": "^8.43.0",
     "eslint-plugin-jsdoc": "^46.2.6",
     "eslint-plugin-no-null": "^1.0.2",
-    "mocha": "^10.2.0",
+    "mocha": "^10.4.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.3"
