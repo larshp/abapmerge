@@ -7,18 +7,30 @@ export default class Merge {
   private static files: FileList;
   private static classes: ClassList;
 
+  public static preProcessFiles(files: FileList, options?: {
+    skipFUGR?: boolean;
+  }): FileList {
+    if (!options) options = {};
+
+    let preProcessedFiles = files;
+    if (options.skipFUGR) {
+      preProcessedFiles = this.skipFUGR(preProcessedFiles);
+    }
+
+    preProcessedFiles = PragmaProcessor.process(preProcessedFiles);
+
+    return preProcessedFiles;
+  }
+
   public static merge(files: FileList, main: string, options?: {
     skipFUGR?: boolean;
     newReportName?: string;
     appendAbapmergeMarker?: boolean;
   }): string {
-    this.files = files;
     if (!options) options = {};
 
-    if (options.skipFUGR) {
-      this.files = this.skipFUGR(this.files);
-    }
-    this.files = PragmaProcessor.process(this.files);
+    this.files = this.preProcessFiles(files, options);
+
     this.classes = new ClassList(this.files);
 
     let result = this.analyze(main, this.files.fileByName(main).getContents(), options.newReportName);
