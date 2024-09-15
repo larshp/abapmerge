@@ -32,9 +32,9 @@
   },
   "homepage": "https://github.com/larshp/abapmerge#readme",
   "devDependencies": {
-    "@types/chai": "^4.3.5",
-    "@types/mocha": "^10.0.7",
-    "@types/node": "^22.5.1",
+    "@types/chai": "^4.3.19",
+    "@types/mocha": "^10.0.8",
+    "@types/node": "^22.5.5",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "chai": "^4.3.7",
@@ -44,10 +44,10 @@
     "mocha": "^10.7.3",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
     "commander": "^10.0.0",
-    "fast-xml-parser": "^4.4.1"
+    "fast-xml-parser": "^4.5.0"
   }
 }
