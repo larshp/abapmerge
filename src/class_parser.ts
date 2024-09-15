@@ -158,8 +158,8 @@ export class ClassParser {
 
     let ret = s.replace(reg1, "CLASS " + name + " DEFINITION" + (addAbstract ? " ABSTRACT" : ""));
 
-    let reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_ABAPGIT", "i");
-    ret = ret.replace(reg2, "FRIENDS ZCL_ABAPGIT");
+    let reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_", "i");
+    ret = ret.replace(reg2, "FRIENDS ZCL_");
     return ret;
   }
 
