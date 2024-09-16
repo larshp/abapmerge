@@ -38,6 +38,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: false,
       noFooter: false,
       newReportName: undefined,
+      allowUnused: false,
       outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
@@ -54,6 +55,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: true,
       noFooter: false,
       newReportName: undefined,
+      allowUnused: false,
       outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
@@ -71,6 +73,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: true,
       noFooter: true,
       newReportName: undefined,
+      allowUnused: false,
       outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
@@ -90,6 +93,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: true,
       noFooter: true,
       newReportName: "znewname",
+      allowUnused: false,
       outputFile: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
@@ -107,6 +111,7 @@ describe("CLI parse arguments", () => {
       skipFUGR: false,
       noFooter: false,
       newReportName: undefined,
+      allowUnused: false,
       outputFile: "some.file",
     };
     chai.assert.isNotNull(parsedArgs);

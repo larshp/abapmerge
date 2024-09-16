@@ -11,6 +11,7 @@ interface ICliArgs {
   entryDir: string;
   skipFUGR: boolean;
   noFooter: boolean;
+  allowUnused: boolean;
   newReportName: string;
   outputFile: string;
 }
@@ -58,6 +59,7 @@ export class Logic {
       .option("-f, --skip-fugr", "ignore unused function groups", false)
       .option("-o, --output <file>", "output to a file (instead of stdout)")
       .option("--without-footer", "do not append footers", false)
+      .option("--allow-unused", "allow unused files", false)
       .option(
         "-c, --change-report-name <newreportname>",
         "changes report name in REPORT clause in source code",
@@ -88,6 +90,7 @@ export class Logic {
       entryFilename,
       skipFUGR: cmdOpts.skipFugr,
       noFooter: cmdOpts.withoutFooter,
+      allowUnused: cmdOpts.allowUnused,
       newReportName: cmdOpts.changeReportName,
       outputFile: cmdOpts.output,
     };
@@ -109,6 +112,7 @@ export class Logic {
         {
           skipFUGR: parsedArgs.skipFUGR,
           newReportName: parsedArgs.newReportName,
+          allowUnused: parsedArgs.allowUnused,
           appendAbapmergeMarker: parsedArgs.noFooter === false,
         },
       );

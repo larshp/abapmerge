@@ -47,14 +47,19 @@ export default class FileList implements Iterable<File> {
     throw Error(`file not found: ${name}`);
   }
 
-  public validateAllFilesUsed(): void {
+  public validateAllFilesUsed(allowUnused?: boolean): void {
     const unusedFiles = this.files
       .filter(i => !i.wasUsed() && (i.isABAP() && !i.isMain()))
       .map(i => i.getFilename().toLowerCase())
       .join(", ");
 
     if (unusedFiles) {
-      throw Error(`Not all files used: [${unusedFiles}]`);
+      const text = `Not all files used: [${unusedFiles}]`;
+      if (allowUnused === true) {
+        console.log(text);
+      } else {
+        throw Error(text);
+      }
     }
   }
 
