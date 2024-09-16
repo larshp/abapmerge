@@ -11,6 +11,7 @@ export default class Merge {
     skipFUGR?: boolean;
     newReportName?: string;
     appendAbapmergeMarker?: boolean;
+    allowUnused?: boolean;
   }): string {
     this.files = files;
     if (!options) options = {};
@@ -22,7 +23,7 @@ export default class Merge {
     this.classes = new ClassList(this.files);
 
     let result = this.analyze(main, this.files.fileByName(main).getContents(), options.newReportName);
-    this.files.validateAllFilesUsed();
+    this.files.validateAllFilesUsed(options.allowUnused);
 
     if (options.appendAbapmergeMarker) {
       result += new AbapmergeMarker().render();
