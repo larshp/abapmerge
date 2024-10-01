@@ -39,15 +39,15 @@ export default class Merge {
 
   private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
-    let lines = contents.split("\n");
+    const lines = contents.split("\n");
     let isMainReport = false;
 
     let lineNo = 0;
     if (main !== null) {
       while (lineNo < lines.length) {
         let line = lines[lineNo++];
-        let regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)$/im;
-        let reportClauseMatches = line.match(regexReportClause);
+        const regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)$/im;
+        const reportClauseMatches = line.match(regexReportClause);
 
         if (reportClauseMatches) {
           isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase();
@@ -65,7 +65,7 @@ export default class Merge {
       }
 
       while (lineNo < lines.length) {
-        let line = lines[lineNo];
+        const line = lines[lineNo];
 
         if (!line.match(/^((\*.*)|(\s*))$/im)) {
           output += this.classes.getResult();
@@ -78,7 +78,7 @@ export default class Merge {
     }
 
     for ( ; lineNo < lines.length; ++lineNo) {
-      let line = lines[lineNo];
+      const line = lines[lineNo];
       let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
       if (!include) {
         // try namespaced

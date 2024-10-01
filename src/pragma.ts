@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import FileList from "./file_list";
 import File from "./file";
 import { XMLParser } from "fast-xml-parser";
@@ -22,7 +23,7 @@ export default class PragmaProcessor {
   }
 
   public processFiles(): FileList {
-    let newFiles = new FileList();
+    const newFiles = new FileList();
 
     for (const file of this.files) {
       if (file.isBinary() || !file.isABAP()) {
@@ -30,12 +31,12 @@ export default class PragmaProcessor {
         continue;
       }
 
-      let lines = file.getContents().split("\n");
+      const lines = file.getContents().split("\n");
       let hasPragma = false;
-      let output: string[] = [];
+      const output: string[] = [];
 
-      for (let line of lines) {
-        let pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
+      for (const line of lines) {
+        const pragma = line.match(/^(\*|(\s*)")\s*@@abapmerge\s+(.+)/i);
         if (pragma) {
           const pragmaCmd = pragma[3];
           const indent = (pragma[1] === "*") ? "" : pragma[2];
@@ -85,7 +86,7 @@ export default class PragmaProcessor {
      *      zcl_abapgit_objects_program=>ty_cua type is expected for the var
      */
 
-    let result: string[] = [];
+    const result: string[] = [];
     const cmdMatch = pragma.match(/(\S+)\s+(.*)/);
     if (!cmdMatch) return null;
     const command = cmdMatch[1].toLowerCase();

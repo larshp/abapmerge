@@ -1,8 +1,9 @@
+/* eslint-disable prefer-rest-params */
 import * as chai from "chai";
 import { Logic } from "../src/cli";
 import { join } from "path";
 
-let expect = chai.expect;
+const expect = chai.expect;
 
 let stderr;
 let args: string[];
@@ -31,8 +32,8 @@ describe("CLI parse arguments", () => {
 
   it("entrypoint existing file", () => {
     args.push(join(__dirname, "entry.abap"));
-    let parsedArgs = Logic.parseArgs(args);
-    let parsedArgsExpected = {
+    const parsedArgs = Logic.parseArgs(args);
+    const parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "entry.abap",
       skipFUGR: false,
@@ -48,8 +49,8 @@ describe("CLI parse arguments", () => {
   it("skipFugr option", () => {
     args.push("-f");
     args.push(join(__dirname, "entry.abap"));
-    let parsedArgs = Logic.parseArgs(args);
-    let parsedArgsExpected = {
+    const parsedArgs = Logic.parseArgs(args);
+    const parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "entry.abap",
       skipFUGR: true,
@@ -66,8 +67,8 @@ describe("CLI parse arguments", () => {
     args.push("-f");
     args.push("--without-footer");
     args.push(join(__dirname, "entry.abap"));
-    let parsedArgs = Logic.parseArgs(args);
-    let parsedArgsExpected = {
+    const parsedArgs = Logic.parseArgs(args);
+    const parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "entry.abap",
       skipFUGR: true,
@@ -86,8 +87,8 @@ describe("CLI parse arguments", () => {
     args.push("-c");
     args.push("znewname");
     args.push(join(__dirname, "entry.abap"));
-    let parsedArgs = Logic.parseArgs(args);
-    let parsedArgsExpected = {
+    const parsedArgs = Logic.parseArgs(args);
+    const parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "entry.abap",
       skipFUGR: true,
@@ -104,8 +105,8 @@ describe("CLI parse arguments", () => {
     args.push("-o");
     args.push("some.file");
     args.push(join(__dirname, "entry.abap"));
-    let parsedArgs = Logic.parseArgs(args);
-    let parsedArgsExpected = {
+    const parsedArgs = Logic.parseArgs(args);
+    const parsedArgsExpected = {
       entryDir: __dirname,
       entryFilename: "entry.abap",
       skipFUGR: false,
@@ -120,7 +121,7 @@ describe("CLI parse arguments", () => {
 });
 
 function captureStream(stream) {
-  let oldWrite = stream.write;
+  const oldWrite = stream.write;
   let buf = "";
   stream.write = function(chunk) {
     buf += chunk.toString(); // chunk is a String or Buffer

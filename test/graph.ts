@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import Graph from "../src/graph";
 
-let expect = chai.expect;
+const expect = chai.expect;
 
 describe("graph 1, test", () => {
   it("something", () => {
-    let g = new Graph<String>();
+    const g = new Graph<string>();
 
     g.addNode("node1", "value1");
     g.addNode("node2", "value2");
@@ -20,7 +20,7 @@ describe("graph 1, test", () => {
 
 describe("graph 2, test", () => {
   it("something", () => {
-    let g = new Graph<String>();
+    const g = new Graph<string>();
 
     g.addNode("node1", "value1");
     g.addNode("node2", "value2");

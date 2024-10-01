@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import File from "./file";
 import FileList from "./file_list";
 import Class from "./class";
@@ -13,17 +14,17 @@ export class AbapPublicClass {
 export class ClassParser {
 
   public static anonymizeTypeName(prefix15: string, type: string, name: string): string {
-    let typeSeed = Utils.hashCodeOf(type);
-    let typeAlias = Utils.randomStringOfLength(typeSeed, 5);
+    const typeSeed = Utils.hashCodeOf(type);
+    const typeAlias = Utils.randomStringOfLength(typeSeed, 5);
 
-    let nameSeed = Utils.hashCodeOf(name);
-    let nameAlias = Utils.randomStringOfLength(nameSeed, 10);
+    const nameSeed = Utils.hashCodeOf(name);
+    const nameAlias = Utils.randomStringOfLength(nameSeed, 10);
 
     return typeAlias + prefix15 + nameAlias;
   }
 
   public static renameLocalType(oldName: string, newName: string, parent: string, oldCode: string): string {
-    let occurrences = [
+    const occurrences = [
       // interface declaration
       { context: "* renamed: " + parent + " :: " + oldName + "\n",
         regstr: "^(\s*interface\\s+)" + oldName + "(\\s*\\.)",
@@ -38,8 +39,8 @@ export class ClassParser {
     ];
 
     let newCode = oldCode;
-    for (let occurrence of occurrences) {
-      let regexp = new RegExp(occurrence.regstr, "igm");
+    for (const occurrence of occurrences) {
+      const regexp = new RegExp(occurrence.regstr, "igm");
       while (newCode.match(regexp)) {
         newCode = newCode.replace(regexp, occurrence.context + "$1" + newName + "$2");
       }
@@ -55,9 +56,9 @@ export class ClassParser {
   public static findFileByName(filename: string, list: FileList ): File {
     filename = filename.toLowerCase();
 
-    let length = list.length();
+    const length = list.length();
     for (let i = 0; i < length; ++i) {
-      let file = list.get(i);
+      const file = list.get(i);
       if (filename === file.getFilename().toLowerCase()) {
         return file;
       }
@@ -69,7 +70,7 @@ export class ClassParser {
   public static parseLocalContents(part: string, publicClass: AbapPublicClass, local: string): void {
     let global = local + "\n" + publicClass[part];
 
-    let regex = /^\s*((CLASS)\s+(\w+)\s+DEFINITION\s*[^\.]*|(INTERFACE)\s+(\w+)\s*)\./gim;
+    const regex = /^\s*((CLASS)\s+(\w+)\s+DEFINITION\s*[^\.]*|(INTERFACE)\s+(\w+)\s*)\./gim;
     let definition;
 
     while ((definition = regex.exec(local)) !== null) {
@@ -86,7 +87,7 @@ export class ClassParser {
         name = definition[5];
       }
 
-      let alias = ClassParser.anonymizeTypeName(publicClass.hash, type, name);
+      const alias = ClassParser.anonymizeTypeName(publicClass.hash, type, name);
       global = ClassParser.renameLocalType(name, alias, publicClass.name, global);
 
       // prepend (definition)? deferred
@@ -110,25 +111,25 @@ export class ClassParser {
   }
 
   public static tryProcessLocalFile(part: string, publicClass: AbapPublicClass, list: FileList): void {
-    let filename = ClassParser.buildLocalFileName(part, publicClass);
-    let file = ClassParser.findFileByName(filename, list);
+    const filename = ClassParser.buildLocalFileName(part, publicClass);
+    const file = ClassParser.findFileByName(filename, list);
     if (file === null) {
       return;
     }
 
-    let contents = file.getContents();
+    const contents = file.getContents();
     ClassParser.parseLocalContents(part, publicClass, contents);
     file.markUsed();
   }
 
   public static parse(f: File, list: FileList): Class {
 
-    let match = f.getContents().match(/^(([\s\S])*ENDCLASS\.)\s*(CLASS(.|\s)*)$/i);
+    const match = f.getContents().match(/^(([\s\S])*ENDCLASS\.)\s*(CLASS(.|\s)*)$/i);
     if (!match || !match[1] || !match[2] || !match[3]) {
       throw "error parsing class: " + f.getFilename();
     }
 
-    let publicClass = new AbapPublicClass();
+    const publicClass = new AbapPublicClass();
     publicClass.name = f.getFilename().split(".")[0];
     publicClass.hash = Utils.randomStringOfLength(Utils.hashCodeOf(publicClass.name), 15);
     publicClass.def = this.makeLocal(publicClass.name, match[1]);
@@ -139,9 +140,9 @@ export class ClassParser {
     // because the local definitions are used in the implementation.
     ClassParser.tryProcessLocalFile("def", publicClass, list);
 
-    let superMatch = publicClass.def.match(/INHERITING FROM (Z\w+)/i);
+    const superMatch = publicClass.def.match(/INHERITING FROM (Z\w+)/i);
     // console.dir(superMatch);
-    let dependencies = [];
+    const dependencies = [];
     if (superMatch && superMatch[1]) {
       dependencies.push(superMatch[1].toLowerCase());
     }
@@ -152,13 +153,13 @@ export class ClassParser {
   }
 
   private static makeLocal(name: string, s: string): string {
-    let reg1 = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+(ABSTRACT\\s+)?PUBLIC", "i");
+    const reg1 = new RegExp("CLASS\\s+" + name + "\\s+DEFINITION\\s+(ABSTRACT\\s+)?PUBLIC", "i");
 
     const addAbstract = s.match(/\s+ABSTRACT\s+?PUBLIC/i) !== null;
 
     let ret = s.replace(reg1, "CLASS " + name + " DEFINITION" + (addAbstract ? " ABSTRACT" : ""));
 
-    let reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_", "i");
+    const reg2 = new RegExp("GLOBAL\\s+FRIENDS\\s+ZCL_", "i");
     ret = ret.replace(reg2, "FRIENDS ZCL_");
     return ret;
   }

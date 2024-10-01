@@ -1,26 +1,26 @@
 export default class Graph<T> {
-  private nodes: [String, T][];
-  private edges: [String, String][];
+  private nodes: [string, T][];
+  private edges: [string, string][];
 
   public constructor() {
     this.nodes = [];
     this.edges = [];
   }
 
-  public addNode(key: String, value: T) {
+  public addNode(key: string, value: T) {
     this.nodes.push([key, value]);
   }
 
-  public addEdge(from: String, to: String) {
+  public addEdge(from: string, to: string) {
     this.edges.push([from, to]);
   }
 
-  public removeNode(key: String) {
+  public removeNode(key: string) {
     this.nodes = this.nodes.filter((n) => n[0] !== key);
     this.edges = this.edges.filter((e) => e[1] !== key);
   }
 
-  public toString(): String {
+  public toString(): string {
     const nodes = this.nodes.map(n => n[0]).join(", ");
     const edges = this.edges.map(e => e[0] + "->" + e[1]).join(", ");
     return nodes + "\n" + edges;
@@ -35,9 +35,9 @@ export default class Graph<T> {
   }
 
   public popLeaf(): T {
-    for (let node of this.nodes) {
+    for (const node of this.nodes) {
       let leaf = true;
-      for (let edge of this.edges) {
+      for (const edge of this.edges) {
         if (edge[0] === node[0]) {
           leaf = false;
           break;
