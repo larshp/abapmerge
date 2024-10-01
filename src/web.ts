@@ -47,8 +47,8 @@ function reset() {
 }
 
 function setupReader(file) {
-  let name = file.name;
-  let reader = new FileReader();
+  const name = file.name;
+  const reader = new FileReader();
 
   reader.onload = function() {
     files.push(new File(fname(name), reader.result as string));
@@ -62,7 +62,7 @@ function handleFileSelect(event) {
   event.stopPropagation();
   event.preventDefault();
 
-  let input = event.dataTransfer.files;
+  const input = event.dataTransfer.files;
 
   reset();
 
@@ -78,7 +78,7 @@ function handleDragOver(evt) {
 }
 
 function setupListeners() {
-  let dropZone = document.getElementById("drop_zone");
+  const dropZone = document.getElementById("drop_zone");
   dropZone.addEventListener("dragover", handleDragOver, false);
   dropZone.addEventListener("drop", handleFileSelect, false);
 }

@@ -24,21 +24,21 @@ export class Logic {
   }
 
   private static readFiles(dir: string, pre = ""): FileList {
-    let files = fs.readdirSync(dir);
-    let list = new FileList();
+    const files = fs.readdirSync(dir);
+    const list = new FileList();
 
-    for (let file of files) {
-      let filepath = path.join(dir, file);
+    for (const file of files) {
+      const filepath = path.join(dir, file);
 
       if (fs.lstatSync(filepath).isFile()) {
         if (Logic.isTextFile(filepath)) {
-          let contents = fs
+          const contents = fs
             .readFileSync(filepath, "utf8")
             .replace(/\t/g, "  ") // remove tabs
             .replace(/\r/g, ""); // unify EOL
           list.push(new File(file, contents));
         } else {
-          let buffer = fs.readFileSync(filepath);
+          const buffer = fs.readFileSync(filepath);
           list.push(new File(file, buffer));
         }
 

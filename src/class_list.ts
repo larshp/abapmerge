@@ -31,8 +31,8 @@ export default class ClassList {
   }
 
   public getDeferred(): string {
-    let classes = this.classes.reduce((a, c) => "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a, "");
-    let interfaces = this.interfaces.reduce((a, c) => "INTERFACE " + c.getName() + " DEFERRED.\n" + a, "");
+    const classes = this.classes.reduce((a, c) => "CLASS " + c.getName() + " DEFINITION DEFERRED.\n" + a, "");
+    const interfaces = this.interfaces.reduce((a, c) => "INTERFACE " + c.getName() + " DEFERRED.\n" + a, "");
     return interfaces + classes;
   }
 
@@ -41,11 +41,11 @@ export default class ClassList {
   }
 
   public getDefinitions(): string {
-    let g = this.buildDependenciesGraph(this.classes);
+    const g = this.buildDependenciesGraph(this.classes);
 
     let result = "";
     while (g.countNodes() > 0) {
-      let leaf = g.popLeaf();
+      const leaf = g.popLeaf();
       result = result + leaf.getDefinition() + "\n";
     }
 
@@ -53,11 +53,11 @@ export default class ClassList {
   }
 
   public getExceptions(): string {
-    let g = this.buildDependenciesGraph(this.exceptions);
+    const g = this.buildDependenciesGraph(this.exceptions);
 
     let result = "";
     while (g.countNodes() > 0) {
-      let leaf = g.popLeaf();
+      const leaf = g.popLeaf();
       result = result + leaf.getDefinition() + "\n" + leaf.getImplementation() + "\n";
     }
 
@@ -65,11 +65,11 @@ export default class ClassList {
   }
 
   public getInterfaces(): string {
-    let g = this.buildDependenciesGraph(this.interfaces);
+    const g = this.buildDependenciesGraph(this.interfaces);
 
     let result = "";
     while (g.countNodes() > 0) {
-      let leaf = g.popLeaf();
+      const leaf = g.popLeaf();
       result = result + leaf.getDefinition() + "\n";
     }
 
@@ -77,7 +77,7 @@ export default class ClassList {
   }
 
   private buildDependenciesGraph(list: Class[]): Graph<Class> {
-    let g = new Graph<Class>();
+    const g = new Graph<Class>();
 
     for (const c of list) {
       const className = c.getName();
@@ -90,7 +90,7 @@ export default class ClassList {
 
   private parseFiles(list: FileList) {
     for (let i = 0; i < list.length(); i++) {
-      let f = list.get(i);
+      const f = list.get(i);
       if (f.getFilename().match(/\.clas\.abap$/)) {
         f.markUsed();
         this.pushClass(f, list);
@@ -110,7 +110,7 @@ export default class ClassList {
   }
 
   private pushClass(f: File, list: FileList): void {
-    let cls = ClassParser.parse(f, list);
+    const cls = ClassParser.parse(f, list);
     if (cls.isForTesting() === true) {
       this.testclasses.push(cls);
       return; // skip global test classes

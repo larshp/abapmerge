@@ -3,11 +3,11 @@ import File from "../src/file";
 import FileList from "../src/file_list";
 import ClassList from "../src/class_list";
 
-let expect = chai.expect;
+const expect = chai.expect;
 
 describe("classes 1, test", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File(
       "zcl_class.clas.abap",
@@ -20,7 +20,7 @@ describe("classes 1, test", () => {
       "  ENDMETHOD.\n" +
       "ENDCLASS."));
 
-    let classes = new ClassList(files);
+    const classes = new ClassList(files);
 
     expect(classes.getDeferred().split("\n").length).to.equal(2);
     expect(classes.getDefinitions().split("\n").length).to.equal(5);
@@ -32,8 +32,8 @@ describe("classes 1, test", () => {
 describe("classes 2, parser error", () => {
   it("something", () => {
 
-    let run = function () {
-      let files = new FileList();
+    const run = function () {
+      const files = new FileList();
       files.push(new File("zcl_class.clas.abap", "foo boo moo"));
       new ClassList(files);
     };
@@ -45,7 +45,7 @@ describe("classes 2, parser error", () => {
 
 describe("classes 3, remove public", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File(
       "zcl_class.clas.abap",
@@ -58,7 +58,7 @@ describe("classes 3, remove public", () => {
       "  ENDMETHOD.\n" +
       "ENDCLASS."));
 
-    let classes = new ClassList(files);
+    const classes = new ClassList(files);
 
     expect(classes.getDefinitions()).to.have.string("CLASS zcl_class DEFINITION CREATE PUBLIC.");
   });
@@ -66,7 +66,7 @@ describe("classes 3, remove public", () => {
 
 describe("classes 4, exception class", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File(
       "zcx_exception.clas.abap",
@@ -79,7 +79,7 @@ describe("classes 4, exception class", () => {
       "  ENDMETHOD.\n" +
       "ENDCLASS."));
 
-    let classes = new ClassList(files);
+    const classes = new ClassList(files);
 
     expect(classes.getExceptions()).to.have.string("CLASS zcx_exception");
   });
@@ -87,7 +87,7 @@ describe("classes 4, exception class", () => {
 
 describe("classes 5, windows newline", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File(
       "zcl_class.clas.abap",
@@ -100,7 +100,7 @@ describe("classes 5, windows newline", () => {
       "  ENDMETHOD.\r\n" +
       "ENDCLASS."));
 
-    let classes = new ClassList(files);
+    const classes = new ClassList(files);
 
     expect(classes.getDeferred().split("\n").length).to.equal(2);
     expect(classes.getDefinitions().split("\n").length).to.equal(5);
@@ -112,7 +112,7 @@ describe("classes 5, windows newline", () => {
 
 describe("classes 6, interface", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File(
       "zif_test.intf.abap",
@@ -120,7 +120,7 @@ describe("classes 6, interface", () => {
       "TYPES: ty_type TYPE c LENGTH 6.\n" +
       "ENDINTERFACE."));
 
-    let classes = new ClassList(files);
+    const classes = new ClassList(files);
 
     expect(classes.getInterfaces().split("\n").length).to.equal(4);
   });
@@ -148,7 +148,7 @@ describe("classes 7, sequenced by inheritance", () => {
       "CLASS zcl_abapgit_syntax_highlighter IMPLEMENTATION.\n" +
       "ENDCLASS.");
 
-    let files = [file1, file2];
+    const files = [file1, file2];
     let classes = new ClassList(new FileList(files));
 
     expect(classes.getDefinitions().split("\n")[0].indexOf("CLASS zcl_abapgit_syntax_highlighter")).to.equal(0);
@@ -180,7 +180,7 @@ describe("classes 8, exceptions sequenced by inheritance", () => {
       "CLASS zcx_abapgit_2fa_error IMPLEMENTATION.\n" +
       "ENDCLASS.");
 
-    let files = [file1, file2];
+    const files = [file1, file2];
     let classes = new ClassList(new FileList(files));
 
     expect(classes.getExceptions().split("\n")[0].indexOf("CLASS zcx_abapgit_2fa_error")).to.equal(0);
@@ -204,7 +204,7 @@ describe("interfaces 1, dependencies", () => {
       "METHODS blah RETURNING VALUE(rt_bar) TYPE zif_intf1=>ty_boo.\n" +
       "ENDINTERFACE.");
 
-    let files = [file1, file2];
+    const files = [file1, file2];
     let classes = new ClassList(new FileList(files));
 
     expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
@@ -222,8 +222,8 @@ describe("interfaces 2, reference to self", () => {
       "METHODS read RETURNING VALUE(rt_foo) TYPE zif_intf1=>ty_moo.\n" +
       "ENDINTERFACE.");
 
-    let files = [file1];
-    let classes = new ClassList(new FileList(files));
+    const files = [file1];
+    const classes = new ClassList(new FileList(files));
 
     expect(classes.getInterfaces().split("\n")[0].indexOf("INTERFACE zif_intf1.")).to.equal(0);
   });
@@ -231,7 +231,7 @@ describe("interfaces 2, reference to self", () => {
 
 describe("classes, remove PUBLIC, combined with abstract", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File(
       "zcl_class.clas.abap",
@@ -240,7 +240,7 @@ describe("classes, remove PUBLIC, combined with abstract", () => {
       "CLASS zcl_class IMPLEMENTATION.\n" +
       "ENDCLASS."));
 
-    let classes = new ClassList(files);
+    const classes = new ClassList(files);
 
     expect(classes.getDefinitions()).to.have.string("CLASS zcl_class DEFINITION ABSTRACT CREATE PUBLIC.");
   });

@@ -5,7 +5,7 @@ import FileList from "../src/file_list";
 
 describe("classes 1, test", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinclude."));
     files.push(new File("zinclude.abap", "WRITE / 'Hello World!'."));
@@ -23,7 +23,7 @@ describe("classes 1, test", () => {
 
 describe("classes 2, remove test classes from friends", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(new File("zmain.abap", "REPORT zmain.\n\ndata: foo type ref to zcl_serialize."));
     files.push(new File("zcl_serialize.clas.abap", `class zcl_serialize definition public global friends zcl_abapgit_test_serialize .

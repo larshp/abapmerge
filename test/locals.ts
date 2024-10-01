@@ -34,7 +34,7 @@ METHOD run.
 ENDMETHOD.
 ENDCLASS.`;
 
-    let files = new FileList();
+    const files = new FileList();
     files.push(new File("zcl_locals_test.clas.abap", abap1));
     files.push(new File("zcl_locals_test.clas.locals_imp.abap", abap2));
     files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinclude."));

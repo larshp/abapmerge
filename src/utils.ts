@@ -3,7 +3,7 @@ export default class Utils {
   public static minstdRandMax = 2147483646;
 
   public static nextMinstdRandFor(seed: number): number {
-    let product = 48271 * seed;
+    const product = 48271 * seed;
     return product % (Utils.minstdRandMax + 1);
   }
 
@@ -15,7 +15,7 @@ export default class Utils {
     }
 
     for (let i = 0; i < input.length; ++i) {
-      let char = input.charCodeAt(i);
+      const char = input.charCodeAt(i);
       /* eslint-disable-next-line no-bitwise */
       hash = ( ( hash << 5 ) - hash ) + char;
       /* eslint-disable-next-line no-bitwise */
@@ -30,7 +30,7 @@ export default class Utils {
   }
 
   public static randomStringOfLength(seed: number, requiredLength: number): string {
-    let allowedLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const allowedLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     let result = "";
     for (let currentLength = 0; currentLength < requiredLength; ++currentLength) {

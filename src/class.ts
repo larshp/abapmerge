@@ -1,12 +1,12 @@
 export default class Class {
 
-  private name: String;
-  private definition: String;
-  private implementation: String;
+  private name: string;
+  private definition: string;
+  private implementation: string;
   private forTesting: boolean;
-  private dependencies: String[];
+  private dependencies: string[];
 
-  public constructor(name: String, definition: String, forTesting: boolean, implementation?: string, dependencies?: String[]) {
+  public constructor(name: string, definition: string, forTesting: boolean, implementation?: string, dependencies?: string[]) {
     this.name = name;
     this.definition = definition;
     this.implementation = implementation;
@@ -14,19 +14,19 @@ export default class Class {
     this.forTesting = forTesting;
   }
 
-  public getName(): String {
+  public getName(): string {
     return this.name;
   }
 
-  public getDefinition(): String {
+  public getDefinition(): string {
     return this.definition;
   }
 
-  public getImplementation(): String {
+  public getImplementation(): string {
     return this.implementation;
   }
 
-  public getDependencies(): String[] {
+  public getDependencies(): string[] {
     return this.dependencies;
   }
 

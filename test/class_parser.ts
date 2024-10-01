@@ -3,15 +3,15 @@ import File from "../src/file";
 import FileList from "../src/file_list";
 import {ClassParser, AbapPublicClass} from "../src/class_parser";
 
-let expect = chai.expect;
+const expect = chai.expect;
 
 describe("class_parser 1, anonymizeTypeName contract", () => {
   it("something", () => {
-    let prefix = "prefix";
-    let alias = ClassParser.anonymizeTypeName(prefix, "type", "name");
+    const prefix = "prefix";
+    const alias = ClassParser.anonymizeTypeName(prefix, "type", "name");
 
-    let anotherprefix = "foobar";
-    let anotheralias = ClassParser.anonymizeTypeName(anotherprefix, "type", "name");
+    const anotherprefix = "foobar";
+    const anotheralias = ClassParser.anonymizeTypeName(anotherprefix, "type", "name");
 
     expect(alias.length).to.equal(15 + prefix.length);
     expect(alias.substr(5, prefix.length)).to.equal(prefix);
@@ -23,32 +23,32 @@ describe("class_parser 1, anonymizeTypeName contract", () => {
 
 describe("class_parser 2, renameLocalType class member", () => {
   it("something", () => {
-    let oldCode = "data(res) = cl_foo=>do_stuff().";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
+    const oldCode = "data(res) = cl_foo=>do_stuff().";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
     expect(newCode).to.equal("data(res) = cl_bar=>do_stuff().");
   });
 });
 
 describe("class_parser 3, renameLocalType new", () => {
   it("something", () => {
-    let oldCode = "data(res) = new cl_foo( ).";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
+    const oldCode = "data(res) = new cl_foo( ).";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
     expect(newCode).to.equal("data(res) = new cl_bar( ).");
   });
 });
 
 describe("class_parser 4, renameLocalType ref to", () => {
   it("something", () => {
-    let oldCode = "data: res type ref to cl_foo.";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
+    const oldCode = "data: res type ref to cl_foo.";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
     expect(newCode).to.equal("data: res type ref to cl_bar.");
   });
 });
 
 describe("class_parser 5, renameLocalType class definition", () => {
   it("something", () => {
-    let oldCode = "class cl_foo definition.";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
+    const oldCode = "class cl_foo definition.";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
     expect(newCode).to.equal("* renamed: cl_parent :: cl_foo\n" +
                              "class cl_bar definition.");
   });
@@ -56,16 +56,16 @@ describe("class_parser 5, renameLocalType class definition", () => {
 
 describe("class_parser 6, renameLocalType class implementation", () => {
   it("something", () => {
-    let oldCode = "class cl_foo implementation.";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
+    const oldCode = "class cl_foo implementation.";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_bar", "cl_parent", oldCode);
     expect(newCode).to.equal("class cl_bar implementation.");
   });
 });
 
 describe("class_parser 7, renameLocalType interface declaration", () => {
   it("something", () => {
-    let oldCode = "interface lif_foo.\nclass lcl_imp definition.\ninterfaces lif_foo.\nendclass.\n";
-    let newCode = ClassParser.renameLocalType("lif_foo", "lif_bar", "cl_parent", oldCode);
+    const oldCode = "interface lif_foo.\nclass lcl_imp definition.\ninterfaces lif_foo.\nendclass.\n";
+    const newCode = ClassParser.renameLocalType("lif_foo", "lif_bar", "cl_parent", oldCode);
 
     expect(newCode).to.equal("* renamed: cl_parent :: lif_foo\n" +
                              "interface lif_bar.\n" +
@@ -75,10 +75,10 @@ describe("class_parser 7, renameLocalType interface declaration", () => {
 
 describe("class_parser 8, buildLocalFileName imp", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
 
-    let filename = ClassParser.buildLocalFileName("imp", abapClass);
+    const filename = ClassParser.buildLocalFileName("imp", abapClass);
 
     expect(filename).to.equal("cl_foo.clas.locals_imp.abap");
   });
@@ -86,10 +86,10 @@ describe("class_parser 8, buildLocalFileName imp", () => {
 
 describe("class_parser 9, buildLocalFileName def", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
 
-    let filename = ClassParser.buildLocalFileName("def", abapClass);
+    const filename = ClassParser.buildLocalFileName("def", abapClass);
 
     expect(filename).to.equal("cl_foo.clas.locals_def.abap");
   });
@@ -97,14 +97,14 @@ describe("class_parser 9, buildLocalFileName def", () => {
 
 describe("class_parser 10, parseLocalContents contract class", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.hash = "XOX";
     abapClass.def = "lcl_def=>def_imp";
     abapClass.imp = "lcl_def=>def_imp lcl_imp=>imp_only";
 
-    let oldLocalDef = "class lcl_def definition.";
-    let oldLocalImp = "class lcl_imp definition.";
+    const oldLocalDef = "class lcl_def definition.";
+    const oldLocalImp = "class lcl_imp definition.";
 
     ClassParser.parseLocalContents("imp", abapClass, oldLocalImp);
 
@@ -129,14 +129,14 @@ describe("class_parser 10, parseLocalContents contract class", () => {
 
 describe("class_parser 11, parseLocalContents contract interface", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.hash = "XOX";
     abapClass.def = "lif_def=>def_imp";
     abapClass.imp = "lif_def=>def_imp lif_imp=>imp_only";
 
-    let oldLocalDef = "interface lif_def.";
-    let oldLocalImp = "interface lif_imp.";
+    const oldLocalDef = "interface lif_def.";
+    const oldLocalImp = "interface lif_imp.";
 
     ClassParser.parseLocalContents("imp", abapClass, oldLocalImp);
 
@@ -161,13 +161,13 @@ describe("class_parser 11, parseLocalContents contract interface", () => {
 
 describe("class_parser 12, parseLocalContents comments", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.hash = "_XOX_";
     abapClass.def = "";
     abapClass.imp = "";
 
-    let oldLocalImp = "* interface foo definition.\n" +
+    const oldLocalImp = "* interface foo definition.\n" +
                       "class utils definition.\n";
 
     ClassParser.parseLocalContents("imp", abapClass, oldLocalImp);
@@ -182,7 +182,7 @@ describe("class_parser 12, parseLocalContents comments", () => {
 
 describe("class_parser 13, findFileByName", () => {
   it("something", () => {
-    let files = new FileList();
+    const files = new FileList();
     files.push(new File("camelCASEfile", "camelCASEfile"));
     files.push(new File("INVERTEDcaseFILE", "INVERTEDcaseFILE"));
 
@@ -193,14 +193,14 @@ describe("class_parser 13, findFileByName", () => {
 
 describe("class_parser 14, tryProcessLocalFile not found imp", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.def = "";
     abapClass.imp = "";
 
-    let mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
-    let defFile = new File("cl_foo.clas.locals_def.abap", "interface lif_bar.");
-    let files = new FileList();
+    const mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
+    const defFile = new File("cl_foo.clas.locals_def.abap", "interface lif_bar.");
+    const files = new FileList();
     files.push(mainFile);
     files.push(defFile);
 
@@ -216,14 +216,14 @@ describe("class_parser 14, tryProcessLocalFile not found imp", () => {
 
 describe("class_parser 15, tryProcessLocalFile not found def", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.def = "";
     abapClass.imp = "";
 
-    let mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
-    let impFile = new File("cl_foo.clas.locals_imp.abap", "class lcl_bar definition.");
-    let files = new FileList();
+    const mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
+    const impFile = new File("cl_foo.clas.locals_imp.abap", "class lcl_bar definition.");
+    const files = new FileList();
     files.push(mainFile);
 
     ClassParser.tryProcessLocalFile("def", abapClass, files);
@@ -238,15 +238,15 @@ describe("class_parser 15, tryProcessLocalFile not found def", () => {
 
 describe("class_parser 16, tryProcessLocalFile unknown", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.def = "";
     abapClass.imp = "";
 
-    let mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
-    let defFile = new File("cl_foo.clas.locals_def.abap", "interface lif_blah.");
-    let impFile = new File("cl_foo.clas.locals_imp.abap", "class lcl_bar definition.");
-    let files = new FileList();
+    const mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
+    const defFile = new File("cl_foo.clas.locals_def.abap", "interface lif_blah.");
+    const impFile = new File("cl_foo.clas.locals_imp.abap", "class lcl_bar definition.");
+    const files = new FileList();
     files.push(mainFile);
     files.push(defFile);
     files.push(impFile);
@@ -264,15 +264,15 @@ describe("class_parser 16, tryProcessLocalFile unknown", () => {
 
 describe("class_parser 17, tryProcessLocalFile found", () => {
   it("something", () => {
-    let abapClass = new AbapPublicClass();
+    const abapClass = new AbapPublicClass();
     abapClass.name = "cl_foo";
     abapClass.def = "";
     abapClass.imp = "";
 
-    let mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
-    let defFile = new File("cl_foo.clas.locals_def.abap", "* comment def");
-    let impFile = new File("cl_foo.clas.locals_imp.abap", "* comment imp");
-    let files = new FileList();
+    const mainFile = new File("cl_foo.clas.abap", "class cl_foo definition.");
+    const defFile = new File("cl_foo.clas.locals_def.abap", "* comment def");
+    const impFile = new File("cl_foo.clas.locals_imp.abap", "* comment imp");
+    const files = new FileList();
     files.push(mainFile);
     files.push(defFile);
     files.push(impFile);
@@ -299,63 +299,63 @@ describe("class_parser 17, tryProcessLocalFile found", () => {
 
 describe("class_parser 19, renameLocalType exception in catch with into", () => {
   it("something", () => {
-    let oldCode = "catch cl_foo cl_bar into";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "catch cl_foo cl_bar into";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
     expect(newCode).to.equal("catch cl_new cl_bar into");
 
-    let newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
+    const newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
     expect(newCode2).to.equal("catch cl_new cl_future into");
   });
 });
 
 describe("class_parser 20, renameLocalType exception in catch w/o into", () => {
   it("something", () => {
-    let oldCode = "catch cl_foo cl_bar.";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "catch cl_foo cl_bar.";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
     expect(newCode).to.equal("catch cl_new cl_bar.");
 
-    let newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
+    const newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
     expect(newCode2).to.equal("catch cl_new cl_future.");
   });
 });
 
 describe("class_parser 21, renameLocalType exception in catch before unwind with into", () => {
   it("something", () => {
-    let oldCode = "catch cl_foo cl_bar into";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "catch cl_foo cl_bar into";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
     expect(newCode).to.equal("catch cl_new cl_bar into");
 
-    let newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
+    const newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
     expect(newCode2).to.equal("catch cl_new cl_future into");
   });
 });
 
 describe("class_parser 22, renameLocalType exception in catch before unwind w/o into", () => {
   it("something", () => {
-    let oldCode = "catch cl_foo cl_bar.";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "catch cl_foo cl_bar.";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
     expect(newCode).to.equal("catch cl_new cl_bar.");
 
-    let newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
+    const newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
     expect(newCode2).to.equal("catch cl_new cl_future.");
   });
 });
 
 describe("class_parser 23, renameLocalType exception in raising", () => {
   it("something", () => {
-    let oldCode = "raising cl_foo resumable(cl_bar).";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "raising cl_foo resumable(cl_bar).";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
     expect(newCode).to.equal("raising cl_new resumable(cl_bar).");
 
-    let newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
+    const newCode2 = ClassParser.renameLocalType("cl_bar", "cl_future", "cl_parent", newCode);
     expect(newCode2).to.equal("raising cl_new resumable(cl_future).");
   });
 });
 
 describe("class_parser 24, renameLocalType no rename in asterisk comments", () => {
   it("something", () => {
-    let oldCode = "* The class cl_foo does the hard work";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "* The class cl_foo does the hard work";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
 
     expect(newCode).to.equal("* The class cl_foo does the hard work");
   });
@@ -363,8 +363,8 @@ describe("class_parser 24, renameLocalType no rename in asterisk comments", () =
 
 describe("class_parser 25, renameLocalType no rename in double quote comments", () => {
   it("something", () => {
-    let oldCode = "lo_inst = cl_foo=>instance( ). \" cache singletone inst of cl_foo";
-    let newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
+    const oldCode = "lo_inst = cl_foo=>instance( ). \" cache singletone inst of cl_foo";
+    const newCode = ClassParser.renameLocalType("cl_foo", "cl_new", "cl_parent", oldCode);
 
     expect(newCode).to.equal("lo_inst = cl_new=>instance( ). \" cache singletone inst of cl_foo");
   });
@@ -372,8 +372,8 @@ describe("class_parser 25, renameLocalType no rename in double quote comments", 
 
 describe("class_parser 26, renameLocalType interfaces in class definition", () => {
   it("something", () => {
-    let oldCode = "class cl_parent definition.\n  public section.\n    interfaces lif_foo.\n";
-    let newCode = ClassParser.renameLocalType("lif_foo", "lif_renamed", "cl_parent", oldCode);
+    const oldCode = "class cl_parent definition.\n  public section.\n    interfaces lif_foo.\n";
+    const newCode = ClassParser.renameLocalType("lif_foo", "lif_renamed", "cl_parent", oldCode);
 
     expect(newCode).to.equal("class cl_parent definition.\n  public section.\n    interfaces lif_renamed.\n");
   });
@@ -381,8 +381,8 @@ describe("class_parser 26, renameLocalType interfaces in class definition", () =
 
 describe("class_parser 27, renameLocalType interface in method implementation", () => {
   it("something", () => {
-    let oldCode = "class cl_parent implementation.\n  method lif_foo~do.\n  endmethod.\n";
-    let newCode = ClassParser.renameLocalType("lif_foo", "lif_renamed", "cl_parent", oldCode);
+    const oldCode = "class cl_parent implementation.\n  method lif_foo~do.\n  endmethod.\n";
+    const newCode = ClassParser.renameLocalType("lif_foo", "lif_renamed", "cl_parent", oldCode);
 
     expect(newCode).to.equal("class cl_parent implementation.\n  method lif_renamed~do.\n  endmethod.\n");
   });
@@ -390,7 +390,7 @@ describe("class_parser 27, renameLocalType interface in method implementation", 
 
 describe("class_parser 28, the method parse", () => {
   it("processes all files", () => {
-    let mainFile = new File(
+    const mainFile = new File(
       "cl_parent.clas.abap",
       "class cl_parent definition.\n" +
       "private section.\n" +
@@ -402,27 +402,27 @@ describe("class_parser 28, the method parse", () => {
       "endmethod.\n" +
       "endclass.\n");
 
-    let defFile = new File(
+    const defFile = new File(
       "cl_parent.clas.locals_def.abap",
       "interface lif_impl.\nendinterface.\n" +
       "class lcl_impl_base definition.\n" +
       "interfaces lif_impl.\n" +
       "endclass.\n");
 
-    let impFile = new File(
+    const impFile = new File(
       "cl_parent.clas.locals_imp.abap",
       "class lcl_impl_prod definition inheriting from lcl_impl_base.\n" +
       "public section.\n" +
       "interfaces lif_impl.\n" +
       "endclass.\n");
 
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(mainFile);
     files.push(defFile);
     files.push(impFile);
 
-    let abapClass = ClassParser.parse(mainFile, files);
+    const abapClass = ClassParser.parse(mainFile, files);
 
     expect(abapClass.getDefinition()).to.equal(
       "class GiiGhQvMEsAOOpdApbtQhfRrLQpNLF DEFINITION DEFERRED.\n" +
@@ -451,7 +451,7 @@ describe("class_parser 28, the method parse", () => {
 
 describe("class_parser 29, multi occurrence on line", () => {
   it("processes all files", () => {
-    let mainFile = new File(
+    const mainFile = new File(
       "cl_parent.clas.abap",
       `
 class cl_parent definition.
@@ -464,19 +464,19 @@ class cl_parent implementation.
   endmethod.
 endclass.`);
 
-    let defFile = new File(
+    const defFile = new File(
       "cl_parent.clas.locals_def.abap",
       `
 interface lif_kind.
   constants bar type c length 1 value 'A'.
 endinterface.`);
 
-    let files = new FileList();
+    const files = new FileList();
 
     files.push(mainFile);
     files.push(defFile);
 
-    let abapClass = ClassParser.parse(mainFile, files);
+    const abapClass = ClassParser.parse(mainFile, files);
 
     expect(abapClass.getImplementation()).to.equal(`class cl_parent implementation.
   method constructor.

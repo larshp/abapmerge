@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+
 import { expect } from "chai";
 import PragmaProcessor from "../src/pragma";
 import File from "../src/file";
@@ -18,7 +18,7 @@ function buildFileList(mock) {
 
 describe("Pragma include", () => {
   it("include a file with pragma", () => {
-    let files = buildFileList({
+    const files = buildFileList({
       "zmain.abap": [
         "REPORT zmain.",
         "  \" @@abapmerge include some.txt > append '$$' to tab.",
@@ -45,7 +45,7 @@ describe("Pragma include", () => {
   });
 
   it("include a file with pragma, base64", () => {
-    let files = buildFileList({
+    const files = buildFileList({
       "zmain.abap": [
         "REPORT zmain.",
         "  \" @@abapmerge include-base64 some.blob > append '$$' to tab.",
@@ -68,7 +68,7 @@ describe("Pragma include", () => {
   });
 
   it("include a cua from XML", () => {
-    let files = buildFileList({
+    const files = buildFileList({
       "zmain.abap": `
         REPORT zmain.
           DATA ls_cua TYPE ty_cua.
@@ -100,7 +100,7 @@ describe("Pragma include", () => {
                 <RSMPE_FUNT>
                   <CODE>OK</CODE>
                   <TEXTNO>002</TEXTNO>
-                </RSMPE_FUNT>         
+                </RSMPE_FUNT>
               </FUN>
           </CUA>
           </asx:values>
@@ -140,7 +140,7 @@ describe("Pragma include", () => {
   });
 
   it("include a cua from XML, negative", () => {
-    let files = buildFileList({
+    const files = buildFileList({
       "zmain.abap": `
         REPORT zmain.
           " @@abapmerge include-cua some.xml > ls_cua
