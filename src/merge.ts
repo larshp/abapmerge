@@ -50,7 +50,7 @@ export default class Merge {
         const reportClauseMatches = line.match(regexReportClause);
 
         if (reportClauseMatches) {
-          isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase();
+          isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase().replace(/#/g, "/");
           if (newReportName) {
             line = line.replace( regexReportClause, `$1${newReportName}$3`);
           }

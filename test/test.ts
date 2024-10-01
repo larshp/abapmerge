@@ -401,3 +401,22 @@ describe("test 25, replace report clause name by options when report name has na
     expect(split.indexOf("REPORT /prod/main_test.")).to.equal(0);
   });
 });
+
+describe("test 26, namespaced includes", () => {
+  it("something", () => {
+    const files = new FileList();
+    files.push(new File("#foo#test.prog.abap", `REPORT /foo/test.
+
+INCLUDE /foo/inc.
+
+START-OF-SELECTION.
+  PERFORM say_hello.`));
+    files.push(new File("#foo#inc.prog.abap", `FORM say_hello.
+  WRITE / 'Hello World'.
+ENDFORM.`));
+
+    const result = Merge.merge(files, "#foo#test");
+    expect(result).to.be.a("string");
+    expect(result).to.include("FORM say_hello.");
+  });
+});
