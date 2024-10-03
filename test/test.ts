@@ -424,29 +424,42 @@ ENDFORM.`));
 describe("test 27, chained includes", () => {
   it("something", () => {
     const files = new FileList();
-    files.push(new File("zfoo.prog.abap", `REPORT zfoo.
+    files.push(new File("zfoo.prog.abap",
+      `REPORT zfoo.\nINCLUDE: zfoo_inc,\nzfoo_inc2.\nSTART-OF-SELECTION.\nPERFORM do_nothing.\nPERFORM do_nothing2.`));
 
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.\n  RETURN.\nENDFORM.`));
 
-      INCLUDE: zfoo_inc,
-      zfoo_inc2.
-
-START-OF-SELECTION.
-PERFORM do_nothing.
-PERFORM do_nothing2.`));
-
-    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
-  RETURN.
-ENDFORM.
-`));
-
-    files.push(new File("zfoo_inc2.prog.abap", `FORM do_nothing2.
-  RETURN.
-ENDFORM.
-`));
+    files.push(new File("zfoo_inc2.prog.abap", `FORM do_nothing2.\n  RETURN.\nENDFORM.`));
 
     const result = Merge.merge(files, "zfoo");
     expect(result).to.be.a("string");
     expect(result).to.include("FORM do_nothing.");
     expect(result).to.include("FORM do_nothing2.");
+  });
+});
+
+describe("test 28, REPORT comments", () => {
+  it("something", () => {
+    const files = new FileList();
+    files.push(new File("zfoo.prog.abap",
+      `REPORT zfoo. "moo\nINCLUDE zfoo_inc.\nSTART-OF-SELECTION.PERFORM do_nothing.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.\n  RETURN.\nENDFORM.`));
+
+    const result = Merge.merge(files, "zfoo");
+    expect(result).to.be.a("string");
+    expect(result).to.include("FORM do_nothing.");
+  });
+});
+
+describe("test 29, REPORT multi-line additions", () => {
+  it("something", () => {
+    const files = new FileList();
+    files.push(new File("zfoo.prog.abap",
+      `REPORT zfoo\n  LINE SIZE 100.\nINCLUDE zfoo_inc.\nSTART-OF-SELECTION.PERFORM do_nothing.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.\n  RETURN.\nENDFORM.`));
+
+    const result = Merge.merge(files, "zfoo");
+    expect(result).to.be.a("string");
+    expect(result).to.include("FORM do_nothing.");
   });
 });
