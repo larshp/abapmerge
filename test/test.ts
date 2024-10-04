@@ -470,7 +470,8 @@ describe("test 29, REPORT multi-line additions", () => {
       `REPORT zfoo
 LINE SIZE 100.
 INCLUDE zfoo_inc.
-START-OF-SELECTION.PERFORM do_nothing.`));
+START-OF-SELECTION.
+PERFORM do_nothing.`));
     files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
   RETURN.
 ENDFORM.`));
