@@ -422,7 +422,7 @@ ENDFORM.`));
 });
 
 describe("test 27, chained includes", () => {
-  it.skip("something", () => {
+  it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo.
