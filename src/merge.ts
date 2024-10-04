@@ -46,13 +46,13 @@ export default class Merge {
     if (main !== null) {
       while (lineNo < lines.length) {
         let line = lines[lineNo++];
-        const regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)$/im;
+        const regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)/im;
         const reportClauseMatches = line.match(regexReportClause);
 
         if (reportClauseMatches) {
           isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase().replace(/#/g, "/");
           if (newReportName) {
-            line = line.replace( regexReportClause, `$1${newReportName}$3`);
+            line = line.replace(regexReportClause, `$1${newReportName}$3`);
           }
         }
 
@@ -79,25 +79,40 @@ export default class Merge {
 
     for ( ; lineNo < lines.length; ++lineNo) {
       const line = lines[lineNo];
-      let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
-      if (!include) {
-        // try namespaced
-        include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
-        if (include) {
-          include[1] = include[1].replace(/\//g, "#");
+      const includes = this.matchIncludeStatement(line);
+      if (includes) {
+        for (const include of includes) {
+          output = output +
+            this.comment(include) +
+            this.analyze(null, this.files.fileByName(include).getContents()) +
+            "\n";
         }
-      }
-      if (include) {
-        output = output +
-          this.comment(include[1]) +
-          this.analyze(null, this.files.fileByName(include[1]).getContents()) +
-          "\n";
       } else {
         output += line + "\n";
       }
     }
 
     return output.replace(/\n{3}|\n{2}$/g, "\n");
+  }
+
+  /** returns INCLUDE names if found in current line */
+  private static matchIncludeStatement(line: string): string[] | undefined {
+    let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
+    if (!include) {
+      // try namespaced
+      include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
+      if (include) {
+        include[1] = include[1].replace(/\//g, "#");
+      }
+    }
+    if (!include) {
+      // try chained
+      // todo
+    }
+    if (include === null) {
+      return undefined
+    }
+    return [include[1]];
   }
 
   private static comment(name: string): string {

@@ -420,3 +420,63 @@ ENDFORM.`));
     expect(result).to.include("FORM say_hello.");
   });
 });
+
+describe("test 27, chained includes", () => {
+  it.skip("something", () => {
+    const files = new FileList();
+    files.push(new File("zfoo.prog.abap",
+      `REPORT zfoo.
+INCLUDE: zfoo_inc, zfoo_inc2.
+START-OF-SELECTION.
+PERFORM do_nothing.
+PERFORM do_nothing2.`));
+
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
+  RETURN.
+ENDFORM.`));
+
+    files.push(new File("zfoo_inc2.prog.abap", `FORM do_nothing2.
+  RETURN.
+ENDFORM.`));
+
+    const result = Merge.merge(files, "zfoo");
+    expect(result).to.be.a("string");
+    expect(result).to.include("FORM do_nothing.");
+    expect(result).to.include("FORM do_nothing2.");
+  });
+});
+
+describe("test 28, REPORT comments", () => {
+  it("something", () => {
+    const files = new FileList();
+    files.push(new File("zfoo.prog.abap",
+      `REPORT zfoo. "moo
+INCLUDE zfoo_inc.
+START-OF-SELECTION.PERFORM do_nothing.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
+  RETURN.
+ENDFORM.`));
+
+    const result = Merge.merge(files, "zfoo");
+    expect(result).to.be.a("string");
+    expect(result).to.include("FORM do_nothing.");
+  });
+});
+
+describe("test 29, REPORT multi-line additions", () => {
+  it.skip("something", () => {
+    const files = new FileList();
+    files.push(new File("zfoo.prog.abap",
+      `REPORT zfoo
+LINE SIZE 100.
+INCLUDE zfoo_inc.
+START-OF-SELECTION.PERFORM do_nothing.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
+  RETURN.
+ENDFORM.`));
+
+    const result = Merge.merge(files, "zfoo");
+    expect(result).to.be.a("string");
+    expect(result).to.include("FORM do_nothing.");
+  });
+});
