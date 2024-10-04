@@ -41,7 +41,6 @@ export default class Merge {
   private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
     const lines = CollectStatements.collect(contents).split("\n");
-    console.dir(lines);
     let isMainReport = false;
 
     let lineNo = 0;
