@@ -79,12 +79,14 @@ export default class Merge {
 
     for ( ; lineNo < lines.length; ++lineNo) {
       const line = lines[lineNo];
-      const include = this.matchIncludeStatement(line);
-      if (include) {
-        output = output +
-          this.comment(include) +
-          this.analyze(null, this.files.fileByName(include).getContents()) +
-          "\n";
+      const includes = this.matchIncludeStatement(line);
+      if (includes) {
+        for (const include of includes) {
+          output = output +
+            this.comment(include) +
+            this.analyze(null, this.files.fileByName(include).getContents()) +
+            "\n";
+        }
       } else {
         output += line + "\n";
       }
@@ -94,7 +96,7 @@ export default class Merge {
   }
 
   /** returns INCLUDE names if found in current line */
-  private static matchIncludeStatement(line: string): string | undefined {
+  private static matchIncludeStatement(line: string): string[] | undefined {
     let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
     if (!include) {
       // try namespaced
@@ -103,10 +105,14 @@ export default class Merge {
         include[1] = include[1].replace(/\//g, "#");
       }
     }
+    if (!include) {
+      // try chained
+      // todo
+    }
     if (include === null) {
       return undefined
     }
-    return include[1];
+    return [include[1]];
   }
 
   private static comment(name: string): string {
