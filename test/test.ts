@@ -464,7 +464,7 @@ ENDFORM.`));
 });
 
 describe("test 29, REPORT multi-line additions", () => {
-  it.skip("something", () => {
+  it.only("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo
