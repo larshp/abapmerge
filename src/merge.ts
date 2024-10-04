@@ -2,6 +2,7 @@ import FileList from "./file_list";
 import PragmaProcessor from "./pragma";
 import ClassList from "./class_list";
 import AbapmergeMarker from "./abapmerge_marker";
+import { CollectStatements } from "./collect_statements";
 
 export default class Merge {
   private static files: FileList;
@@ -39,7 +40,7 @@ export default class Merge {
 
   private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
-    const lines = contents.split("\n");
+    const lines = CollectStatements.collect(contents).split("\n");
     let isMainReport = false;
 
     let lineNo = 0;
