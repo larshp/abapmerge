@@ -46,13 +46,13 @@ export default class Merge {
     if (main !== null) {
       while (lineNo < lines.length) {
         let line = lines[lineNo++];
-        const regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)$/im;
+        const regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)/im;
         const reportClauseMatches = line.match(regexReportClause);
 
         if (reportClauseMatches) {
           isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase().replace(/#/g, "/");
           if (newReportName) {
-            line = line.replace( regexReportClause, `$1${newReportName}$3`);
+            line = line.replace(regexReportClause, `$1${newReportName}$3`);
           }
         }
 

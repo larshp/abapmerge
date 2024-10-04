@@ -447,7 +447,7 @@ ENDFORM.`));
 });
 
 describe("test 28, REPORT comments", () => {
-  it.skip("something", () => {
+  it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo. "moo
@@ -468,7 +468,7 @@ describe("test 29, REPORT multi-line additions", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo
-  LINE SIZE 100.
+LINE SIZE 100.
 INCLUDE zfoo_inc.
 START-OF-SELECTION.PERFORM do_nothing.`));
     files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
