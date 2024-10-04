@@ -82,8 +82,8 @@ export default class Merge {
       const include = this.matchIncludeStatement(line);
       if (include) {
         output = output +
-          this.comment(include[1]) +
-          this.analyze(null, this.files.fileByName(include[1]).getContents()) +
+          this.comment(include) +
+          this.analyze(null, this.files.fileByName(include).getContents()) +
           "\n";
       } else {
         output += line + "\n";
@@ -94,7 +94,7 @@ export default class Merge {
   }
 
   /** returns INCLUDE names if found in current line */
-  private static matchIncludeStatement(line: string) {
+  private static matchIncludeStatement(line: string): string | undefined {
     let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
     if (!include) {
       // try namespaced
@@ -103,7 +103,10 @@ export default class Merge {
         include[1] = include[1].replace(/\//g, "#");
       }
     }
-    return include;
+    if (include === null) {
+      return undefined
+    }
+    return include[1];
   }
 
   private static comment(name: string): string {
