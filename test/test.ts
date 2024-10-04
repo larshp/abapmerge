@@ -422,11 +422,12 @@ ENDFORM.`));
 });
 
 describe("test 27, chained includes", () => {
-  it.skip("something", () => {
+  it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo.
-INCLUDE: zfoo_inc, zfoo_inc2.
+INCLUDE: zfoo_inc,
+zfoo_inc2.
 START-OF-SELECTION.
 PERFORM do_nothing.
 PERFORM do_nothing2.`));
@@ -464,13 +465,14 @@ ENDFORM.`));
 });
 
 describe("test 29, REPORT multi-line additions", () => {
-  it.skip("something", () => {
+  it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo
 LINE SIZE 100.
 INCLUDE zfoo_inc.
-START-OF-SELECTION.PERFORM do_nothing.`));
+START-OF-SELECTION.
+PERFORM do_nothing.`));
     files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
   RETURN.
 ENDFORM.`));

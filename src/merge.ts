@@ -2,6 +2,7 @@ import FileList from "./file_list";
 import PragmaProcessor from "./pragma";
 import ClassList from "./class_list";
 import AbapmergeMarker from "./abapmerge_marker";
+import { CollectStatements } from "./collect_statements";
 
 export default class Merge {
   private static files: FileList;
@@ -39,7 +40,7 @@ export default class Merge {
 
   private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
-    const lines = contents.split("\n");
+    const lines = CollectStatements.collect(contents).split("\n");
     let isMainReport = false;
 
     let lineNo = 0;
@@ -97,17 +98,41 @@ export default class Merge {
 
   /** returns INCLUDE names if found in current line */
   private static matchIncludeStatement(line: string): string[] | undefined {
-    let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
+    let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\./i);
     if (!include) {
       // try namespaced
-      include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
+      include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\./i);
       if (include) {
         include[1] = include[1].replace(/\//g, "#");
       }
     }
     if (!include) {
       // try chained
-      // todo
+      const moo = line.matchAll(/^\s*INCLUDE\s*:\s+(z\w+)(?:,\s*(z\w+))*\s*\./gi);
+      const found: string[] = [];
+      for (const m of moo) {
+        for (let i = 1; i < 10; i++) {
+          const element = m[i];
+          if (element === undefined) {
+            return found;
+          }
+          found.push(element);
+        }
+      }
+    }
+    if (!include) {
+      // try chained namespaced
+      const moo = line.matchAll(/^\s*INCLUDE\s*:\s+(\/\w+\/\w+)(?:,\s*(\/\w+\/\w+))*\s*\./gi);
+      const found: string[] = [];
+      for (const m of moo) {
+        for (let i = 1; i < 10; i++) {
+          const element = m[i];
+          if (element === undefined) {
+            return found;
+          }
+          found.push(element);
+        }
+      }
     }
     if (include === null) {
       return undefined
