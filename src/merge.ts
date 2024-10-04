@@ -79,14 +79,7 @@ export default class Merge {
 
     for ( ; lineNo < lines.length; ++lineNo) {
       const line = lines[lineNo];
-      let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
-      if (!include) {
-        // try namespaced
-        include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
-        if (include) {
-          include[1] = include[1].replace(/\//g, "#");
-        }
-      }
+      const include = this.matchIncludeStatement(line);
       if (include) {
         output = output +
           this.comment(include[1]) +
@@ -98,6 +91,19 @@ export default class Merge {
     }
 
     return output.replace(/\n{3}|\n{2}$/g, "\n");
+  }
+
+  /** returns INCLUDE names if found in current line */
+  private static matchIncludeStatement(line: string) {
+    let include = line.match(/^\s*INCLUDE\s+(z\w+)\s*\.\s*.*$/i);
+    if (!include) {
+      // try namespaced
+      include = line.match(/^\s*INCLUDE\s+(\/\w+\/\w+)\s*\.\s*.*$/i);
+      if (include) {
+        include[1] = include[1].replace(/\//g, "#");
+      }
+    }
+    return include;
   }
 
   private static comment(name: string): string {
