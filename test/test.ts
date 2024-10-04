@@ -426,7 +426,8 @@ describe("test 27, chained includes", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
       `REPORT zfoo.
-INCLUDE: zfoo_inc, zfoo_inc2.
+INCLUDE: zfoo_inc,
+zfoo_inc2.
 START-OF-SELECTION.
 PERFORM do_nothing.
 PERFORM do_nothing2.`));

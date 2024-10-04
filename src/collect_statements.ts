@@ -8,7 +8,8 @@ export class CollectStatements {
     while (lines.length > 0) {
       const line = lines.shift();
       if (line.trimStart().toUpperCase().startsWith("REPORT ") === false
-          && line.trimStart().toUpperCase().startsWith("INCLUDE ") === false) {
+          && line.trimStart().toUpperCase().startsWith("INCLUDE ") === false
+          && line.trimStart().toUpperCase().startsWith("INCLUDE:") === false) {
         output.push(line);
         continue;
       }
