@@ -425,11 +425,20 @@ describe("test 27, chained includes", () => {
   it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
-      `REPORT zfoo.\nINCLUDE: zfoo_inc,\nzfoo_inc2.\nSTART-OF-SELECTION.\nPERFORM do_nothing.\nPERFORM do_nothing2.`));
+      `REPORT zfoo.
+INCLUDE: zfoo_inc,
+zfoo_inc2.
+START-OF-SELECTION.
+PERFORM do_nothing.
+PERFORM do_nothing2.`));
 
-    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.\n  RETURN.\nENDFORM.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
+  RETURN.
+ENDFORM.`));
 
-    files.push(new File("zfoo_inc2.prog.abap", `FORM do_nothing2.\n  RETURN.\nENDFORM.`));
+    files.push(new File("zfoo_inc2.prog.abap", `FORM do_nothing2.
+  RETURN.
+ENDFORM.`));
 
     const result = Merge.merge(files, "zfoo");
     expect(result).to.be.a("string");
@@ -442,8 +451,12 @@ describe("test 28, REPORT comments", () => {
   it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
-      `REPORT zfoo. "moo\nINCLUDE zfoo_inc.\nSTART-OF-SELECTION.PERFORM do_nothing.`));
-    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.\n  RETURN.\nENDFORM.`));
+      `REPORT zfoo. "moo
+INCLUDE zfoo_inc.
+START-OF-SELECTION.PERFORM do_nothing.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
+  RETURN.
+ENDFORM.`));
 
     const result = Merge.merge(files, "zfoo");
     expect(result).to.be.a("string");
@@ -455,8 +468,13 @@ describe("test 29, REPORT multi-line additions", () => {
   it("something", () => {
     const files = new FileList();
     files.push(new File("zfoo.prog.abap",
-      `REPORT zfoo\n  LINE SIZE 100.\nINCLUDE zfoo_inc.\nSTART-OF-SELECTION.PERFORM do_nothing.`));
-    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.\n  RETURN.\nENDFORM.`));
+      `REPORT zfoo
+  LINE SIZE 100.
+INCLUDE zfoo_inc.
+START-OF-SELECTION.PERFORM do_nothing.`));
+    files.push(new File("zfoo_inc.prog.abap", `FORM do_nothing.
+  RETURN.
+ENDFORM.`));
 
     const result = Merge.merge(files, "zfoo");
     expect(result).to.be.a("string");
