@@ -16,9 +16,9 @@ describe("test 2, 2 includes", () => {
   it("something", () => {
     const files = new FileList();
     files.push(new File("zmain.abap", "report zmain.\n\n" +
-                        "include zinc1.\n" +
-                        "include zinc2.\n\n" +
-                        "write / 'Main include'."));
+                                      "include zinc1.\n" +
+                                      "include zinc2.\n\n" +
+                                      "write / 'Main include'."));
     files.push(new File("zinc1.abap", "write / 'hello @inc1'."));
     files.push(new File("zinc2.abap", "write / 'hello @inc2'."));
     expect(Merge.merge(files, "zmain")).to.be.a("string");
@@ -29,9 +29,9 @@ describe("test 3, subinclude", () => {
   it("something", () => {
     const files = new FileList();
     files.push(new File("zmain.abap", "report zmain.\n\n" +
-                        "include zinc1.\n" +
-                        "include zinc2.\n\n" +
-                        "write / 'Main include'."));
+                                      "include zinc1.\n" +
+                                      "include zinc2.\n\n" +
+                                      "write / 'Main include'."));
     files.push(new File("zinc1.abap", "include zsubinc1.\nwrite / 'hello @inc1'."));
     files.push(new File("zinc2.abap", "write / 'hello @inc2'."));
     files.push(new File("zsubinc1.abap", "write / 'hello @inc2'."));
@@ -43,9 +43,9 @@ describe("test 4, standard include", () => {
   it("something", () => {
     const files = new FileList();
     files.push(new File("zmain.abap", "report zmain.\n\n" +
-                        "include zinc1.  \" A comment here\n" +
-                        "include zinc2.\n\n" +
-                        "write / 'Main include'."));
+                                      "include zinc1.  \" A comment here\n" +
+                                      "include zinc2.\n\n" +
+                                      "write / 'Main include'."));
     files.push(new File("zinc1.abap", "include standard.\nwrite / 'hello @inc1'."));
     files.push(new File("zinc2.abap", "write / 'hello @inc2'."));
     expect(Merge.merge(files, "zmain")).to.be.a("string");
@@ -100,7 +100,7 @@ describe("test 9, @@abapmerge commands", () => {
                                       "  \" @@abapmerge include js/script.js > write '$$'.\n" +
                                       "  \" @@abapmerge wrong pragma, just copy to output\n" +
                                       "  \" @@abapmerge include data.txt > write '$$'.\n" +
-                                      "  \" @@abapmerge include data.txt > write '$$$'. \" Unescaped !"));
+                                      "  \" @@abapmerge include data.txt > write '$$$'. \" Unescaped !" ));
     files.push(new File("style.css", "body {\nbackground: red;\n}"));
     files.push(new File("data.txt", "content = 'X';\n"));
     files.push(new File("js/script.js", "alert(\"Hello world!\");\n"));
