@@ -4,7 +4,7 @@ import Merge from "../src/merge";
 import FileList from "../src/file_list";
 
 describe("classes 1, test", () => {
-  it("something", () => {
+  it("something1", () => {
     const files = new FileList();
 
     files.push(new File("zmain.abap", "REPORT zmain.\n\nINCLUDE zinclude."));
@@ -22,7 +22,7 @@ describe("classes 1, test", () => {
 });
 
 describe("classes 2, remove test classes from friends", () => {
-  it("something", () => {
+  it("something2", () => {
     const files = new FileList();
 
     files.push(new File("zmain.abap", "REPORT zmain.\n\ndata: foo type ref to zcl_serialize."));
