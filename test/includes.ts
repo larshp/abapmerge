@@ -3,6 +3,35 @@ import Merge from "../src/merge";
 import File from "../src/file";
 import FileList from "../src/file_list";
 
+describe("Global class no include", () => {
+  it("Program and global class without includes", () => {
+
+    const files = new FileList();
+
+    files.push(new File("zfoo.abap",
+      `REPORT zfoo.
+START-OF-SELECTION.
+NEW zcl_main( )->run( ).`));
+
+    files.push(new File("zcl_main.clas.abap",
+      `CLASS zcl_main DEFINITION.
+  PUBLIC SECTION.
+    METHODS run.
+ENDCLASS.
+
+CLASS zcl_main IMPLEMENTATION.
+  METHOD run.
+    WRITE / 'Hello World!'.
+  ENDMETHOD.
+ENDCLASS.`));
+
+    const result = Merge.merge(files, "zfoo");
+    expect(result).to.be.a("string");
+    expect(result).to.include("World");
+
+  });
+});
+
 describe("Local class include", () => {
   it("Program with local class that contains include", () => {
 
@@ -40,15 +69,14 @@ describe("Global class include", () => {
 
     const files = new FileList();
 
-    files.push(new File("zfoo.abap", `
-REPORT zfoo.
+    files.push(new File("zfoo.abap",
+      `REPORT zfoo.
 
 START-OF-SELECTION.
-NEW zcl_main( )->run( ).
-      `));
+NEW zcl_main( )->run( ).`));
 
-    files.push(new File("zcl_main.abap", `
-CLASS zcl_main DEFINITION.
+    files.push(new File("zcl_main.clas.abap",
+      `CLASS zcl_main DEFINITION.
   PUBLIC SECTION.
     METHODS run.
 ENDCLASS.
@@ -57,8 +85,7 @@ CLASS zcl_main IMPLEMENTATION.
   METHOD run.
     INCLUDE zhello.
   ENDMETHOD.
-ENDCLASS.
-      `));
+ENDCLASS.`));
 
     files.push(new File("zhello.abap", "WRITE / 'Hello World!'."));
 
@@ -68,6 +95,3 @@ ENDCLASS.
 
   });
 });
-
-
-

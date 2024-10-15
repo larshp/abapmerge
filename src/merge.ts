@@ -69,7 +69,8 @@ export default class Merge {
         const line = lines[lineNo];
 
         if (!line.match(/^((\*.*)|(\s*))$/im)) {
-          output += this.classes.getResult();
+          const classLines = this.classes.getResult().split("\n");
+          lines.splice(lineNo+1, 0, ...classLines);
           break;
         }
 
