@@ -40,7 +40,7 @@ export default class Merge {
 
   private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
-    const lines = CollectStatements.collect(contents).split("\n");
+    let lines = CollectStatements.collect(contents).split("\n");
     let isMainReport = false;
 
     let lineNo = 0;
@@ -72,7 +72,7 @@ export default class Merge {
           const classLines = this.classes.getResult().split("\n");
           classLines.pop();
           // insert the class source code in the array at lineNo, this way they are analyzed later
-          lines.splice(lineNo, 0, ...classLines);
+          lines = [].concat(lines.slice(0, lineNo), classLines, lines.slice(lineNo, lines.length));
           break;
         }
 
