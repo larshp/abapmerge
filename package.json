@@ -37,7 +37,7 @@
     "@types/node": "^22.13.0",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.9.0",
-    "@eslint/compat": "^1.2.0",
+    "@eslint/compat": "^1.2.6",
     "chai": "^4.5.0",
     "eslint": "^9.19.0",
     "mocha": "^10.7.3",
