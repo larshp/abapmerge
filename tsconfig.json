@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "target": "es2020",
         "outDir": "build",
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
