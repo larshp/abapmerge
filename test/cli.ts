@@ -41,6 +41,7 @@ describe("CLI parse arguments", () => {
       newReportName: undefined,
       allowUnused: false,
       outputFile: undefined,
+      excludePattern: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -58,6 +59,7 @@ describe("CLI parse arguments", () => {
       newReportName: undefined,
       allowUnused: false,
       outputFile: undefined,
+      excludePattern: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -76,6 +78,7 @@ describe("CLI parse arguments", () => {
       newReportName: undefined,
       allowUnused: false,
       outputFile: undefined,
+      excludePattern: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -96,6 +99,7 @@ describe("CLI parse arguments", () => {
       newReportName: "znewname",
       allowUnused: false,
       outputFile: undefined,
+      excludePattern: undefined,
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
@@ -114,6 +118,26 @@ describe("CLI parse arguments", () => {
       newReportName: undefined,
       allowUnused: false,
       outputFile: "some.file",
+      excludePattern: undefined,
+    };
+    chai.assert.isNotNull(parsedArgs);
+    chai.assert.deepEqual(parsedArgs, parsedArgsExpected);
+  });
+
+  it("exclude option", () => {
+    args.push("-e");
+    args.push("test*");
+    args.push(join(__dirname, "entry.abap"));
+    const parsedArgs = Logic.parseArgs(args);
+    const parsedArgsExpected = {
+      entryDir: __dirname,
+      entryFilename: "entry.abap",
+      skipFUGR: false,
+      noFooter: false,
+      newReportName: undefined,
+      allowUnused: false,
+      outputFile: undefined,
+      excludePattern: "test*",
     };
     chai.assert.isNotNull(parsedArgs);
     chai.assert.deepEqual(parsedArgs, parsedArgsExpected);

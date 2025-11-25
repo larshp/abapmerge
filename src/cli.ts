@@ -5,6 +5,7 @@ import FileList from "./file_list";
 import Merge from "./merge";
 import { Command } from "commander";
 import PackageInfo from "../package.json";
+import { minimatch } from "minimatch";
 
 interface ICliArgs {
   entryFilename: string;
@@ -14,6 +15,7 @@ interface ICliArgs {
   allowUnused: boolean;
   newReportName: string;
   outputFile: string;
+  excludePattern?: string;
 }
 
 export class Logic {
@@ -23,7 +25,13 @@ export class Logic {
     return Logic.textFiles.has(path.extname(filepath).toLowerCase());
   }
 
-  private static readFiles(dir: string, pre = ""): FileList {
+  private static shouldExcludeDir(dirPath: string, excludePattern?: string): boolean {
+    if (!excludePattern) return false;
+    const dirName = path.basename(dirPath);
+    return minimatch(dirName, excludePattern);
+  }
+
+  private static readFiles(dir: string, pre = "", excludePattern?: string): FileList {
     const files = fs.readdirSync(dir);
     const list = new FileList();
 
@@ -43,7 +51,9 @@ export class Logic {
         }
 
       } else {
-        list.concat(this.readFiles(filepath, path.join(pre, file)));
+        if (!this.shouldExcludeDir(filepath, excludePattern)) {
+          list.concat(this.readFiles(filepath, path.join(pre, file), excludePattern));
+        }
       }
     }
 
@@ -64,6 +74,7 @@ export class Logic {
         "-c, --change-report-name <newreportname>",
         "changes report name in REPORT clause in source code",
       )
+      .option("-e, --exclude <pattern>", "exclude directories matching pattern (supports glob patterns)")
       .arguments("<entrypoint>");
 
     commander.exitOverride((err) => {
@@ -93,6 +104,7 @@ export class Logic {
       allowUnused: cmdOpts.allowUnused,
       newReportName: cmdOpts.changeReportName,
       outputFile: cmdOpts.output,
+      excludePattern: cmdOpts.exclude,
     };
   }
 
@@ -107,7 +119,7 @@ export class Logic {
 
       const entryObjectName = parsedArgs.entryFilename.split(".")[0];
       output = Merge.merge(
-        Logic.readFiles(parsedArgs.entryDir),
+        Logic.readFiles(parsedArgs.entryDir, "", parsedArgs.excludePattern),
         entryObjectName,
         {
           skipFUGR: parsedArgs.skipFUGR,
