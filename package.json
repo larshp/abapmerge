@@ -47,6 +47,6 @@
   },
   "dependencies": {
     "commander": "^10.0.0",
-    "fast-xml-parser": "^5.4.2"
+    "fast-xml-parser": "^5.5.6"
   }
 }
