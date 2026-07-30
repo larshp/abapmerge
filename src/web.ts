@@ -9,7 +9,7 @@ function fname(s: string): string {
 }
 
 export function onClick(e) {
-  let merged = "";
+  let merged: string;
 
   try {
     merged = Merge.merge(files, e.srcElement.text);

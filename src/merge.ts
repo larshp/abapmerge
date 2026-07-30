@@ -41,7 +41,6 @@ export default class Merge {
   private static analyze(main: string, contents: string, newReportName?: string) {
     let output = "";
     let lines = CollectStatements.collect(contents).split("\n");
-    let isMainReport = false;
 
     let lineNo = 0;
     if (main !== null) {
@@ -49,9 +48,10 @@ export default class Merge {
         let line = lines[lineNo++];
         const regexReportClause = /(^\s*REPORT\s+)([\w/]+)(\s+[^.*]*\.|\s*\.)/im;
         const reportClauseMatches = line.match(regexReportClause);
+        const isMainReport = reportClauseMatches &&
+          reportClauseMatches[2].toLowerCase() === main.toLowerCase().replace(/#/g, "/");
 
         if (reportClauseMatches) {
-          isMainReport = reportClauseMatches[2].toLowerCase() === main.toLowerCase().replace(/#/g, "/");
           if (newReportName) {
             line = line.replace(regexReportClause, `$1${newReportName}$3`);
           }
@@ -60,7 +60,6 @@ export default class Merge {
         output += line + "\n";
 
         if (isMainReport) {
-          isMainReport = false;
           break;
         }
       }
