@@ -131,6 +131,32 @@ describe("interface_parser 1", () => {
     expect(result.getDependencies().length).to.equal(0);
   });
 
+  it("ignores interface references in comments and ABAP Doc", () => {
+    const f = new File("zif_my_interface.intf.abap", `
+      INTERFACE zif_my_interface PUBLIC.
+        "! $values {@link zif_abapgit_aff_ddic_types_v1,
+        TYPES ty_x TYPE i. " TYPE zif_inline_comment
+* TYPE zif_full_line_comment
+      ENDINTERFACE.`);
+
+    const result = InterfaceParser.parse(f);
+
+    expect(result.getDependencies()).to.deep.equal([]);
+  });
+
+  it("ignores interface references in text literals", () => {
+    const f = new File("zif_my_interface.intf.abap", `
+      INTERFACE zif_my_interface PUBLIC.
+        CONSTANTS c_single TYPE string VALUE 'TYPE zif_in_single_quote'.
+        CONSTANTS c_backtick TYPE string VALUE \`TYPE zif_in_backticks\`.
+        CONSTANTS c_template TYPE string VALUE |TYPE zif_in_template|.
+      ENDINTERFACE.`);
+
+    const result = InterfaceParser.parse(f);
+
+    expect(result.getDependencies()).to.deep.equal([]);
+  });
+
   it("parse apack", () => {
     const f = new File("zif_abapgit_apack_definitions.intf.abap", `
 INTERFACE zif_abapgit_apack_definitions PUBLIC .
