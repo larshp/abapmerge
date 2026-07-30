@@ -64,6 +64,7 @@ export class Logic {
         "-c, --change-report-name <newreportname>",
         "changes report name in REPORT clause in source code",
       )
+      .allowExcessArguments()
       .arguments("<entrypoint>");
 
     commander.exitOverride((err) => {
