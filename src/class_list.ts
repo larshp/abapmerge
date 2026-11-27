@@ -2,6 +2,7 @@ import File from "./file";
 import FileList from "./file_list";
 import Class from "./class";
 import Graph from "./graph";
+import Dependencies from "./dependencies";
 import InterfaceParser from "./interface_parser";
 import { ClassParser } from "./class_parser";
 
@@ -23,9 +24,7 @@ export default class ClassList {
   public getResult(): string {
     return [
       this.getDeferred(),
-      this.getExceptions(),
-      this.getInterfaces(),
-      this.getDefinitions(),
+      this.render(this.ordered()),
       this.getImplementations(),
     ].join("");
   }
@@ -41,51 +40,61 @@ export default class ClassList {
   }
 
   public getDefinitions(): string {
-    const g = this.buildDependenciesGraph(this.classes);
-
-    let result = "";
-    while (g.countNodes() > 0) {
-      const leaf = g.popLeaf();
-      result = result + leaf.getDefinition() + "\n";
-    }
-
-    return result;
+    return this.render(this.ordered().filter(c => this.classes.includes(c)));
   }
 
   public getExceptions(): string {
-    const g = this.buildDependenciesGraph(this.exceptions);
-
-    let result = "";
-    while (g.countNodes() > 0) {
-      const leaf = g.popLeaf();
-      result = result + leaf.getDefinition() + "\n" + leaf.getImplementation() + "\n";
-    }
-
-    return result;
+    return this.render(this.ordered().filter(c => this.exceptions.includes(c)));
   }
 
   public getInterfaces(): string {
-    const g = this.buildDependenciesGraph(this.interfaces);
+    return this.render(this.ordered().filter(c => this.interfaces.includes(c)));
+  }
 
+  private render(list: Class[]): string {
     let result = "";
-    while (g.countNodes() > 0) {
-      const leaf = g.popLeaf();
-      result = result + leaf.getDefinition() + "\n";
+    for (const c of list) {
+      result = result + c.getDefinition() + "\n";
+      if (this.exceptions.includes(c)) {
+        // exception classes are not deferred, so they come as a whole
+        result = result + c.getImplementation() + "\n";
+      }
     }
-
     return result;
   }
 
-  private buildDependenciesGraph(list: Class[]): Graph<Class> {
+  /**
+   * Exceptions, interfaces and classes in one sequence, each after the ones
+   * its definition needs. Without such a need the sequence is exceptions,
+   * then interfaces, then classes.
+   */
+  private ordered(): Class[] {
+    const all = [...this.exceptions, ...this.interfaces, ...this.classes];
+    const known = new Set(all.map(c => ClassList.abapName(c)));
     const g = new Graph<Class>();
 
-    for (const c of list) {
-      const className = c.getName();
-      g.addNode(className, c);
-      for (const d of c.getDependencies()) g.addEdge(className, d);
+    for (const c of all) {
+      const name = ClassList.abapName(c);
+      g.addNode(name, c);
+      const strong = c.getDependencies().map(d => d.toLowerCase());
+      for (const d of strong) g.addEdge(name, d);
+      // found by a scan of the source, and a definition can name another one
+      // without needing it first - so these only order, they never fail
+      for (const d of Dependencies.find(name, c.getDefinition(), known)) {
+        if (strong.includes(d) === false) g.addWeakEdge(name, d);
+      }
     }
 
-    return g;
+    const result: Class[] = [];
+    while (g.countNodes() > 0) {
+      result.push(g.popLeaf());
+    }
+    return result;
+  }
+
+  /** the name as written in the source: lower case, namespace with slashes */
+  private static abapName(c: Class): string {
+    return c.getName().toLowerCase().replace(/#/g, "/");
   }
 
   private parseFiles(list: FileList) {
