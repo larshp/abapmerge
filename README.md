@@ -28,6 +28,8 @@ Abapmerge requires file naming schema compatible with the schema used by [abapGi
 
 Global classes `FOR TESTING` are skipped.
 
+The definitions of the classes and interfaces are sequenced by dependency: a definition comes after its superclass, the interfaces it implements, the classes and interfaces whose components it uses (`zcl_other=>ty_type`, `zif_other~method`), the exceptions it raises and the classes whose events it handles. Without a dependency the sequence is exception classes, interfaces, classes.
+
 ## Pragmas
 
 Abapmerge supports pragmas that can be written inside an abap comment. If written as " comment, then indentation before " is also used for output.

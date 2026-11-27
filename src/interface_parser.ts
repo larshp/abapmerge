@@ -1,47 +1,8 @@
 import File from "./file";
 import Class from "./class";
+import Dependencies from "./dependencies";
 
 export default class InterfaceParser {
-
-  private static codeOnly(contents: string): string {
-    return contents.split("\n").map(line => {
-      if (line.startsWith("*")) {
-        return "";
-      }
-
-      let result = "";
-      let literal: "'" | "`" | "|" | undefined;
-      for (let index = 0; index < line.length; index++) {
-        const character = line[index];
-
-        if (!literal && character === "\"") {
-          break;
-        }
-
-        if (!literal && (character === "'" || character === "`" || character === "|")) {
-          literal = character;
-          result += " ";
-          continue;
-        }
-
-        if (literal) {
-          if (character === literal) {
-            if (line[index + 1] === literal) {
-              result += "  ";
-              index++;
-              continue;
-            }
-            literal = undefined;
-          }
-          result += " ";
-          continue;
-        }
-
-        result += character;
-      }
-      return result;
-    }).join("\n");
-  }
 
   public static parse(f: File): Class {
 
@@ -57,7 +18,7 @@ export default class InterfaceParser {
     // if interface itself is referred, then it is probably a REF TO
     // REF TOs will be solved by deferred definitions are not taken into account
     // (maybe it is wrong by the way, as it helps to identify cyclic dependencies)
-    const code = InterfaceParser.codeOnly(f.getContents());
+    const code = Dependencies.codeOnly(f.getContents());
     const typeDeps = code.matchAll(/TYPE\s+([^.,\n]+)?(ZIF_\w+)(=?)/ig);
     if (typeDeps) {
       for (const dep of typeDeps) {
